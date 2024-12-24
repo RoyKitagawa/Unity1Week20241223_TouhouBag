@@ -2,8 +2,14 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Bag
+  - Item
+  - BagCell
+  - ItemCell
+  - StageSlotCell
+  - StageSlot
   layers:
   - Default
   - TransparentFX
@@ -38,6 +44,29 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BagSlot
+    uniqueID: 3722210739
+    locked: 0
+  - name: SlotOverlay
+    uniqueID: 1316901211
+    locked: 0
+  - name: Bag
+    uniqueID: 1481931485
+    locked: 0
+  - name: BagOverlay
+    uniqueID: 1355795817
+    locked: 0
+  - name: Item
+    uniqueID: 2148357577
+    locked: 0
+  - name: ItemOverlay
+    uniqueID: 49366021
+    locked: 0
+  - name: DragItem
+    uniqueID: 1094786755
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  m_RenderingLayers:
+  - Default

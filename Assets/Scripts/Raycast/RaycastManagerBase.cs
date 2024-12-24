@@ -50,9 +50,9 @@ public class RaycastManagerBase : MonoBehaviourSingleton<RaycastManagerBase>
     /// <returns></returns>
     protected virtual RaycastHit2D[] GetRaycastHit2Ds()
     {
-        RaycastHit2D[] hits = GetRaycastHit2Ds();  
-        // ヒット対象が無ければ即座に終了
-        if(hits == null || hits.Length <= 0) return null;
+        // RaycastHit2D[] hits = GetRaycastHit2Ds();  
+        // // ヒット対象が無ければ即座に終了
+        // if(hits == null || hits.Length <= 0) return null;
 
         Vector2 mousePos = BasicUtil.GetMousePos();
         return Physics2D.RaycastAll(mousePos, Vector2.zero);

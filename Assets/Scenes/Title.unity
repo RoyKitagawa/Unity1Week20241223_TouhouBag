@@ -584,7 +584,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "InGame\u3078\u79FB\u52D5"
+  m_text: "Story\u3078\u79FB\u52D5"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 575259501ffd79d4eb2b34d2d3742285, type: 2}
   m_sharedMaterial: {fileID: 4759974450865745340, guid: 575259501ffd79d4eb2b34d2d3742285, type: 2}

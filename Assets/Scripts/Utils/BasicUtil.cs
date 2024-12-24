@@ -79,8 +79,6 @@ public static class BasicUtil
     {
         Vector2 min = camera.ViewportToWorldPoint(minPercentage);
         Vector2 max = camera.ViewportToWorldPoint(maxPercentage);
-        new GameObject("min").transform.localPosition = min;
-        new GameObject("max").transform.localPosition = max;
         Rect rect = new Rect();
         rect.min = min;
         rect.max = max;
@@ -95,6 +93,24 @@ public static class BasicUtil
     public static Vector2 GetMousePos()
     {
         return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    /// <summary>
+    /// 指定範囲のRectを取得する
+    /// CenterPosを基準に座標、範囲を設定する
+    /// </summary>
+    /// <param name="centerPos"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns></returns>
+    public static Rect CreateRectFromCenter(Vector2 centerPos, float width, float height)
+    {
+        return new Rect(
+            centerPos.x - width / 2.0f,
+            centerPos.y - height / 2.0f,
+            width,
+            height
+        );
     }
 
     // public static Material LoadMaterial(string path)
