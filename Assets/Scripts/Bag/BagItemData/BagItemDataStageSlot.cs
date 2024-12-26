@@ -12,4 +12,7 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     string BagItemDataBase.GetPrefabPath() { return "Prefabs/StageSlot"; }
     int BagItemDataBase.GetCost() { return 0; }
     Vector2Int BagItemDataBase.GetSize() { return new Vector2Int(1, 1); }
+    float BagItemDataBase.GetCooldown() { return 1.0f; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBattle() { return Consts.Sprites.ItemAppleBagEdit; }
 }

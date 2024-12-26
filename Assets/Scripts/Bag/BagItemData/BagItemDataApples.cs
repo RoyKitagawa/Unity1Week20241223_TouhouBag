@@ -8,9 +8,12 @@ public class BagItemDataApple : SimpleSingleton<BagItemDataApple>, BagItemDataBa
 {
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.Apple; }
-    string BagItemDataBase.GetPrefabPath() { return "Prefabs/BagItem_Apple"; }    
+    string BagItemDataBase.GetPrefabPath() { return Consts.Resources.BagItem.ItemApple; }    
     int BagItemDataBase.GetCost() { return 2; }
     Vector2Int BagItemDataBase.GetSize() { return new Vector2Int(1, 1); }
+    float BagItemDataBase.GetCooldown() { return 1.0f; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBattle() { return Consts.Sprites.ItemAppleBagEdit; }
 }
 
 /// <summary>
@@ -20,7 +23,10 @@ public class BagItemDataBigApple : SimpleSingleton<BagItemDataBigApple>, BagItem
 {
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.BigApple; }
-    string BagItemDataBase.GetPrefabPath() { return "Prefabs/BagItem_Apple4"; }
+    string BagItemDataBase.GetPrefabPath() { return Consts.Resources.BagItem.ItemApple4; }
     int BagItemDataBase.GetCost() { return 2; }
     Vector2Int BagItemDataBase.GetSize() { return new Vector2Int(2, 2); }
+    float BagItemDataBase.GetCooldown() { return 1.5f; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBattle() { return Consts.Sprites.ItemAppleBagEdit; }
 }

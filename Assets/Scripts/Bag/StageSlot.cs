@@ -44,7 +44,7 @@ public class StageSlot : MonoBehaviour
     public static StageSlot InstantiateStageSlot(int x, int y)
     {
         // オブジェクト生成
-        if(bagSlotPrefab == null) bagSlotPrefab = Resources.Load<GameObject>(Consts.Resources.BagSlot);
+        if(bagSlotPrefab == null) bagSlotPrefab = Resources.Load<GameObject>(Consts.Resources.BagItem.StageSlot);
         GameObject obj = Instantiate(bagSlotPrefab);        
         obj.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BagSlotRoot).transform);
 

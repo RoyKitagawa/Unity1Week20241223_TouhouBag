@@ -3,7 +3,7 @@ Shader "Custom/CooldownWithGlow"
     Properties
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Progress ("Cooldown Progress", Range(0, 1)) = 0
+        _Progress ("Cooldown Progress", Range(0, 1)) = 1
         _GlowColor ("Glow Color", Color) = (1, 1, 0, 0.5)
         _GlowThickness ("Glow Thickness", Float) = 0.05
         _UseCooldownEffect ("Use Cooldown Effect (0=Off, 1=On)", Range(0, 1)) = 1

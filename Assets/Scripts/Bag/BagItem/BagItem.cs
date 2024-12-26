@@ -51,6 +51,11 @@ public class BagItem : TappableObject
         if(cells.Count <= 0) InitCells();
     }
 
+    public BagItemName GetDataItemName()
+    {
+        return data.ItemName;
+    }
+
     private Material material;
     private float elapsedTime = 0.0f;
     public override void Update()

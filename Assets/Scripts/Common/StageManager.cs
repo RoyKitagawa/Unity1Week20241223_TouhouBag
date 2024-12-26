@@ -13,11 +13,11 @@ public enum StageType
 public class StageManager : MonoBehaviourSingleton<StageManager>
 {
     // ステージに存在するスロットの一覧
-    private static HashSet<BagItem> Slots = new HashSet<BagItem>();
+    public static HashSet<BagItem> Slots = new HashSet<BagItem>();
     // ステージに存在するバッグの一覧
-    private static HashSet<BagItem> Bags = new HashSet<BagItem>();
+    public static HashSet<BagItem> Bags = new HashSet<BagItem>();
     // ステージに存在するアイテムの一覧
-    private static HashSet<BagItem> Items = new HashSet<BagItem>();
+    public static HashSet<BagItem> Items = new HashSet<BagItem>();
     // ステージサイズ
     private Vector2Int stageSize = Vector2Int.zero;
 
@@ -186,7 +186,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     private void InitStage()
     {
-        stageSize = new Vector2Int(6, 6);
+        stageSize = new Vector2Int(5, 7);
         float ratioH;
         float ratioV;
 

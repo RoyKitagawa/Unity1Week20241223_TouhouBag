@@ -40,10 +40,16 @@ public interface BagItemDataBase
     public string PrefabPath { get { return GetPrefabPath(); } }
     // アイテムの金額
     public int Cost { get { return GetCost(); } }
+    // クールダウン時間
+    public float Cooldown { get { return GetCooldown(); } }
     // アイテムの総セル数
     public Vector2Int Size { get { return GetSize(); } }
     // アイテムの総セル数
     public int CellCount { get { return Size.x * Size.y; } }
+    // アイテムの画像パス（バッグ編集画面）
+    public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
+    // アイテムの画像パス（バトル画面）
+    public string SpritePathBattle { get { return GetSpritePathBattle(); } }
 
     /// <summary>
     /// アイテムに含まれるセル数
@@ -77,9 +83,29 @@ public interface BagItemDataBase
     protected int GetCost();
 
     /// <summary>
+    /// クールダウンを取得
+    /// </summary>
+    /// <returns></returns>
+    protected float GetCooldown();
+
+    /// <summary>
     /// アイテムのサイズを取得
     /// 四角形でない場合でも縦横それぞれの最大値を入れておく
     /// </summary>
     /// <returns></returns>
     protected Vector2Int GetSize();
+
+    /// <summary>
+    /// アイテムの画像パス
+    /// バッグ編集画面用
+    /// </summary>
+    /// <returns></returns>
+    protected string GetSpritePathBagEdit();
+
+    /// <summary>
+    /// アイテムの画像パス
+    /// バトル画面用
+    /// </summary>
+    /// <returns></returns>
+    protected string GetSpritePathBattle();
 }

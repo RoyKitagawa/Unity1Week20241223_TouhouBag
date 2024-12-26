@@ -62,4 +62,11 @@ public static class RandUtil
         return ret;
     }
 
+    public static Vector2 GetRandomVector2In(Rect area)
+    {
+        float randomX = Random.Range(area.xMin, area.xMax);
+        float randomY = Random.Range(area.yMin, area.yMax);
+        return new Vector2(randomX, randomY);
+    }
+
 }

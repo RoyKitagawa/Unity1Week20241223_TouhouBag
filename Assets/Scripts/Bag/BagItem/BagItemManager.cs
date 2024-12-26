@@ -130,17 +130,17 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         if(cellPrefabs.ContainsKey(cellName))
             return cellPrefabs[cellName];
 
-        string prefabPath = "";
+        string prefabPath;
         switch(cellName)
         {
             case BagCellName.CellStageSlot:
-                prefabPath = Consts.Resources.CellStageSlot;
+                prefabPath = Consts.Resources.BagItem.CellStageSlot;
                 break;
             case BagCellName.CellBag:
-                prefabPath = Consts.Resources.CellBag;
+                prefabPath = Consts.Resources.BagItem.CellBag;
                 break;
             case BagCellName.CellItem:
-                prefabPath = Consts.Resources.CellItem;
+                prefabPath = Consts.Resources.BagItem.CellItem;
                 break;
             default:
                 Debug.LogError("不明なセル名：" + cellName);
