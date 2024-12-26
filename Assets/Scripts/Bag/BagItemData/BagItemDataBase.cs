@@ -30,26 +30,61 @@ public enum BagItemType
     Item, // 実際に効果を発動するバッグ
 }
 
+/// <summary>
+/// ダメージ種別
+/// </summary>
+public enum DamageType
+{
+    None,
+    NormalDamage,
+    CriticalDamage,
+    Heal,
+}
+
+public enum TargetType
+{
+    None,
+    Self,
+    Random,
+    Nearest,
+    Farthest,
+    HighestLife,
+    LowestLife,
+}
+
 public interface BagItemDataBase
 {
+    // 基本情報系
     // アイテムの種別
     public BagItemType ItemType { get { return GetType(); } }
     // アイテムの名前
     public BagItemName ItemName { get { return GetName(); } }
     // アイテムのPrefabパス（現状はResource内想定）
-    public string PrefabPath { get { return GetPrefabPath(); } }
+    public string BagPrefabPath { get { return GetBagPrefabPath(); } }
+    // バトル用のPrefabパス（現状はResource内想定）
+    public string BattlePrefabPath { get { return GetBattlePrefabPath(); } }
+    // アイテムの画像パス（バッグ編集画面）
+    public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
+    // アイテムの画像パス（バトル画面）
+    public string SpritePathBattle { get { return GetSpritePathBattleItemList(); } }
+
+    // バッグ編集画面用
     // アイテムの金額
     public int Cost { get { return GetCost(); } }
-    // クールダウン時間
-    public float Cooldown { get { return GetCooldown(); } }
     // アイテムの総セル数
     public Vector2Int Size { get { return GetSize(); } }
     // アイテムの総セル数
     public int CellCount { get { return Size.x * Size.y; } }
-    // アイテムの画像パス（バッグ編集画面）
-    public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
-    // アイテムの画像パス（バトル画面）
-    public string SpritePathBattle { get { return GetSpritePathBattle(); } }
+
+    // バトル画面用
+    // 攻撃種別
+    public DamageType WeaponDamageType { get { return GetDamageType(); } }
+    // 攻撃力
+    public int WeaponDamage { get { return GetDamage(); } }
+    // クールダウン時間
+    public float Cooldown { get { return GetCooldown(); } }
+    // ターゲット選定方法
+    public TargetType WeaponTargetType { get { return GetTargetType(); } }
 
     /// <summary>
     /// アイテムに含まれるセル数
@@ -71,10 +106,16 @@ public interface BagItemDataBase
     protected BagItemType GetType();
 
     /// <summary>
-    /// アイテムのResourcesPrefabパスを取得
+    /// バッグ編集時用アイテムのResourcesPrefabパスを取得
     /// </summary>
     /// <returns></returns>
-    protected string GetPrefabPath();
+    protected string GetBagPrefabPath();
+
+    /// <summary>
+    /// バトル時用アイテムのResourcesPrefabパスを取得
+    /// </summary>
+    /// <returns></returns>
+    protected string GetBattlePrefabPath();
 
     /// <summary>
     /// アイテムの金額を取得
@@ -107,5 +148,23 @@ public interface BagItemDataBase
     /// バトル画面用
     /// </summary>
     /// <returns></returns>
-    protected string GetSpritePathBattle();
+    protected string GetSpritePathBattleItemList();
+
+    /// <summary>
+    /// アイテムのダメージ種別
+    /// </summary>
+    /// <returns></returns>
+    protected DamageType GetDamageType();
+
+    /// <summary>
+    /// アイテムの攻撃力
+    /// </summary>
+    /// <returns></returns>
+    protected int GetDamage();
+
+    /// <summary>
+    /// 攻撃対象の選定方法
+    /// </summary>
+    /// <returns></returns>
+    protected TargetType GetTargetType();
 }

@@ -3,12 +3,43 @@ using UnityEngine;
 
 public class CharacterPlayer : CharacterBase
 {
+    [SerializeField]
+    private HPBar hpBar;
+    
+    public override void InitializeCharacter(CharacterDataBase characterData)
+    {
+        if(isInitialized) return;
+        base.InitializeCharacter(characterData);
+
+        // HPバー初期化
+        hpBar.Initialize(data.MaxLife, currentLife);
+    }
+
+    /// <summary>
+    /// ダメージ付与
+    /// </summary>
+    /// <param name="damageAmt"></param>
+    /// <param name="damageType"></param>
+    public override void GainDamage(float damageAmt, DamageType damageType)
+    {
+        base.GainDamage(damageAmt, damageType);
+        hpBar.SetCurrentValue(currentLife);
+    }
+
     /// <summary>
     /// キャラクター死亡時に呼び出される処理
     /// </summary>
-    public override void OnDead()
+    protected override void OnDead()
     {
+        if(!isAlive) return;
+
         // TODO 死亡処理
         Debug.Log("プレイヤー死亡！");
+
+        isAlive = false;
+        // TODO GAMEOVER演出表示＆リザルトへ
+        ManagerInGame.Instance.ShowGameOverResult();
     }
+
+    private bool isAlive = true;
 }

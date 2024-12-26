@@ -29,8 +29,9 @@ public class EnemyBase : CharacterBase
     protected virtual void TriggerAttack()
     {
         // アタック処理を発生させる
-        HashSet<DamageType> damageTypes = new HashSet<DamageType> { DamageType.NormalDamage, DamageType.CriticalDamage, DamageType.Heal };
-        ManagerBattlePhase.Instance.ApplyDamage2Player(Random.Range(1, 150), RandUtil.GetRandomItem(damageTypes));
+        bool isCritical = RandUtil.GetRandomBool(0.1f);
+        float damage = Random.Range(data.AttackDamage * 0.8f, data.AttackDamage * 1.2f);
+        ManagerBattlePhase.Instance.GetPlayer().GainDamage(isCritical ? damage * 1.5f : damage, isCritical ? DamageType.CriticalDamage : DamageType.NormalDamage);
     }
 
     public void OnTriggerEnter2D(Collider2D target)
@@ -50,12 +51,26 @@ public class EnemyBase : CharacterBase
     }
 
     /// <summary>
+    /// ダメージ付与
+    /// </summary>
+    /// <param name="damageAmt"></param>
+    /// <param name="damageType"></param>
+    public override void GainDamage(float damageAmt, DamageType damageType)
+    {
+        // ダメージ演出
+        base.GainDamage(damageAmt, damageType);
+    }
+
+
+    /// <summary>
     /// キャラクター死亡時に呼び出される処理
     /// </summary>
-    public override void OnDead()
+    protected override void OnDead()
     {
         // TODO 死亡処理
         Debug.Log("敵キャラクター死亡！");
+        ManagerEnemy.Instance.RemoveEnemyFromList(this);
+        Destroy(gameObject);
     }
 
     /// <summary>
@@ -63,7 +78,7 @@ public class EnemyBase : CharacterBase
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
-    public Vector2 GetFuturePosition(float time)
+    public override Vector2 GetFuturePosition(float time)
     {
         Vector2 futurePos = VectorUtil.Add(transform.position, rb.linearVelocity * time);
         // TODO 敵が自機に近づいて止まる場合を考慮する。まだ未実装なため一旦はずっと左に行ってもらう

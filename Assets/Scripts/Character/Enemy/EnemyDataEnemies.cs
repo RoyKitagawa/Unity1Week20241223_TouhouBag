@@ -6,9 +6,9 @@ public class CharacterDataEnemyA : SimpleSingleton<CharacterDataEnemyA>, Charact
     CharacterType CharacterDataBase.GetType() { return CharacterType.EnemyNormal; }
     CharacterName CharacterDataBase.GetName() { return CharacterName.EnemyA; }
     // 敵の強さ関連
-    float CharacterDataBase.GetMaxLife() { return 10.0f; }
+    float CharacterDataBase.GetMaxLife() { return 50.0f; }
     float CharacterDataBase.GetCooldown() { return 1.0f; }
-    float CharacterDataBase.GetAttackDamage() { return 1.0f; }
+    float CharacterDataBase.GetAttackDamage() { return 50.0f; }
     // 敵の挙動関連
     Vector2 CharacterDataBase.GetVelocity() { return new Vector2(-2.5f, 0.0f); }
 }

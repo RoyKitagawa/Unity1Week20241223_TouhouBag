@@ -11,7 +11,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     private Rect enemySpawnArea;
 
     // デバッグ用
-    private const float enemySpawnCooldown = 10f;
+    private const float enemySpawnCooldown = 1f;
     private float enemySpawnElapsedTime = enemySpawnCooldown; // スポーン時間（初期値はすぐに1体敵が出るようにする）
 
     public void Update()
@@ -21,8 +21,102 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         if(enemySpawnElapsedTime >= enemySpawnCooldown)
         {
             enemySpawnElapsedTime = 0;
-            SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)));
+            EnemyBase enemy = SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)));
+            enemies.Add(enemy);
         }
+    }
+
+    /// <summary>
+    /// 敵機をランダムで取得する
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBase GetRandomEnemy()
+    {
+        return RandUtil.GetRandomItem(enemies);
+    }
+
+    /// <summary>
+    /// プレイヤーに最も近い敵機を取得する
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBase GetNearestEnemy()
+    {
+        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase nearestEnemy = null;
+        float nearestDist = -1;
+        foreach(CharacterBase enemy in enemies)
+        {
+            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
+            if(nearestDist < 0 || dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearestEnemy = enemy;
+            }
+        }
+        return nearestEnemy;
+    }
+
+    /// <summary>
+    /// プレイヤーに最も遠い敵機を取得する
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBase GetFarthestEnemy()
+    {
+        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase farthestEnemy = null;
+        float closestDist = -1;
+        foreach(CharacterBase enemy in enemies)
+        {
+            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
+            if(closestDist < 0 || dist > closestDist)
+            {
+                closestDist = dist;
+                farthestEnemy = enemy;
+            }
+        }
+        return farthestEnemy;
+    }
+
+    /// <summary>
+    /// 最も残ライフの低い敵機を取得する
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBase GetEnemyWithLowestLife()
+    {
+        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase targetEnemy = null;
+        float lowestLife = -1;
+        foreach(CharacterBase enemy in enemies)
+        {
+            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
+            if(lowestLife < 0 || lowestLife > targetEnemy.GetCurrentLife())
+            {
+                lowestLife = targetEnemy.GetCurrentLife();
+                targetEnemy = enemy;
+            }
+        }
+        return targetEnemy;
+    }
+
+    /// <summary>
+    /// 最も残ライフの高い敵機を取得する
+    /// </summary>
+    /// <returns></returns>
+    public CharacterBase GetEnemyWithHighestLife()
+    {
+        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase targetEnemy = null;
+        float highestLife = -1;
+        foreach(CharacterBase enemy in enemies)
+        {
+            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
+            if(highestLife < 0 || highestLife < targetEnemy.GetCurrentLife())
+            {
+                highestLife = targetEnemy.GetCurrentLife();
+                targetEnemy = enemy;
+            }
+        }
+        return targetEnemy;
     }
 
     /// <summary>
@@ -60,6 +154,16 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         enemy.InitializeCharacter(CharacterDataList.GetCharacterData(characterName));
         enemy.transform.position = RandUtil.GetRandomVector2In(enemySpawnArea);
         return enemy;
+    }
+
+    /// <summary>
+    /// リストから敵機を除外する
+    /// </summary>
+    /// <param name="enemy"></param>
+    /// <returns></returns>
+    public bool RemoveEnemyFromList(EnemyBase enemy)
+    {
+        return enemies.Remove(enemy);
     }
 
     /// <summary>

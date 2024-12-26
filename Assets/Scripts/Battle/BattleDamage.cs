@@ -2,12 +2,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public enum DamageType
-{
-    NormalDamage,
-    CriticalDamage,
-    Heal,
-}
+
 
 public class BattleDamage : MonoBehaviour
 {
@@ -49,18 +44,29 @@ public class BattleDamage : MonoBehaviour
         }
 
         // ダメージ演出を動かす
-        Vector2 jumpVector = new Vector2(Random.Range(-0.5f, 0.5f), Random.Range(1.0f, 2.0f));
-        Vector2 jumpFallVector = new Vector2(jumpVector.x * 1.5f, jumpVector.y / 2f);
-
-        Sequence jumpSequence = DOTween.Sequence();
-        jumpSequence.Append(damage.transform.DOMove(pos + jumpVector, 0.5f).SetEase(Ease.OutQuad));
-        jumpSequence.Append(damage.transform.DOMove(pos + jumpFallVector, 0.5f).SetEase(Ease.InQuad));
-        // damage.transform.DOMove(pos + jumpVector, 0.5f).SetEase(Ease.OutQuart);
-        damage.text.DOFade(0.0f, 0.6f).SetDelay(0.4f).OnComplete(() => {
+        float height = Random.Range(0.5f, 1.5f);
+        float duration = Random.Range(0.8f, 1.0f);
+        Vector2 endPosition = new Vector2(pos.x + Random.Range(-0.5f, 0.5f), pos.y);
+        // カスタムパスを設定して放物線移動を実現
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(DOTween.To(() => (Vector2)damage.transform.position, x => damage.transform.position = x, endPosition, duration)
+            .OnUpdate(() =>
+            {
+                float progress = sequence.Elapsed() / duration;
+                // 開始地点まで降りて欲しくないので、0.8の係数をかけておく
+                float heightOffset = Mathf.Sin(progress * Mathf.PI * 0.8f) * height;
+                Vector3 currentPosition = Vector3.Lerp(pos, endPosition, progress);
+                currentPosition.y += heightOffset;
+                damage.transform.position = currentPosition;
+            }));
+        sequence.Join(damage.text.DOFade(0.0f, duration * 0.6f).SetDelay(duration * 0.4f));
+        // 終了処理
+        sequence.OnComplete(() => {
             Destroy(damage.gameObject);
         });
+
         // 背景がONの場合はそれもフェードアウトする
-        damage.criticalBG.DOFade(0.0f, 0.8f).SetDelay(0.3f);
+        damage.criticalBG.DOFade(0.0f, duration * 0.6f).SetDelay(duration * 0.4f);
         return damage;
     }
 

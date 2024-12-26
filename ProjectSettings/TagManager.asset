@@ -69,5 +69,17 @@ TagManager:
   - name: DragItem
     uniqueID: 1094786755
     locked: 0
+  - name: BattleCharacter
+    uniqueID: 1822935401
+    locked: 0
+  - name: BattleWeapon
+    uniqueID: 2261787295
+    locked: 0
+  - name: UI
+    uniqueID: 2115709445
+    locked: 0
+  - name: OverlayUI
+    uniqueID: 1786708573
+    locked: 0
   m_RenderingLayers:
   - Default

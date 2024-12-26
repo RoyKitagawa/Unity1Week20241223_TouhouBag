@@ -20,7 +20,14 @@ public class BattleListItem : MonoBehaviour
     public void Update()
     {
         elapsedTime += Time.deltaTime;
-        elapsedTime %= data.Cooldown;
+        // クールダウン経過による攻撃実施
+        if(elapsedTime >= data.Cooldown)
+        {
+            OnTriggerAttack();
+            elapsedTime = 0.0f;
+        }
+
+        // クールダウン進行度合い表示
         float progress = elapsedTime / data.Cooldown;
         // Debug.Log("Progress: " + progress);
         sr.material.SetFloat("_Progress", progress);
@@ -31,6 +38,11 @@ public class BattleListItem : MonoBehaviour
         sr.material.SetColor("_GlowColor", new Color(1, 1, 0, 0.1f)); // グロウの色
         // material.SetColor("_BaseColor", Color.white); // 基本のスプライトの色
         
+    }
+
+    private void OnTriggerAttack()
+    {
+        ManagerBattlePhase.Instance.TriggerPlayerAttack(data);
     }
 
     /// <summary>
@@ -49,13 +61,28 @@ public class BattleListItem : MonoBehaviour
 
         // 初期化処理
         item.data = data;
-        item.elapsedTime = 0.0f;
+        item.elapsedTime = Random.Range(0.0f, data.Cooldown);
         item.sr = item.GetComponent<SpriteRenderer>();
         // アイテムの画像を設定する
         item.sr.sprite = BasicUtil.LoadSprite(item.data.SpritePathBattle);
         return item;
     }
 
+    public static string GetBattleItemImagePath(BagItemName itemName)
+    {
+        switch(itemName)
+        {
+            case BagItemName.Apple:
+                return Consts.Sprites.BattleItem.List.Apple;
+            case BagItemName.BigApple:
+                return Consts.Sprites.BattleItem.List.Apple4;
+            case BagItemName.LongItem:
+                return Consts.Sprites.BattleItem.List.Long;
+            default:
+                Debug.LogError("非対応のアイテム名: " + itemName);
+                return "";
+        }
+    }
 
 
 }

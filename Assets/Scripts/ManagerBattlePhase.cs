@@ -11,8 +11,6 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     private BoxCollider2D playerAttackableArea;
     // キャラクターが所持しているアイテム一覧
     private HashSet<BattleListItem> items = new HashSet<BattleListItem>();
-    // // 敵機が自機に近づいて止まるX座標
-    // public float EnemyStopPosX = -6.0f;
 
     public void OnStartBattlePhase()
     {
@@ -20,6 +18,24 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
         InitializeBattle();
 
         Debug.Log("攻撃可能になるX座標：" + GetPlayerAttackableBoundaryX());
+    }
+
+    public void OnGameClear()
+    {
+        Debug.Log("ゲームクリア！");
+        ManagerInGame.Instance.ShowGameClearResult();
+    }
+
+    public void OnWaveClear()
+    {
+        Debug.Log("Wave成功！");
+        ManagerInGame.Instance.ShowWaveClearResult();
+    }
+
+    public void OnWaveFail()
+    {
+        Debug.Log("Wave失敗…");
+        ManagerInGame.Instance.ShowGameOverResult();
     }
 
     /// <summary>
@@ -53,37 +69,69 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
     }
 
-    /// <summary>
-    /// プレイヤーにダメージを与える
-    /// </summary>
-    /// <param name="damageAmt"></param>
-    /// <param name="damageType"></param>
-    public void ApplyDamage2Player(float damageAmt, DamageType damageType)
+    public void TriggerPlayerAttack(BagItemDataBase data)
     {
-        ApplyDamage2(player, damageAmt, damageType);
+        // 攻撃タイプが設定されていない場合、攻撃は発動しない
+        if(data.WeaponTargetType == TargetType.None) return;
+        
+        // 対象が存在しない場合は終了する
+        CharacterBase target = GetTargetCharacter(data);
+        if(target == null) return;
+
+        // 武器を射出する
+        ProjectileWeaponBase.Launch(data, target, player.transform.position);
     }
 
-    /// <summary>
-    /// 指定キャラクターにダメージを与える
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="damageAmt"></param>
-    /// <param name="damageType"></param>
-    public void ApplyDamage2(CharacterBase target, float damageAmt, DamageType damageType)
+    public CharacterBase GetPlayer()
     {
-        target.GainDamage(damageAmt, damageType);
+        return player;
     }
+
+    private CharacterBase GetTargetCharacter(BagItemDataBase data)
+    {
+        switch(data.WeaponTargetType)
+        {
+            case TargetType.Self:
+                return player;
+            case TargetType.Random:
+                return ManagerEnemy.Instance.GetRandomEnemy();
+            case TargetType.Nearest:
+                return ManagerEnemy.Instance.GetNearestEnemy();
+            case TargetType.Farthest:
+                return ManagerEnemy.Instance.GetFarthestEnemy();
+            case TargetType.HighestLife:
+                return ManagerEnemy.Instance.GetEnemyWithHighestLife();
+            case TargetType.LowestLife:
+                return ManagerEnemy.Instance.GetEnemyWithLowestLife();
+            default:
+                Debug.LogError("不正なターゲット種別: " + data.ItemName + "/" + data.WeaponTargetType);
+                return null;
+        }
+    }
+
+    // /// <summary>
+    // /// プレイヤーにダメージを与える
+    // /// </summary>
+    // /// <param name="damageAmt"></param>
+    // /// <param name="damageType"></param>
+    // public void ApplyDamage2Player(float damageAmt, DamageType damageType)
+    // {
+    //     ApplyDamage2(player, damageAmt, damageType);
+    // }
+
+    // /// <summary>
+    // /// 指定キャラクターにダメージを与える
+    // /// </summary>
+    // /// <param name="target"></param>
+    // /// <param name="damageAmt"></param>
+    // /// <param name="damageType"></param>
+    // public void ApplyDamage2(CharacterBase target, float damageAmt, DamageType damageType)
+    // {
+    //     target.GainDamage(damageAmt, damageType);
+    // }
 
     public float GetPlayerAttackableBoundaryX()
     {
         return playerAttackableArea.bounds.max.x;
-    }
-
-    /// <summary>
-    /// アイテムのクールダウンが終了時に呼ばれる
-    /// </summary>
-    public void OnTriggerItem()
-    {
-
     }
 }

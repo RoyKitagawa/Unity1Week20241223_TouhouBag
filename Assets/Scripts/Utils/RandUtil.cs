@@ -69,4 +69,10 @@ public static class RandUtil
         return new Vector2(randomX, randomY);
     }
 
+    public static bool GetRandomBool(float truePercentage = 0.50f)
+    {
+        float value = Random.Range(0.0f, 1.0f);
+        return value <= truePercentage;
+    }
+
 }

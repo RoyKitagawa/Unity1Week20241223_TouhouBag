@@ -57,7 +57,7 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         if(!itemPrefabs.ContainsKey(data.ItemName))
         {
             // Prefab追加
-            GameObject prefab = Resources.Load<GameObject>(data.PrefabPath);
+            GameObject prefab = Resources.Load<GameObject>(data.BagPrefabPath);
             itemPrefabs.Add(data.ItemName, prefab);
         }
 

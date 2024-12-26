@@ -68,10 +68,29 @@ public static class Consts
             public const string EnemyA = Characters + "/EnemyA";
         }
 
+        public static class BattleWeapon
+        {
+            private const string Weapon = Prefabs + "/Items/ProjectileWeapons";
+            public const string Apple = Weapon + "/ProjectileWeaponApple";
+            public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
+            public const string Long = Weapon + "/ProjectileWeaponLong";
+        }
     }
     
     public static class Sprites
     {
+        private const string Images = "Assets/Images";
+        public class BattleItem
+        {
+            private const string BattleItems = Images + "/BattleItems";
+            // バトル中のクールダウン表記用
+            public class List
+            {
+                public const string Apple = BattleItems + "/Apple.png";
+                public const string Apple4 = BattleItems + "/Apple4.png";
+                public const string Long = BattleItems + "/Long.png";
+            }
+        }
         public const string ItemAppleBattle = "Assets/Images/ItemCardA.png";
         public const string ItemAppleBagEdit = "Assets/Images/ItemCardA.png";
     }
