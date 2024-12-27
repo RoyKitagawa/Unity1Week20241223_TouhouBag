@@ -64,7 +64,7 @@ public class BattleListItem : MonoBehaviour
         item.elapsedTime = Random.Range(0.0f, data.Cooldown);
         item.sr = item.GetComponent<SpriteRenderer>();
         // アイテムの画像を設定する
-        item.sr.sprite = BasicUtil.LoadSprite(item.data.SpritePathBattle);
+        item.sr.sprite = BasicUtil.LoadSprite4Resources(item.data.SpritePathBattle);
         return item;
     }
 
@@ -73,11 +73,11 @@ public class BattleListItem : MonoBehaviour
         switch(itemName)
         {
             case BagItemName.Apple:
-                return Consts.Sprites.BattleItem.List.Apple;
+                return Consts.Resources.Sprites.BattleItem.List.Apple;
             case BagItemName.BigApple:
-                return Consts.Sprites.BattleItem.List.Apple4;
+                return Consts.Resources.Sprites.BattleItem.List.Apple4;
             case BagItemName.LongItem:
-                return Consts.Sprites.BattleItem.List.Long;
+                return Consts.Resources.Sprites.BattleItem.List.Long;
             default:
                 Debug.LogError("非対応のアイテム名: " + itemName);
                 return "";

@@ -12,8 +12,8 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     BagItemName BagItemDataBase.GetName() { return BagItemName.StageSlot; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.StageSlot; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 0; }

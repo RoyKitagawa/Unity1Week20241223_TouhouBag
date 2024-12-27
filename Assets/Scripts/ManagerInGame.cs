@@ -63,14 +63,14 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
         gameOverPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
         Sequence sequence = DOTween.Sequence();
         sequence.SetUpdate(true);
-        sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 1.0f).SetEase(Ease.Linear));
-        sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 1.0f).SetDelay(1.0f).SetEase(Ease.Linear));
+        sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
         sequence.OnComplete(() => {
-            // GameOver終了時にリザルト画面へと遷移
-            ManagerSceneTransition.Instance.Move2Scene(SceneType.Result);
+            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+            ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
             gameOverPanel.gameObject.SetActive(false);
             ResumeTimer();
-        });
+        }).SetDelay(0.5f);
         PauseTimer();
     }
 

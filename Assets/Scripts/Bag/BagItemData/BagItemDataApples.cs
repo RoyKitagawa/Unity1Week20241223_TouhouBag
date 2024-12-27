@@ -11,8 +11,8 @@ public class BagItemDataApple : SimpleSingleton<BagItemDataApple>, BagItemDataBa
     BagItemName BagItemDataBase.GetName() { return BagItemName.Apple; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemApple; }    
     string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Apple; }    
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.BattleItem.List.Apple; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
@@ -35,8 +35,8 @@ public class BagItemDataBigApple : SimpleSingleton<BagItemDataBigApple>, BagItem
     BagItemName BagItemDataBase.GetName() { return BagItemName.BigApple; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemApple4; }
     string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Apple4; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.BattleItem.List.Apple4; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }

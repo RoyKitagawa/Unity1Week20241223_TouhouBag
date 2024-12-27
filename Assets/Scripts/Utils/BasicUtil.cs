@@ -45,7 +45,24 @@ public static class BasicUtil
     /// </summary>
     /// <param name="path"></param>
     /// <returns></returns>
-    public static Sprite LoadSprite(string path)
+    public static Sprite LoadSprite4Resources(string path)
+    {
+        Sprite sprite = Resources.Load<Sprite>(path);
+        if(sprite == null)
+        {
+            Debug.LogError("SpriteのLoadに失敗しました: path = " + path);
+        }
+        return sprite;
+    }
+
+    /// <summary>
+    /// ファイルパスからSpriteを読み込む
+    /// WebGLではSystem.IO.File.ReadAllBytesは正常に動かないため要注意
+    /// Pivotは画像中心、画像のユニットサイズは画像の横幅を基準に設定する
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Sprite LoadSprite4NonResources(string path)
     {
         byte[] bytes = System.IO.File.ReadAllBytes(path);
         Texture2D texture2D = new Texture2D(0, 0);

@@ -58,10 +58,11 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
         // 画面内にアイテム一覧を表示する
         int index = 0;
         GameObject itemsRoot = BasicUtil.GetRootObject(Consts.Roots.BattleItemList);
+        Vector2 itemListStartPos = new Vector2(-8f, -4.25f);
         foreach(BattleListItem item in items)
         {
             item.transform.SetParent(itemsRoot.transform);
-            item.transform.localPosition = new Vector2(0.0f, -index * 1.2f);
+            item.transform.localPosition = new Vector2(itemListStartPos.x + index * 1.2f, itemListStartPos.y);
             index ++;
         }
 

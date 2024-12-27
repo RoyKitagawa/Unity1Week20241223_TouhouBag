@@ -19,6 +19,6 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
     /// </summary>
     public void Move2SceneInGame()
     {
-        ManagerSceneTransition.Instance.Move2Scene(SceneType.Story);
+        ManagerSceneTransition.Instance.Move2Scene(SceneType.InGame);
     }
 }

@@ -21,7 +21,8 @@ public class BattleDamage : MonoBehaviour
             return null;
         }
         // オブジェクト初期化
-        damage.transform.position = pos;
+        // 横座標を少し散らす
+        damage.transform.position = new Vector2(pos.x + Random.Range(-0.5f, 0.5f), pos.y);
         // ダメージ量設定
         damage.text.text = damageAmt.ToString();
         // ダメージ表記サイズ微調整

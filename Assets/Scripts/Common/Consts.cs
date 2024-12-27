@@ -75,25 +75,41 @@ public static class Consts
             public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
             public const string Long = Weapon + "/ProjectileWeaponLong";
         }
-    }
-    
-    public static class Sprites
-    {
-        private const string Images = "Assets/Images";
-        public class BattleItem
+
+        public static class Sprites
         {
-            private const string BattleItems = Images + "/BattleItems";
+            private const string Images = "Images";
             // バトル中のクールダウン表記用
-            public class List
+            public class BattleItem
             {
-                public const string Apple = BattleItems + "/Apple.png";
-                public const string Apple4 = BattleItems + "/Apple4.png";
-                public const string Long = BattleItems + "/Long.png";
+                private const string BattleItems = Images + "/BattleItems";
+                public class List
+                {
+                    public const string Apple = BattleItems + "/Apple";
+                    public const string Apple4 = BattleItems + "/Apple4";
+                    public const string Long = BattleItems + "/Long";
+                }
             }
         }
-        public const string ItemAppleBattle = "Assets/Images/ItemCardA.png";
-        public const string ItemAppleBagEdit = "Assets/Images/ItemCardA.png";
     }
+    
+    // public static class Sprites
+    // {
+    //     private const string Images = "Assets/Images";
+    //     public class BattleItem
+    //     {
+    //         private const string BattleItems = Images + "/BattleItems";
+    //         // バトル中のクールダウン表記用
+    //         public class List
+    //         {
+    //             public const string Apple = BattleItems + "/Apple.png";
+    //             public const string Apple4 = BattleItems + "/Apple4.png";
+    //             public const string Long = BattleItems + "/Long.png";
+    //         }
+    //     }
+    //     public const string ItemAppleBattle = "Assets/Images/ItemCardA.png";
+    //     public const string ItemAppleBagEdit = "Assets/Images/ItemCardA.png";
+    // }
 
     public static class Names
     {

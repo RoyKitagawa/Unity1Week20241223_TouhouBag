@@ -252,6 +252,8 @@ public class BagItem : TappableObject
     {
         // 物理演算関係の設定
         SetPhysicSimulator(true);
+        // 剥がす
+        SetIsPlaced(false);
         
         // 移動が発生していない場合、SlotPosを初期化する
         foreach(BagItemCell cell in cells)

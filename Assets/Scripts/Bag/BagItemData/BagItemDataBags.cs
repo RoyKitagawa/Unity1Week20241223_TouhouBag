@@ -8,8 +8,8 @@ public class BagItemDataBag1x1 : SimpleSingleton<BagItemDataBag1x1>, BagItemData
     BagItemName BagItemDataBase.GetName() { return BagItemName.Bag1x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemBag1x1; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
@@ -29,8 +29,8 @@ public class BagItemDataBag3x1 : SimpleSingleton<BagItemDataBag3x1>, BagItemData
     BagItemName BagItemDataBase.GetName() { return BagItemName.Bag3x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemBag3x1; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
@@ -50,8 +50,8 @@ public class BagItemDataBag2x2 : SimpleSingleton<BagItemDataBag2x2>, BagItemData
     BagItemName BagItemDataBase.GetName() { return BagItemName.Bag2x2; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemBag2x2; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
@@ -71,8 +71,8 @@ public class BagItemDataBag2x1 : SimpleSingleton<BagItemDataBag2x1>, BagItemData
     BagItemName BagItemDataBase.GetName() { return BagItemName.Bag2x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemBag2x1; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.ItemAppleBagEdit; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
  
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }

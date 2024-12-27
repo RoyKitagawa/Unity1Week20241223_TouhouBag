@@ -8,8 +8,8 @@ public class BagItemDataLongItem : SimpleSingleton<BagItemDataLongItem>, BagItem
     BagItemName BagItemDataBase.GetName() { return BagItemName.LongItem; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemLong; }
     string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Long; }    
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Sprites.ItemAppleBagEdit; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Sprites.BattleItem.List.Long; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Long; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Long; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
