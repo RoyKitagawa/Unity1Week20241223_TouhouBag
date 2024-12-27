@@ -40,6 +40,21 @@ public static class BasicUtil
     }
 
     /// <summary>
+    /// ファイルパスからMaterialを読み込む
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static Material LoadMaterial4Resources(string path)
+    {
+        Material material = Resources.Load<Material>(path);
+        if(material == null)
+        {
+            Debug.LogError("MaterialのLoadに失敗しました: path = " + path);
+        }
+        return material;
+    }
+
+    /// <summary>
     /// ファイルパスからSpriteを読み込む
     /// Pivotは画像中心、画像のユニットサイズは画像の横幅を基準に設定する
     /// </summary>

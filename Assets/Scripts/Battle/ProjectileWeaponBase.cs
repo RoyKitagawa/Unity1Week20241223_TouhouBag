@@ -16,15 +16,26 @@ public class ProjectileWeaponBase : MonoBehaviour
 
     public static ProjectileWeaponBase Launch(BagItemDataBase data, CharacterBase target, Vector2 startPosition)
     {
-        GameObject prefab = GetWeaponPrefab(data);
-        if(prefab == null)
-        {
-            Debug.LogError("投てき武器の生成に失敗: " + data.ItemName);
-            return null;
-        }
-        ProjectileWeaponBase weapon = Instantiate(prefab).GetComponent<ProjectileWeaponBase>();
+        // GameObject prefab = GetWeaponPrefab(data);
+        // if(prefab == null)
+        // {
+        //     Debug.LogError("投てき武器の生成に失敗: " + data.ItemName);
+        //     return null;
+        // }
+        // ProjectileWeaponBase weapon = Instantiate(prefab).GetComponent<ProjectileWeaponBase>();
+
+        ProjectileWeaponBase weapon = new GameObject(data.ItemName.ToString()).AddComponent<ProjectileWeaponBase>();
+        weapon.transform.localScale = new Vector2(0.5f, 0.5f);
         weapon.transform.position = startPosition;
         weapon.data = data;
+
+        // 画像設定
+        SpriteRenderer sr = new GameObject("Image").AddComponent<SpriteRenderer>();
+        sr.transform.SetParent(weapon.transform);
+        sr.transform.localPosition = Vector2.zero;
+        sr.transform.localScale = Vector2.one;
+        sr.sprite = BasicUtil.LoadSprite4Resources(data.SpritePathBagEdit);
+        sr.sortingLayerName = Consts.SortingLayer.BattleWeapon;
 
         // 武器を到着地点まで移動させる
         float duration = 1.0f;
@@ -69,20 +80,20 @@ public class ProjectileWeaponBase : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private static GameObject GetWeaponPrefab(BagItemDataBase data)
-    {
-        // Prefabが登録済みならそれを返す
-        if(weaponPrefab.ContainsKey(data.ItemName)) return weaponPrefab[data.ItemName];
+    // private static GameObject GetWeaponPrefab(BagItemDataBase data)
+    // {
+    //     // Prefabが登録済みならそれを返す
+    //     if(weaponPrefab.ContainsKey(data.ItemName)) return weaponPrefab[data.ItemName];
 
-        GameObject prefab = Resources.Load<GameObject>(data.BattlePrefabPath);
-        if(prefab == null)
-        {
-            Debug.LogError("不正なWeapon名: " + data.ItemName);
-            return null;
-        }
-        weaponPrefab.Add(data.ItemName, prefab);
-        return prefab;
-    }
+    //     GameObject prefab = Resources.Load<GameObject>(data.BattlePrefabPath);
+    //     if(prefab == null)
+    //     {
+    //         Debug.LogError("不正なWeapon名: " + data.ItemName);
+    //         return null;
+    //     }
+    //     weaponPrefab.Add(data.ItemName, prefab);
+    //     return prefab;
+    // }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

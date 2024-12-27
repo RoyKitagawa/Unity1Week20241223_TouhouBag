@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -55,16 +56,20 @@ public class BattleListItem : MonoBehaviour
         BagItemDataBase data = BagItemDataList.GetItemData(itemName);
         if(data == null) return null;
 
-        // Prefabの取得
-        if(itemPrefab == null) itemPrefab = Resources.Load<GameObject>(Consts.Resources.BattleItemListItemPrefab);
-        BattleListItem item = Instantiate(itemPrefab).GetComponent<BattleListItem>();
+        // // Prefabの取得
+        // if(itemPrefab == null) itemPrefab = Resources.Load<GameObject>(Consts.Resources.BattleItemListItemPrefab);
+        // BattleListItem item = Instantiate(itemPrefab).GetComponent<BattleListItem>();
+        BattleListItem item = new GameObject(itemName + "_Thumb").AddComponent<BattleListItem>();
 
         // 初期化処理
         item.data = data;
         item.elapsedTime = Random.Range(0.0f, data.Cooldown);
-        item.sr = item.GetComponent<SpriteRenderer>();
+        item.sr = item.transform.AddComponent<SpriteRenderer>();
         // アイテムの画像を設定する
         item.sr.sprite = BasicUtil.LoadSprite4Resources(item.data.SpritePathBattle);
+        item.sr.material = BasicUtil.LoadMaterial4Resources(Consts.Resources.Materials.CoolDownWithGlow);
+        item.sr.sortingLayerName = Consts.SortingLayer.UI;
+        item.sr.sortingOrder = 10;
         return item;
     }
 

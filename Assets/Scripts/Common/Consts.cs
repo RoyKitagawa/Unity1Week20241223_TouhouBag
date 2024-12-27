@@ -148,6 +148,11 @@ public static class Consts
             }
         }
 
+        public static class Materials
+        {
+            public const string CoolDownWithGlow = "Materials/CooldownWithGlowMaterial";
+        }
+
         public const string LevelSuffix1 = "_lv1";
         public const string LevelSuffix2 = "_lv2";
         public const string LevelSuffix3 = "_lv3";
@@ -188,5 +193,7 @@ public static class Consts
         public const string Item = "Item";
         public const string ItemOverlay = "ItemOverlay";
         public const string DragItem = "DragItem";
+        public const string BattleWeapon = "BattleWeapon";
+        public const string UI = "UI";
     }
 }
