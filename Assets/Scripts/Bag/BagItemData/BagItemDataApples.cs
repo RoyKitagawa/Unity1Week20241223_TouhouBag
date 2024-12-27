@@ -9,10 +9,12 @@ public class BagItemDataApple : SimpleSingleton<BagItemDataApple>, BagItemDataBa
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.Apple; }
+    string BagItemDataBase.GetTag() { return Consts.Tags.Item; }
+    ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square1x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.ItemApple; }    
     string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.Prefabs.ProjectileItems.Apple; }    
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.Apple; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.Thumb.Apple; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }
@@ -36,10 +38,12 @@ public class BagItemDataBigApple : SimpleSingleton<BagItemDataBigApple>, BagItem
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.BigApple; }
+    string BagItemDataBase.GetTag() { return Consts.Tags.Item; }
+    ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square2x2; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.ItemApple4; }
     string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.Prefabs.ProjectileItems.Apple4; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.Apple4; }
+    string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.Thumb.Apple4; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 2; }

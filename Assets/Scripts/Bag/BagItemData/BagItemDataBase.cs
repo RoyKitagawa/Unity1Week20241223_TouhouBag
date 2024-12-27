@@ -30,6 +30,21 @@ public enum BagItemType
     Item, // 実際に効果を発動するバッグ
 }
 
+public enum ColliderShape
+{
+    Square1x1,
+    Square2x2,
+    Rectangle2x1,
+    Rectangle3x1,
+    Rectangle4x1,
+    Rectangle1x2,
+    Rectangle1x3,
+    Rectangle1x4,
+    TShape,
+    TriangleVToR, // 縦2マス、右に追加1マス
+    TriangleVToL, // 縦2マス、左に追加1マス
+}
+
 /// <summary>
 /// ダメージ種別
 /// </summary>
@@ -59,6 +74,8 @@ public interface BagItemDataBase
     public BagItemType ItemType { get { return GetType(); } }
     // アイテムの名前
     public BagItemName ItemName { get { return GetName(); } }
+    // アイテムのタグ
+    public string Tag { get { return GetTag(); } }
     // アイテムのPrefabパス（現状はResource内想定）
     public string BagPrefabPath { get { return GetBagPrefabPath(); } }
     // バトル用のPrefabパス（現状はResource内想定）
@@ -67,10 +84,12 @@ public interface BagItemDataBase
     public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
     // アイテムの画像パス（バトル画面）
     public string SpritePathBattle { get { return GetSpritePathBattleItemList(); } }
+    // コライダーの形状
+    public ColliderShape Shape { get { return GetColliderShape(); } } 
     // アイテムの総セル数
     public Vector2Int Size { get { return GetSize(); } }
     // アイテムの総セル数
-    public int CellCount { get { return Size.x * Size.y; } }
+    public int CellCount { get { return GetCellCount(); } }
 
     // レベル
     public int Level { get { return GetLevel(); } }
@@ -94,7 +113,37 @@ public interface BagItemDataBase
     /// 形状がシンプルな四角形でない場合、この処理を派生クラスで都度記述すること
     /// </summary>
     /// <returns></returns>
-    protected int GetCellCount() { return Size.x * Size.y; }
+    protected int GetCellCount()
+    {
+        switch(Shape)
+        {
+            case ColliderShape.Square1x1:
+                return 1;
+            case ColliderShape.Rectangle2x1:
+            case ColliderShape.Rectangle1x2:
+                return 2;
+            case ColliderShape.Rectangle1x3:
+            case ColliderShape.Rectangle3x1:
+            case ColliderShape.TriangleVToR:
+            case ColliderShape.TriangleVToL:
+                return 3;
+            case ColliderShape.Square2x2:
+            case ColliderShape.Rectangle4x1:
+            case ColliderShape.Rectangle1x4:
+                return 4;
+            case ColliderShape.TShape:
+                return 5;
+            default:
+                Debug.LogError("不正のColliderShape: " + Shape);
+                return 1;
+        }
+    }
+
+    /// <summary>
+    /// コライダーの形状を取得
+    /// </summary>
+    /// <returns></returns>
+    protected ColliderShape GetColliderShape();
 
     /// <summary>
     /// アイテムの名前を取得
@@ -107,6 +156,12 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     protected BagItemType GetType();
+
+    /// <summary>
+    /// アイテムオブジェクトのタグを取得
+    /// </summary>
+    /// <returns></returns>
+    protected string GetTag();
 
     /// <summary>
     /// アイテムのレベルを取得
@@ -143,7 +198,36 @@ public interface BagItemDataBase
     /// 四角形でない場合でも縦横それぞれの最大値を入れておく
     /// </summary>
     /// <returns></returns>
-    protected Vector2Int GetSize();
+    protected Vector2Int GetSize()
+    {
+        switch(Shape)
+        {
+            case ColliderShape.Square1x1:
+                return Vector2Int.one;
+            case ColliderShape.Square2x2:
+                return new Vector2Int(2, 2);
+            case ColliderShape.Rectangle2x1:
+                return new Vector2Int(2, 1);
+            case ColliderShape.Rectangle3x1:
+                return new Vector2Int(3, 1);
+            case ColliderShape.Rectangle4x1:
+                return new Vector2Int(4, 1);
+            case ColliderShape.Rectangle1x2:
+                return new Vector2Int(1, 2);
+            case ColliderShape.Rectangle1x3:
+                return new Vector2Int(1, 3);
+            case ColliderShape.Rectangle1x4:
+                return new Vector2Int(1, 4);
+            case ColliderShape.TShape:
+                return new Vector2Int(3, 3);
+            case ColliderShape.TriangleVToR:
+            case ColliderShape.TriangleVToL:
+                return new Vector2Int(2, 2);
+            default:
+                Debug.LogError("不正のShape: " + Shape);
+                return Vector2Int.one;
+        }
+    }
 
     /// <summary>
     /// アイテムの画像パス

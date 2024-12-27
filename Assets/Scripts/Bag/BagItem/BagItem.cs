@@ -26,7 +26,7 @@ public class BagItem : TappableObject
     // アイテムのコンポーネント
     private SpriteRenderer image = null;
     private Rigidbody2D rb = null;
-    private BoxCollider2D boxCollider = null;
+    private PolygonCollider2D boxCollider = null;
     // アイテムの現在の回転
     private Rotation currentRotation = Rotation.Default;
     // 回転時の座標調整用GameObject
@@ -745,9 +745,9 @@ public class BagItem : TappableObject
         return rb;
     }
 
-    private BoxCollider2D GetCollider()
+    private PolygonCollider2D GetCollider()
     {
-        if(boxCollider == null) boxCollider = GetComponent<BoxCollider2D>();
+        if(boxCollider == null) boxCollider = GetComponent<PolygonCollider2D>();
         return boxCollider;
     }
 

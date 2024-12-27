@@ -10,9 +10,11 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.StageSlot; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.StageSlot; }
+    string BagItemDataBase.GetTag() { return Consts.Tags.StageSlot; }
+    ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square1x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.StageSlot; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
+    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
     string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
 
     // バッグ編集画面用

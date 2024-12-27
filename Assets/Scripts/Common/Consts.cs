@@ -131,13 +131,20 @@ public static class Consts
             // バトル中のクールダウン表記用
             public class BattleItem
             {
-                private const string ItemsThumb = Images + "/ItemsThumb";
-                public class List
+                private const string _Items = Images + "/Items";
+                private const string _ItemsThumb = Images + "/ItemsThumb";
+                public class Thumb
                 {
-                    public const string Apple = ItemsThumb + "/Apple";
-                    public const string Apple4 = ItemsThumb + "/Apple4";
-                    public const string Long = ItemsThumb + "/Long";
+                    public const string Apple = _ItemsThumb + "/Apple";
+                    public const string Apple4 = _ItemsThumb + "/Apple4";
+                    public const string Long = _ItemsThumb + "/Long";
                 }
+
+                public const string StageSlot = _Items + "/StageSlot";
+                public const string Apple = _Items + "/Apple";
+                public const string Apple4 = _Items + "/Apple4";
+                public const string Bag2x2 = _Items + "/Bag_2x2";
+                public const string Long = _Items + "/Long";
             }
         }
 

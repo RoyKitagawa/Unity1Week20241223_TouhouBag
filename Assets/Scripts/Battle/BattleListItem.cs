@@ -73,11 +73,11 @@ public class BattleListItem : MonoBehaviour
         switch(itemName)
         {
             case BagItemName.Apple:
-                return Consts.Resources.Sprites.BattleItem.List.Apple;
+                return Consts.Resources.Sprites.BattleItem.Thumb.Apple;
             case BagItemName.BigApple:
-                return Consts.Resources.Sprites.BattleItem.List.Apple4;
+                return Consts.Resources.Sprites.BattleItem.Thumb.Apple4;
             case BagItemName.LongItem:
-                return Consts.Resources.Sprites.BattleItem.List.Long;
+                return Consts.Resources.Sprites.BattleItem.Thumb.Long;
             default:
                 Debug.LogError("非対応のアイテム名: " + itemName);
                 return "";
