@@ -54,7 +54,7 @@ public enum TargetType
 
 public interface BagItemDataBase
 {
-    // 基本情報系
+    // 基本情報系（レベルによって変動しないもの）
     // アイテムの種別
     public BagItemType ItemType { get { return GetType(); } }
     // アイテムの名前
@@ -67,14 +67,17 @@ public interface BagItemDataBase
     public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
     // アイテムの画像パス（バトル画面）
     public string SpritePathBattle { get { return GetSpritePathBattleItemList(); } }
-
-    // バッグ編集画面用
-    // アイテムの金額
-    public int Cost { get { return GetCost(); } }
     // アイテムの総セル数
     public Vector2Int Size { get { return GetSize(); } }
     // アイテムの総セル数
     public int CellCount { get { return Size.x * Size.y; } }
+
+    // レベル
+    public int Level { get { return GetLevel(); } }
+
+    // バッグ編集画面用
+    // アイテムの金額
+    public int Cost { get { return GetCost(); } }
 
     // バトル画面用
     // 攻撃種別
@@ -104,6 +107,12 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     protected BagItemType GetType();
+
+    /// <summary>
+    /// アイテムのレベルを取得
+    /// </summary>
+    /// <returns></returns>
+    protected int GetLevel();
 
     /// <summary>
     /// バッグ編集時用アイテムのResourcesPrefabパスを取得

@@ -64,7 +64,13 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         // アイテムPrefabが保持済みなら生成して返す
         if(itemPrefabs.ContainsKey(data.ItemName))
         {
-            GameObject item = Instantiate(itemPrefabs[data.ItemName]);
+            GameObject prefab = itemPrefabs[data.ItemName];
+            if(prefab == null)
+            {
+                Debug.LogError("Prefabの取得に失敗: アイテム名 = " + data.ItemName + " / Path = " + data.BagPrefabPath);
+                return null;
+            }
+            GameObject item = Instantiate(prefab);
 
             // セル設定処理
             GameObject cellPrefab = GetCellPrefab(item.tag);
@@ -134,13 +140,13 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         switch(cellName)
         {
             case BagCellName.CellStageSlot:
-                prefabPath = Consts.Resources.BagItem.CellStageSlot;
+                prefabPath = Consts.Resources.Prefabs.BagItems.CellStageSlot;
                 break;
             case BagCellName.CellBag:
-                prefabPath = Consts.Resources.BagItem.CellBag;
+                prefabPath = Consts.Resources.Prefabs.BagItems.CellBag;
                 break;
             case BagCellName.CellItem:
-                prefabPath = Consts.Resources.BagItem.CellItem;
+                prefabPath = Consts.Resources.Prefabs.BagItems.CellItem;
                 break;
             default:
                 Debug.LogError("不明なセル名：" + cellName);

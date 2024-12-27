@@ -50,6 +50,7 @@ public class BattleDamage : MonoBehaviour
         Vector2 endPosition = new Vector2(pos.x + Random.Range(-0.5f, 0.5f), pos.y);
         // カスタムパスを設定して放物線移動を実現
         Sequence sequence = DOTween.Sequence();
+        sequence.SetUpdate(true);
         sequence.Append(DOTween.To(() => (Vector2)damage.transform.position, x => damage.transform.position = x, endPosition, duration)
             .OnUpdate(() =>
             {

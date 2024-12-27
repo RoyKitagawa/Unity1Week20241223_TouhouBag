@@ -6,8 +6,8 @@ public class BagItemDataLongItem : SimpleSingleton<BagItemDataLongItem>, BagItem
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.LongItem; }
-    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemLong; }
-    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Long; }    
+    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.ItemLong; }
+    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.Prefabs.ProjectileItems.Long; }    
     string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Long; }
     string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Long; }
 
@@ -20,4 +20,7 @@ public class BagItemDataLongItem : SimpleSingleton<BagItemDataLongItem>, BagItem
     TargetType BagItemDataBase.GetTargetType() { return TargetType.Random; }
     float BagItemDataBase.GetCooldown() { return 1.25f; }
     int BagItemDataBase.GetDamage() { return 17; }
+
+    // レベル
+    int BagItemDataBase.GetLevel() { return 1; }
 }

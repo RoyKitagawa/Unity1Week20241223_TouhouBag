@@ -10,7 +10,7 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.StageSlot; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.StageSlot; }
-    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.StageSlot; }
+    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.StageSlot; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
     string BagItemDataBase.GetSpritePathBagEdit() { return ""; }
     string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
@@ -24,4 +24,7 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 1.25f; }
     int BagItemDataBase.GetDamage() { return 17; }
+
+    // レベル
+    int BagItemDataBase.GetLevel() { return 1; }
 }

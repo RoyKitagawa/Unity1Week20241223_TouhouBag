@@ -9,8 +9,8 @@ public class BagItemDataApple : SimpleSingleton<BagItemDataApple>, BagItemDataBa
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.Apple; }
-    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemApple; }    
-    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Apple; }    
+    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.ItemApple; }    
+    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.Prefabs.ProjectileItems.Apple; }    
     string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
     string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple; }
 
@@ -23,6 +23,9 @@ public class BagItemDataApple : SimpleSingleton<BagItemDataApple>, BagItemDataBa
     TargetType BagItemDataBase.GetTargetType() { return TargetType.Self; }
     float BagItemDataBase.GetCooldown() { return 2.0f; }
     int BagItemDataBase.GetDamage() { return 5; }
+
+    // レベル
+    int BagItemDataBase.GetLevel() { return 1; }
 }
 
 /// <summary>
@@ -33,8 +36,8 @@ public class BagItemDataBigApple : SimpleSingleton<BagItemDataBigApple>, BagItem
     // 基本情報系
     BagItemType BagItemDataBase.GetType() { return BagItemType.Item; }
     BagItemName BagItemDataBase.GetName() { return BagItemName.BigApple; }
-    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.BagItem.ItemApple4; }
-    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.BattleWeapon.Apple4; }
+    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.ItemApple4; }
+    string BagItemDataBase.GetBattlePrefabPath() { return Consts.Resources.Prefabs.ProjectileItems.Apple4; }
     string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
     string BagItemDataBase.GetSpritePathBattleItemList() { return Consts.Resources.Sprites.BattleItem.List.Apple4; }
 
@@ -47,4 +50,7 @@ public class BagItemDataBigApple : SimpleSingleton<BagItemDataBigApple>, BagItem
     TargetType BagItemDataBase.GetTargetType() { return TargetType.Nearest; }
     float BagItemDataBase.GetCooldown() { return 3.5f; }
     int BagItemDataBase.GetDamage() { return 25; }
+
+    // レベル
+    int BagItemDataBase.GetLevel() { return 1; }
 }

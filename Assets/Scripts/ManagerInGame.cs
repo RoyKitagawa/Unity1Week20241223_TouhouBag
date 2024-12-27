@@ -28,7 +28,7 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
     private void Initialize()
     {
         currentWave = 0;
-        totalWave = 20;
+        totalWave = 20;        
         screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
     }
 
@@ -36,6 +36,8 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
     {
         rootBagEdit.SetActive(true);
         rootBattle.SetActive(false);
+        StageManager.Instance.InitializeStage();
+        StageManager.Instance.OnStartBagEditMode();
     }
 
     public void StartModeBattle()

@@ -68,7 +68,6 @@ public class EnemyBase : CharacterBase
     protected override void OnDead()
     {
         // TODO 死亡処理
-        Debug.Log("敵キャラクター死亡！");
         ManagerEnemy.Instance.RemoveEnemyFromList(this);
         Destroy(gameObject);
     }

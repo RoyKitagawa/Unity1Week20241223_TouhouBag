@@ -29,51 +29,100 @@ public static class Consts
 
     public static class Resources
     {
-        private const string Prefabs = "Prefabs";
+        private const string _Prefabs = "Prefabs";
         // public const string BagSlot = "Prefabs/StageSlot";
         // public const string CellItem = "Prefabs/CellItem";
         // public const string CellBag = "Prefabs/CellBag";
         // public const string CellStageSlot = "Prefabs/CellStageSlot";
 
-        public const string BattleItemListItemPrefab = Prefabs + "/ItemListItem";
-        public const string BattleDamagePrefab = Prefabs + "/Damage";
+        public const string BattleItemListItemPrefab = _Prefabs + "/Items/ItemListItem";
+        public const string BattleDamagePrefab = _Prefabs + "/Damage";
+
+        
 
         // アイテム関連
         public static class BagItem
         {
-            private const string Items = Prefabs + "/Items";
-            private const string Cells = Items + "/Cells";
-            // 初期スロット
-            public const string StageSlot = Items + "/StageSlot";
-            // バッグアイテム
-            public const string ItemBag1x1 = Items + "/BagItem_Bag_1x1";
-            public const string ItemBag2x1 = Items + "/BagItem_Bag_2x1";
-            public const string ItemBag3x1 = Items + "/BagItem_Bag_3x1";
-            public const string ItemBag2x2 = Items + "/BagItem_Bag_2x2";
-            // 通常アイテム
-            public const string ItemApple = Items + "/BagItem_Apple";
-            public const string ItemApple4 = Items + "/BagItem_Apple4";
-            public const string ItemLong = Items + "/BagItem_Long";
-            // セル
-            public const string CellItem = Cells + "/CellItem";
-            public const string CellBag = Cells + "/CellBag";
-            public const string CellStageSlot = Cells + "/CellStageSlot";
+            // private const string Items = _Prefabs + "/Items"; //アイテム系共通
+            // private const string BagItems = Items + "/BagItems"; // バッグ編集画面アイテムフォルダ
+            // private const string Cells = Items + "/Cells"; // Cellフォルダ
+            // // 初期スロット
+            // public const string StageSlot = Items + "/StageSlot";
+            // // バッグアイテム
+            // public const string ItemBag1x1 = Items + "/BagItem_Bag_1x1";
+            // public const string ItemBag2x1 = Items + "/BagItem_Bag_2x1";
+            // public const string ItemBag3x1 = Items + "/BagItem_Bag_3x1";
+            // public const string ItemBag2x2 = Items + "/BagItem_Bag_2x2";
+            // // 通常アイテム
+            // public const string ItemApple = Items + "/BagItem_Apple";
+            // public const string ItemApple4 = Items + "/BagItem_Apple4";
+            // public const string ItemLong = Items + "/BagItem_Long";
+            // // セル
+            // public const string CellItem = Cells + "/CellItem";
+            // public const string CellBag = Cells + "/CellBag";
+            // public const string CellStageSlot = Cells + "/CellStageSlot";
         }
 
         // キャラクター関連
         public static class Character
         {
-            private const string Characters = Prefabs + "/Characters";
+            private const string Characters = _Prefabs + "/Characters";
             // 敵機
             public const string EnemyA = Characters + "/EnemyA";
         }
 
-        public static class BattleWeapon
+        // public static class BattleWeapon
+        // {
+        //     // private const string Weapon = Prefabs + "/Items/ProjectileWeapons";
+        //     // public const string Apple = Weapon + "/ProjectileWeaponApple";
+        //     // public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
+        //     // public const string Long = Weapon + "/ProjectileWeaponLong";
+        // }
+
+        public static class Prefabs
         {
-            private const string Weapon = Prefabs + "/Items/ProjectileWeapons";
-            public const string Apple = Weapon + "/ProjectileWeaponApple";
-            public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
-            public const string Long = Weapon + "/ProjectileWeaponLong";
+            // バッグ編集画面のアイテム
+            public static class BagItems
+            {
+                // フォルダ
+                private const string _Items = _Prefabs + "/Items"; //アイテム系共通
+                private const string _BagItems = _Items + "/BagItems"; // バッグ編集画面アイテムフォルダ
+                private const string _Cells = _Items + "/Cells"; // Cellフォルダ
+
+                // 初期スロット
+                public const string StageSlot = _BagItems + "/StageSlot";
+
+                // セル
+                public const string CellItem = _Cells + "/CellItem";
+                public const string CellBag = _Cells + "/CellBag";
+                public const string CellStageSlot = _Cells + "/CellStageSlot";
+
+                // バッグアイテム
+                public const string ItemBag1x1 = _BagItems + "/BagItem_Bag_1x1";
+                public const string ItemBag2x1 = _BagItems + "/BagItem_Bag_2x1";
+                public const string ItemBag3x1 = _BagItems + "/BagItem_Bag_3x1";
+                public const string ItemBag2x2 = _BagItems + "/BagItem_Bag_2x2";
+
+                // 通常アイテム
+                public const string ItemApple = _BagItems + "/BagItem_Apple";
+                public const string ItemApple4 = _BagItems + "/BagItem_Apple4";
+                public const string ItemLong = _BagItems + "/BagItem_Long";
+            }
+
+            // 投てきする武器
+            public static class ProjectileItems
+            {
+                private const string Weapon = _Prefabs + "/Items/ProjectileWeapons";
+                public const string Apple = Weapon + "/ProjectileWeaponApple";
+                public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
+                public const string Long = Weapon + "/ProjectileWeaponLong";
+            }
+
+            // クールダウンタイム表記するサムネ表記のやつ
+            public static class ItemThumbs
+            {
+                public const string CommonItem = _Prefabs + "/Items/ItemListItem";
+            }
         }
 
         public static class Sprites
@@ -82,15 +131,21 @@ public static class Consts
             // バトル中のクールダウン表記用
             public class BattleItem
             {
-                private const string BattleItems = Images + "/BattleItems";
+                private const string ItemsThumb = Images + "/ItemsThumb";
                 public class List
                 {
-                    public const string Apple = BattleItems + "/Apple";
-                    public const string Apple4 = BattleItems + "/Apple4";
-                    public const string Long = BattleItems + "/Long";
+                    public const string Apple = ItemsThumb + "/Apple";
+                    public const string Apple4 = ItemsThumb + "/Apple4";
+                    public const string Long = ItemsThumb + "/Long";
                 }
             }
         }
+
+        public const string LevelSuffix1 = "_lv1";
+        public const string LevelSuffix2 = "_lv2";
+        public const string LevelSuffix3 = "_lv3";
+        public const string LevelSuffix4 = "_lv4";
+        public const string LevelSuffix5 = "_lv5";
     }
     
     // public static class Sprites

@@ -37,12 +37,16 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     // アイテムスポーン座標:Min~Max
     private Rect itemSpawnArea;
+    private bool isInitialized = false;
     // private Vector2 itemSpawnPosMin;
     // private Vector2 itemSpawnPosMax;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void InitializeStage()
     {
+        if(isInitialized) return;
+        isInitialized = true;
+
         // スロット初期化処理
         ClearAllInStageObjectLists();
         CreateBorderColliders();
@@ -58,7 +62,10 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
+    }
 
+    public void OnStartBagEditMode()
+    {
         // リロール処理
         ReRollItems();
     }
@@ -93,8 +100,6 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     public void ReRollItems()
     {
-        // 未設置のオブジェクトを削除
-        RemoveUnPlacedItems();
         // アイテムの生成
         int spawnMaxItem = 3;
         for(int i = 0; i < spawnMaxItem; i++)
@@ -108,7 +113,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         }
     }
 
-    private void RemoveUnPlacedItems()
+    public void RemoveUnPlacedItems()
     {
         HashSet<BagItem> removeList = new HashSet<BagItem>();
         // バッグリスト
