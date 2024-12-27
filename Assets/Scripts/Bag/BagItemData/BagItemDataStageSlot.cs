@@ -8,14 +8,14 @@ using UnityEngine;
 public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagItemDataBase
 {
     // 基本情報系
-    BagItemType BagItemDataBase.GetType() { return BagItemType.StageSlot; }
-    BagItemName BagItemDataBase.GetName() { return BagItemName.StageSlot; }
+    BagItemType BagItemDataBase.GetItemType() { return BagItemType.StageSlot; }
+    BagItemName BagItemDataBase.GetItemName() { return BagItemName.StageSlot; }
     string BagItemDataBase.GetTag() { return Consts.Tags.StageSlot; }
     ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square1x1; }
     string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.StageSlot; }
     string BagItemDataBase.GetBattlePrefabPath() { return ""; }
-    string BagItemDataBase.GetSpritePathBagEdit() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
-    string BagItemDataBase.GetSpritePathBattleItemList() { return ""; }
+    string BagItemDataBase.GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
+    string BagItemDataBase.GetSpritePathItemThumb() { return ""; }
 
     // バッグ編集画面用
     int BagItemDataBase.GetCost() { return 0; }
@@ -28,5 +28,5 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     int BagItemDataBase.GetDamage() { return 17; }
 
     // レベル
-    int BagItemDataBase.GetLevel() { return 1; }
+    BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
 }

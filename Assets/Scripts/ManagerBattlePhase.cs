@@ -51,7 +51,7 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
         foreach(BagItem item in StageManager.Items)
         {
             if(!item.IsPlaced()) continue;
-            BattleListItem battleItem = BattleListItem.InstantiateBattleListItem(item.GetDataItemName());
+            BattleListItem battleItem = BattleListItem.InstantiateBattleListItem(item.GetDataItemName(), item.GetDataItemLevel());
             if(battleItem != null) items.Add(battleItem);
         }
 

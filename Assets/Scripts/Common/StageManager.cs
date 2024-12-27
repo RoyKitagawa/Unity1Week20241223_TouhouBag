@@ -57,8 +57,8 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         SwitchMode(StageType.BagEditMode, 0.0f);
 
         // 初期バッグ配置
-        SpawnAndPlaceItemAt(BagItemName.Bag2x2, new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) });
-        SpawnAndPlaceItemAt(BagItemName.Bag2x2, new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(3, 0), new Vector2Int(3, 1) });
+        SpawnAndPlaceItemAt(BagItemName.Bag2x2, BagItemLevel.Lv1, new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) });
+        SpawnAndPlaceItemAt(BagItemName.Bag2x2, BagItemLevel.Lv1, new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(3, 0), new Vector2Int(3, 1) });
 
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
@@ -70,13 +70,14 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         ReRollItems();
     }
 
-    private void SpawnAndPlaceItemAt(BagItemName itemName, Vector2Int[] slots)
+    private void SpawnAndPlaceItemAt(BagItemName itemName, BagItemLevel lv, Vector2Int[] slots)
     {
-        BagItem item = BagItemManager.InstantiateItem(itemName); // アイテム生成
+        BagItem item = BagItemManager.InstantiateItem(itemName, lv); // アイテム生成
         item.transform.position = GetSlotsCenterPos(slots); // 指定スロットの中心に配置
         item.SetPhysicSimulator(false); // 物理判定OFF
         item.SetItemCellSlotAtClosestSlot(); // セルのスロット情報設定
         item.SetIsPlaced(true); // アイテムを設置
+        item.SetIsPurchased(true); // 追加支払いが発生しないように購入済みにしておく
         Add2List(item); // 一覧に追加
     }
 
@@ -100,6 +101,24 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     public void ReRollItems()
     {
+        // 未購入のものは削除する
+        Items.RemoveWhere(item => {
+            if(!item.IsPurchased())
+            {
+                Destroy(item.gameObject);
+                return true;
+            }
+            return false; // 残す
+        });
+        Bags.RemoveWhere(item => {
+            if(!item.IsPurchased())
+            {
+                Destroy(item.gameObject);
+                return true;
+            }
+            return false; // 残す
+        });
+
         // アイテムの生成
         int spawnMaxItem = 3;
         for(int i = 0; i < spawnMaxItem; i++)
@@ -110,6 +129,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
                 itemSpawnArea.y);
             item.SetPhysicSimulator(false);
             item.SetIsPlaced(false); // 初期のアイテムは「設置状態」ではない
+            item.SetIsPurchased(false); // 購入前
         }
     }
 
@@ -216,16 +236,6 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         battleStageInfo.stageScale = ratioH < ratioV ? ratioH : ratioV;
         
     }
-    
-    public void OnClickAddBag()
-    {
-        SpawnRandomItem(BagItemType.Bag);
-    }
-
-    public void OnClickAddItem()
-    {
-        SpawnRandomItem(BagItemType.Item);
-    }
 
     public BagItem SpawnRandomItem(BagItemType type)
     {
@@ -233,15 +243,15 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         switch(type)
         {
             case BagItemType.StageSlot:
-                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.StageSlot)));
+                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.StageSlot)), BagItemLevel.Lv1);
                 break;
 
             case BagItemType.Item:
-                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.Item)));
+                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.Item)), BagItemLevel.Lv1);
                 break;
 
             case BagItemType.Bag:
-                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.Bag)));
+                item = BagItemManager.InstantiateItem(RandUtil.GetRandomItem(BagItemDataList.GetItemNames(BagItemType.Bag)), BagItemLevel.Lv1);
                 break;
 
             default:
@@ -299,10 +309,6 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
             totalPos += GetSlotWorldPosAt(_slotPos);
         }
         return totalPos / slotPos.Length;
-        // foreach(BagItem slot in Slots)
-        // {
-        //     if(slotPos.Contains(slot.slotPo))
-        // }
     }
 
     public Vector2 GetSlotWorldPosAt(Vector2Int slotPos)
@@ -422,7 +428,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         {
             for(int y = 0; y < sizeY; y++)
             {
-                BagItem slot = BagItemManager.InstantiateItem(BagItemName.StageSlot);
+                BagItem slot = BagItemManager.InstantiateItem(BagItemName.StageSlot, BagItemLevel.Lv1);
                 slot.SetPhysicSimulator(false);
                 slot.transform.localPosition = new Vector2(x, y);
                 slot.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BagSlotRoot).transform);

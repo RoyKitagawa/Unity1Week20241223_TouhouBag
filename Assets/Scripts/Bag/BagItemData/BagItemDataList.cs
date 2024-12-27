@@ -13,18 +13,24 @@ public class BagItemDataList
     /// </summary>
     /// <param name="itemName"></param>
     /// <returns></returns>
-    public static BagItemDataBase GetItemData(BagItemName itemName)
+    public static BagItemDataBase GetItemData(BagItemName itemName, BagItemLevel lv)
     {
         switch(itemName)
         {
-            case BagItemName.Apple:
-                return BagItemDataApple.Instance;
+            case BagItemName.Cucumber:
+                if(lv == BagItemLevel.Lv1) return BagItemDataCucumberLv1.Instance;
+                else if(lv == BagItemLevel.Lv2) return BagItemDataCucumberLv2.Instance;
+                else return BagItemDataCucumberLv3.Instance;
 
-            case BagItemName.BigApple:
-                return BagItemDataBigApple.Instance;
+            case BagItemName.Screw:
+                if(lv == BagItemLevel.Lv1) return BagItemDataScrewLv1.Instance;
+                else if(lv == BagItemLevel.Lv2) return BagItemDataScrewLv2.Instance;
+                else return BagItemDataScrewLv3.Instance;
 
-            case BagItemName.LongItem:
-                return BagItemDataLongItem.Instance;
+            case BagItemName.Spanner:
+                if(lv == BagItemLevel.Lv1) return BagItemDataSpannerLv1.Instance;
+                else if(lv == BagItemLevel.Lv2) return BagItemDataSpannerLv2.Instance;
+                else return BagItemDataSpannerLv3.Instance;
 
             case BagItemName.Bag2x2:
                 return BagItemDataBag2x2.Instance;
@@ -42,7 +48,7 @@ public class BagItemDataList
                 return BagItemDataStageSlot.Instance;
 
             default:
-                Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName);
+                Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName + ", レベル: " + lv);
                 return null;
         }
     }
@@ -62,7 +68,7 @@ public class BagItemDataList
                 break;
 
             case BagItemType.Item:
-                names = new HashSet<BagItemName> { BagItemName.Apple, BagItemName.LongItem, BagItemName.BigApple };
+                names = new HashSet<BagItemName> { BagItemName.Cucumber, BagItemName.Screw, BagItemName.Spanner };
                 break;
 
             case BagItemType.Bag:

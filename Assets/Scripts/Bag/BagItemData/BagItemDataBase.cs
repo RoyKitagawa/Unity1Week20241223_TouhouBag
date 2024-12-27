@@ -4,13 +4,14 @@ using UnityEngine;
 public enum BagItemName
 {
     StageSlot, // スロットは操作不能のアイテムとして設定する
+    Cucumber,
+    Spanner,
+    Screw,
+
     Bag3x1,
     Bag2x2,
     Bag2x1,
     Bag1x1,
-    Apple,
-    LongItem,
-    BigApple,
 }
 
 public enum BagCellName
@@ -28,6 +29,13 @@ public enum BagItemType
     StageSlot, // 初期から設置されている地盤
     Bag, // アイテム配置用のバッグ
     Item, // 実際に効果を発動するバッグ
+}
+
+public enum BagItemLevel
+{
+    Lv1,
+    Lv2,
+    Lv3,
 }
 
 public enum ColliderShape
@@ -71,9 +79,9 @@ public interface BagItemDataBase
 {
     // 基本情報系（レベルによって変動しないもの）
     // アイテムの種別
-    public BagItemType ItemType { get { return GetType(); } }
+    public BagItemType ItemType { get { return GetItemType(); } }
     // アイテムの名前
-    public BagItemName ItemName { get { return GetName(); } }
+    public BagItemName ItemName { get { return GetItemName(); } }
     // アイテムのタグ
     public string Tag { get { return GetTag(); } }
     // アイテムのPrefabパス（現状はResource内想定）
@@ -81,9 +89,9 @@ public interface BagItemDataBase
     // バトル用のPrefabパス（現状はResource内想定）
     public string BattlePrefabPath { get { return GetBattlePrefabPath(); } }
     // アイテムの画像パス（バッグ編集画面）
-    public string SpritePathBagEdit { get { return GetSpritePathBagEdit(); } }
+    public string SpritePathBagEdit { get { return GetSpritePathItem(); } }
     // アイテムの画像パス（バトル画面）
-    public string SpritePathBattle { get { return GetSpritePathBattleItemList(); } }
+    public string SpritePathBattle { get { return GetSpritePathItemThumb(); } }
     // コライダーの形状
     public ColliderShape Shape { get { return GetColliderShape(); } } 
     // アイテムの総セル数
@@ -92,7 +100,7 @@ public interface BagItemDataBase
     public int CellCount { get { return GetCellCount(); } }
 
     // レベル
-    public int Level { get { return GetLevel(); } }
+    public BagItemLevel Level { get { return GetLevel(); } }
 
     // バッグ編集画面用
     // アイテムの金額
@@ -113,7 +121,7 @@ public interface BagItemDataBase
     /// 形状がシンプルな四角形でない場合、この処理を派生クラスで都度記述すること
     /// </summary>
     /// <returns></returns>
-    protected int GetCellCount()
+    public int GetCellCount()
     {
         switch(Shape)
         {
@@ -143,62 +151,62 @@ public interface BagItemDataBase
     /// コライダーの形状を取得
     /// </summary>
     /// <returns></returns>
-    protected ColliderShape GetColliderShape();
+    public ColliderShape GetColliderShape();
 
     /// <summary>
     /// アイテムの名前を取得
     /// </summary>
     /// <returns></returns>
-    protected BagItemName GetName();
+    public BagItemName GetItemName();
 
     /// <summary>
     /// アイテムの種別を取得
     /// </summary>
     /// <returns></returns>
-    protected BagItemType GetType();
+    public BagItemType GetItemType();
 
     /// <summary>
     /// アイテムオブジェクトのタグを取得
     /// </summary>
     /// <returns></returns>
-    protected string GetTag();
+    public string GetTag();
 
     /// <summary>
     /// アイテムのレベルを取得
     /// </summary>
     /// <returns></returns>
-    protected int GetLevel();
+    public BagItemLevel GetLevel();
 
     /// <summary>
     /// バッグ編集時用アイテムのResourcesPrefabパスを取得
     /// </summary>
     /// <returns></returns>
-    protected string GetBagPrefabPath();
+    public string GetBagPrefabPath();
 
     /// <summary>
     /// バトル時用アイテムのResourcesPrefabパスを取得
     /// </summary>
     /// <returns></returns>
-    protected string GetBattlePrefabPath();
+    public string GetBattlePrefabPath();
 
     /// <summary>
     /// アイテムの金額を取得
     /// </summary>
     /// <returns></returns>
-    protected int GetCost();
+    public int GetCost();
 
     /// <summary>
     /// クールダウンを取得
     /// </summary>
     /// <returns></returns>
-    protected float GetCooldown();
+    public float GetCooldown();
 
     /// <summary>
     /// アイテムのサイズを取得
     /// 四角形でない場合でも縦横それぞれの最大値を入れておく
     /// </summary>
     /// <returns></returns>
-    protected Vector2Int GetSize()
+    public Vector2Int GetSize()
     {
         switch(Shape)
         {
@@ -234,30 +242,30 @@ public interface BagItemDataBase
     /// バッグ編集画面用
     /// </summary>
     /// <returns></returns>
-    protected string GetSpritePathBagEdit();
+    public string GetSpritePathItem();
 
     /// <summary>
     /// アイテムの画像パス
     /// バトル画面用
     /// </summary>
     /// <returns></returns>
-    protected string GetSpritePathBattleItemList();
+    public string GetSpritePathItemThumb();
 
     /// <summary>
     /// アイテムのダメージ種別
     /// </summary>
     /// <returns></returns>
-    protected DamageType GetDamageType();
+    public DamageType GetDamageType();
 
     /// <summary>
     /// アイテムの攻撃力
     /// </summary>
     /// <returns></returns>
-    protected int GetDamage();
+    public int GetDamage();
 
     /// <summary>
     /// 攻撃対象の選定方法
     /// </summary>
     /// <returns></returns>
-    protected TargetType GetTargetType();
+    public TargetType GetTargetType();
 }

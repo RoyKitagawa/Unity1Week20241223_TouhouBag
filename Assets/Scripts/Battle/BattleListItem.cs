@@ -51,9 +51,9 @@ public class BattleListItem : MonoBehaviour
     /// </summary>
     /// <param name="itemName"></param>
     /// <returns></returns>
-    public static BattleListItem InstantiateBattleListItem(BagItemName itemName)
+    public static BattleListItem InstantiateBattleListItem(BagItemName itemName, BagItemLevel lv)
     {
-        BagItemDataBase data = BagItemDataList.GetItemData(itemName);
+        BagItemDataBase data = BagItemDataList.GetItemData(itemName, lv);
         if(data == null) return null;
 
         // // Prefabの取得
@@ -72,22 +72,4 @@ public class BattleListItem : MonoBehaviour
         item.sr.sortingOrder = 10;
         return item;
     }
-
-    public static string GetBattleItemImagePath(BagItemName itemName)
-    {
-        switch(itemName)
-        {
-            case BagItemName.Apple:
-                return Consts.Resources.Sprites.BattleItem.Thumb.Apple;
-            case BagItemName.BigApple:
-                return Consts.Resources.Sprites.BattleItem.Thumb.Apple4;
-            case BagItemName.LongItem:
-                return Consts.Resources.Sprites.BattleItem.Thumb.Long;
-            default:
-                Debug.LogError("非対応のアイテム名: " + itemName);
-                return "";
-        }
-    }
-
-
 }

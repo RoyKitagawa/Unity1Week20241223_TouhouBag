@@ -19,9 +19,9 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
     /// </summary>
     /// <param name="itemName"></param>
     /// <returns></returns>
-    public static BagItem InstantiateItem(BagItemName itemName)
+    public static BagItem InstantiateItem(BagItemName itemName, BagItemLevel lv)
     {
-        BagItemDataBase data = BagItemDataList.GetItemData(itemName);
+        BagItemDataBase data = BagItemDataList.GetItemData(itemName, lv);
         if(data == null) return null;
         BagItem item = GetItemInstance(data);
         if(item == null) return null;

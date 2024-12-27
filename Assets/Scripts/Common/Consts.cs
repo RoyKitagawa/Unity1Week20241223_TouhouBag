@@ -135,12 +135,40 @@ public static class Consts
                 private const string _ItemsThumb = Images + "/ItemsThumb";
                 public class Thumb
                 {
+                    // きゅうり
+                    public const string CucumberLv1 = _ItemsThumb + "/Apple";
+                    public const string CucumberLv2 = _ItemsThumb + "/Apple";
+                    public const string CucumberLv3 = _ItemsThumb + "/Apple";
+                    // ネジ
+                    public const string ScrewLv1 = _ItemsThumb + "/Apple4";
+                    public const string ScrewLv2 = _ItemsThumb + "/Apple4";
+                    public const string ScrewLv3 = _ItemsThumb + "/Apple4";
+                    // スパナ                
+                    public const string SpannerLv1 = _ItemsThumb + "/Apple4";
+                    public const string SpannerLv2 = _ItemsThumb + "/Apple4";
+                    public const string SpannerLv3 = _ItemsThumb + "/Apple4";
+
                     public const string Apple = _ItemsThumb + "/Apple";
                     public const string Apple4 = _ItemsThumb + "/Apple4";
                     public const string Long = _ItemsThumb + "/Long";
                 }
 
                 public const string StageSlot = _Items + "/StageSlot";
+                // きゅうり
+                public const string CucumberLv1 = _Items + "/kyuri1";
+                public const string CucumberLv2 = _Items + "/kyuri2";
+                public const string CucumberLv3 = _Items + "/kyuri3";
+                // ネジ
+                public const string ScrewLv1 = _Items + "/negi1";
+                public const string ScrewLv2 = _Items + "/negi2";
+                public const string ScrewLv3 = _Items + "/negi3";
+                // スパナ                
+                public const string SpannerLv1 = _Items + "/supana1";
+                public const string SpannerLv2 = _Items + "/supana2";
+                public const string SpannerLv3 = _Items + "/supana3";
+
+
+
                 public const string Apple = _Items + "/Apple";
                 public const string Apple4 = _Items + "/Apple4";
                 public const string Bag2x2 = _Items + "/Bag_2x2";

@@ -40,6 +40,8 @@ public class BagItem : TappableObject
     private HashSet<BagItemCell> cellHitSlots = new HashSet<BagItemCell>();
     // アイテムが設置中か
     private bool isPlaced = false;
+    // アイテムが購入済みか
+    private bool isPurchased = false;
 
     public void Start()
     {
@@ -54,6 +56,11 @@ public class BagItem : TappableObject
     public BagItemName GetDataItemName()
     {
         return data.ItemName;
+    }
+
+    public BagItemLevel GetDataItemLevel()
+    {
+        return data.Level;
     }
 
     private Material material;
@@ -204,6 +211,13 @@ public class BagItem : TappableObject
 
         // 設置フラグをOFFに
         SetIsPlaced(false);
+
+        // アイテム購入処理
+        if(!IsPurchased())
+        {
+            // TODO コストを支払う
+            SetIsPurchased(true);
+        }
 
         // タップ処理完了を伝える
         return true;
@@ -417,6 +431,28 @@ public class BagItem : TappableObject
         GetCollider().isTrigger = true;
     }
 
+    /// <summary>
+    /// アイテム購入フラグをセット
+    /// </summary>
+    /// <param name="flag"></param>
+    public void SetIsPurchased(bool flag)
+    {
+        isPurchased = flag;
+    }
+
+    /// <summary>
+    /// アイテムが購入済みか
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPurchased()
+    {
+        return isPurchased;
+    }
+
+    /// <summary>
+    /// アイテムの設置フラグを設定する
+    /// </summary>
+    /// <param name="flag"></param>
     public void SetIsPlaced(bool flag)
     {
         isPlaced = flag;
