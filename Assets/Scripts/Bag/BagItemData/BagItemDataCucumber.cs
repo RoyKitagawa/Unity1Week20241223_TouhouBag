@@ -25,9 +25,6 @@ public class BagItemDataCucumberLv1 : SimpleSingleton<BagItemDataCucumberLv1>, B
     public virtual TargetType GetTargetType() { return TargetType.Self; }
     public virtual float GetCooldown() { return 2.0f; }
     public virtual int GetDamage() { return 10; }
-
-    public virtual string GetBagPrefabPath() { return ""; }    
-    public virtual string GetBattlePrefabPath() { return ""; }
 }
 
 public class BagItemDataCucumberLv2 : BagItemDataCucumberLv1

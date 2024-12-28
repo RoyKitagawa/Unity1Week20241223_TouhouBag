@@ -127,12 +127,13 @@ public static class Consts
 
         public static class Sprites
         {
-            private const string Images = "Images";
+            private const string _Images = "Images";
+            private const string _Items = _Images + "/Items";
+
             // バトル中のクールダウン表記用
             public class BattleItem
             {
-                private const string _Items = Images + "/Items";
-                private const string _ItemsThumb = Images + "/ItemsThumb";
+                private const string _ItemsThumb = _Images + "/ItemsThumb";
                 public class Thumb
                 {
                     // きゅうり
@@ -173,6 +174,11 @@ public static class Consts
                 public const string Apple4 = _Items + "/Apple4";
                 public const string Bag2x2 = _Items + "/Bag_2x2";
                 public const string Long = _Items + "/Long";
+            }
+
+            public static class Cells
+            {
+                public const string Overlay = _Items + "/Overlay";
             }
         }
 

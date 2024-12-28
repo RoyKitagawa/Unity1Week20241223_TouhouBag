@@ -25,9 +25,6 @@ public class BagItemDataScrewLv1 : SimpleSingleton<BagItemDataScrewLv1>, BagItem
     public virtual TargetType GetTargetType() { return TargetType.Nearest; }
     public virtual float GetCooldown() { return 0.5f; }
     public virtual int GetDamage() { return 3; }
-
-    public virtual string GetBagPrefabPath() { return ""; }    
-    public virtual string GetBattlePrefabPath() { return ""; }
 }
 
 public class BagItemDataScrewLv2 : BagItemDataScrewLv1

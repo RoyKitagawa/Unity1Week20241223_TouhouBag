@@ -84,10 +84,6 @@ public interface BagItemDataBase
     public BagItemName ItemName { get { return GetItemName(); } }
     // アイテムのタグ
     public string Tag { get { return GetTag(); } }
-    // アイテムのPrefabパス（現状はResource内想定）
-    public string BagPrefabPath { get { return GetBagPrefabPath(); } }
-    // バトル用のPrefabパス（現状はResource内想定）
-    public string BattlePrefabPath { get { return GetBattlePrefabPath(); } }
     // アイテムの画像パス（バッグ編集画面）
     public string SpritePathBagEdit { get { return GetSpritePathItem(); } }
     // アイテムの画像パス（バトル画面）
@@ -176,18 +172,6 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     public BagItemLevel GetLevel();
-
-    /// <summary>
-    /// バッグ編集時用アイテムのResourcesPrefabパスを取得
-    /// </summary>
-    /// <returns></returns>
-    public string GetBagPrefabPath();
-
-    /// <summary>
-    /// バトル時用アイテムのResourcesPrefabパスを取得
-    /// </summary>
-    /// <returns></returns>
-    public string GetBattlePrefabPath();
 
     /// <summary>
     /// アイテムの金額を取得

@@ -25,9 +25,6 @@ public class BagItemDataSpannerLv1 : SimpleSingleton<BagItemDataSpannerLv1>, Bag
     public virtual TargetType GetTargetType() { return TargetType.Random; }
     public virtual float GetCooldown() { return 2f; }
     public virtual int GetDamage() { return 15; }
-
-    public virtual string GetBagPrefabPath() { return ""; }    
-    public virtual string GetBattlePrefabPath() { return ""; }
 }
 
 public class BagItemDataSpannerLv2 : BagItemDataSpannerLv1

@@ -12,8 +12,6 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
     BagItemName BagItemDataBase.GetItemName() { return BagItemName.StageSlot; }
     string BagItemDataBase.GetTag() { return Consts.Tags.StageSlot; }
     ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square1x1; }
-    string BagItemDataBase.GetBagPrefabPath() { return Consts.Resources.Prefabs.BagItems.StageSlot; }
-    string BagItemDataBase.GetBattlePrefabPath() { return ""; }
     string BagItemDataBase.GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
     string BagItemDataBase.GetSpritePathItemThumb() { return ""; }
 
