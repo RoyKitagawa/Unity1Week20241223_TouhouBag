@@ -39,6 +39,16 @@ public static class BasicUtil
         return root;
     }
 
+    public static GameObject LoadGameObject4Resources(string path)
+    {
+        GameObject obj = Resources.Load<GameObject>(path);
+        if(obj == null)
+        {
+            Debug.LogError("GameObjectのLoadに失敗しました: path = " + path);
+        }
+        return obj;
+    }
+
     /// <summary>
     /// ファイルパスからMaterialを読み込む
     /// </summary>

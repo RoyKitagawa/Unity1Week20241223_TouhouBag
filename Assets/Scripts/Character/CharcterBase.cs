@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
@@ -8,9 +9,12 @@ public class CharacterBase : MonoBehaviour
     protected CharacterDataBase data; // 敵機データ
     protected Rigidbody2D rb; // 移動用コンポーネント
     protected BoxCollider2D boxCollider2D; // サイズ判定用
+    protected SpriteRenderer sr;
     protected bool isInitialized = false; // 初期化済みか
     // 現状のライフ
     protected float currentLife = 1.0f;
+    // ShakeSequence
+    private Sequence shakeSequence = null;
 
     /// <summary>
     /// キャラクターの初期化処理
@@ -40,13 +44,16 @@ public class CharacterBase : MonoBehaviour
         // TODO 死亡処理
         Debug.Log("キャラクター死亡！");
         Destroy(gameObject);
+
+        rb.linearVelocity = Vector2.zero;
+        ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
     }
 
     /// <summary>
     /// キャラクターが死亡しているか
     /// </summary>
     /// <returns></returns>
-    private bool IsDead()
+    protected bool IsDead()
     {
         return currentLife <= 0.0f;
     }
@@ -85,6 +92,26 @@ public class CharacterBase : MonoBehaviour
     public float GetCurrentLife()
     {
         return currentLife;
+    }
+
+    /// <summary>
+    /// ダメージ時に揺らす
+    /// </summary>
+    public void ShakeOnDamage()
+    {
+        if(shakeSequence != null && !shakeSequence.IsComplete())
+        {
+            shakeSequence.Complete();
+        }
+        shakeSequence = DOTween.Sequence();
+        shakeSequence.Append(GetImage().transform.DOLocalMoveX(data.Type == CharacterType.Player ? -0.05f : 0.05f, 0.05f).SetEase(Ease.OutQuad));
+        shakeSequence.Append(GetImage().transform.DOLocalMoveX(0.0f, 0.05f).SetEase(Ease.InQuad));
+    }
+
+    protected SpriteRenderer GetImage()
+    {
+        if(sr == null) sr = GetComponentInChildren<SpriteRenderer>();
+        return sr;
     }
 
     /// <summary>

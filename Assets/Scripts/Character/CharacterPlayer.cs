@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class CharacterPlayer : CharacterBase
@@ -37,6 +38,8 @@ public class CharacterPlayer : CharacterBase
         Debug.Log("プレイヤー死亡！");
 
         isAlive = false;
+        ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+        GetImage().DOFade(0.0f, 0.2f).SetUpdate(true);
         // TODO GAMEOVER演出表示＆リザルトへ
         ManagerInGame.Instance.ShowGameOverResult();
     }

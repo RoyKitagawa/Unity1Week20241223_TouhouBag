@@ -18,6 +18,8 @@ public static class Consts
     {
         public const string BagEdit = "BagEdit";
         public const string Battle = "Battle";
+        // Area
+        public const string BoxRoot = Battle + "/Areas/PlayerHome";
         // BagEdit
         public const string StageBorders = BagEdit + "/StageBorders";
         public const string BagRoot = BagEdit + "/BagArea/Bag";
@@ -25,43 +27,17 @@ public static class Consts
         public const string BagSlotRoot = BagRoot + "/Slots";
         // Battle
         public const string BattleItemList = Battle + "/Items";
+        // Particle
+        public const string ParticlesBagEdit = BagEdit + "/Particles";
+        public const string ParticlesBattle = Battle + "/Particles";
     }
 
     public static class Resources
     {
         private const string _Prefabs = "Prefabs";
-        // public const string BagSlot = "Prefabs/StageSlot";
-        // public const string CellItem = "Prefabs/CellItem";
-        // public const string CellBag = "Prefabs/CellBag";
-        // public const string CellStageSlot = "Prefabs/CellStageSlot";
 
         public const string BattleItemListItemPrefab = _Prefabs + "/Items/ItemListItem";
         public const string BattleDamagePrefab = _Prefabs + "/Damage";
-
-        
-
-        // アイテム関連
-        public static class BagItem
-        {
-            // private const string Items = _Prefabs + "/Items"; //アイテム系共通
-            // private const string BagItems = Items + "/BagItems"; // バッグ編集画面アイテムフォルダ
-            // private const string Cells = Items + "/Cells"; // Cellフォルダ
-            // // 初期スロット
-            // public const string StageSlot = Items + "/StageSlot";
-            // // バッグアイテム
-            // public const string ItemBag1x1 = Items + "/BagItem_Bag_1x1";
-            // public const string ItemBag2x1 = Items + "/BagItem_Bag_2x1";
-            // public const string ItemBag3x1 = Items + "/BagItem_Bag_3x1";
-            // public const string ItemBag2x2 = Items + "/BagItem_Bag_2x2";
-            // // 通常アイテム
-            // public const string ItemApple = Items + "/BagItem_Apple";
-            // public const string ItemApple4 = Items + "/BagItem_Apple4";
-            // public const string ItemLong = Items + "/BagItem_Long";
-            // // セル
-            // public const string CellItem = Cells + "/CellItem";
-            // public const string CellBag = Cells + "/CellBag";
-            // public const string CellStageSlot = Cells + "/CellStageSlot";
-        }
 
         // キャラクター関連
         public static class Character
@@ -70,14 +46,6 @@ public static class Consts
             // 敵機
             public const string EnemyA = Characters + "/EnemyA";
         }
-
-        // public static class BattleWeapon
-        // {
-        //     // private const string Weapon = Prefabs + "/Items/ProjectileWeapons";
-        //     // public const string Apple = Weapon + "/ProjectileWeaponApple";
-        //     // public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
-        //     // public const string Long = Weapon + "/ProjectileWeaponLong";
-        // }
 
         public static class Prefabs
         {
@@ -112,16 +80,19 @@ public static class Consts
             // 投てきする武器
             public static class ProjectileItems
             {
-                private const string Weapon = _Prefabs + "/Items/ProjectileWeapons";
-                public const string Apple = Weapon + "/ProjectileWeaponApple";
-                public const string Apple4 = Weapon + "/ProjectileWeaponApple4";
-                public const string Long = Weapon + "/ProjectileWeaponLong";
+                private const string _Weapon = _Prefabs + "/Items/ProjectileWeapons";
+                public const string Apple = _Weapon + "/ProjectileWeaponApple";
+                public const string Apple4 = _Weapon + "/ProjectileWeaponApple4";
+                public const string Long = _Weapon + "/ProjectileWeaponLong";
             }
 
-            // クールダウンタイム表記するサムネ表記のやつ
-            public static class ItemThumbs
+            public static class Particles
             {
-                public const string CommonItem = _Prefabs + "/Items/ItemListItem";
+                private const string _Particles = "Particles";
+                public const string Evolve = _Particles + "/ParticleEvolve";
+                public const string Damage = _Particles + "/ParticleDamage";
+                public const string Destroy = _Particles + "/ParticleBomb";
+                public const string Heal = _Particles + "/ParticleHeal";
             }
         }
 
@@ -168,18 +139,15 @@ public static class Consts
                 public const string SpannerLv2 = _Items + "/supana2";
                 public const string SpannerLv3 = _Items + "/supana3";
 
-
-
-                public const string Apple = _Items + "/Apple";
-                public const string Apple4 = _Items + "/Apple4";
                 public const string Bag2x2 = _Items + "/Bag_2x2";
-                public const string Long = _Items + "/Long";
             }
 
             public static class Cells
             {
                 public const string Overlay = _Items + "/Overlay";
             }
+
+            public const string Box = _Images + "/mikanhako1";
         }
 
         public static class Materials
@@ -193,24 +161,6 @@ public static class Consts
         public const string LevelSuffix4 = "_lv4";
         public const string LevelSuffix5 = "_lv5";
     }
-    
-    // public static class Sprites
-    // {
-    //     private const string Images = "Assets/Images";
-    //     public class BattleItem
-    //     {
-    //         private const string BattleItems = Images + "/BattleItems";
-    //         // バトル中のクールダウン表記用
-    //         public class List
-    //         {
-    //             public const string Apple = BattleItems + "/Apple.png";
-    //             public const string Apple4 = BattleItems + "/Apple4.png";
-    //             public const string Long = BattleItems + "/Long.png";
-    //         }
-    //     }
-    //     public const string ItemAppleBattle = "Assets/Images/ItemCardA.png";
-    //     public const string ItemAppleBagEdit = "Assets/Images/ItemCardA.png";
-    // }
 
     public static class Names
     {

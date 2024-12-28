@@ -285,10 +285,14 @@ public class BagItem : TappableObject
                         mergeTarget = existingItem;
                         break;
                     }
-                    else
+                }
+                // マージ対象がなかった場合だけ、アイテムをドロップする（マージ時はマージ先のアイテムへ移動するためドロップなし）
+                if(mergeTarget == null)
+                {
+                    foreach(BagItem existingItem in existingItems)
                     {
-                        // マージしない
-                        existingItem.DropItemFromSlot(); // 落とす                    
+                        if(!existingItem.isPlaced) continue;
+                        existingItem.DropItemFromSlot();
                     }
                 }
             }
@@ -324,8 +328,23 @@ public class BagItem : TappableObject
         // データと画像を更新する
         data = BagItemDataList.GetItemData(data.ItemName, data.NextLevel);
         GetImage().sprite = BasicUtil.LoadSprite4Resources(data.SpritePathItemImage);
+
+        // パーティクル表示期間は画像を前面に押し出す
+        GetImage().sortingLayerName = Consts.SortingLayer.DragItem;
         
-        // TODO 進化演出
+        // 進化演出
+        ManagerParticle.Instance.ShowOnEvolveParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBagEdit).transform, () => {
+            // 画像のレイヤーを戻す
+            if(tag == Consts.Tags.Bag) GetImage().sortingLayerName = Consts.SortingLayer.Bag;
+            else if(tag == Consts.Tags.Item) GetImage().sortingLayerName = Consts.SortingLayer.Item;
+        });
+        // 画像も来るっと回してアピールする
+        Sequence scaleSequence = DOTween.Sequence();
+        scaleSequence.Append(GetImage().transform.DOScale(1.3f, 0.3f).SetEase(Ease.OutQuad));
+        scaleSequence.Append(GetImage().transform.DOScale(1.0f, 0.3f).SetEase(Ease.InQuad));
+        float rot = 360.0f * UnityEngine.Random.Range(1, 5);
+        Sequence rotateSequence = DOTween.Sequence();
+        rotateSequence.Append(GetImage().transform.DORotate(new Vector2(0.0f, rot), 0.6f).SetRelative());
     }
 
     /// <summary>
@@ -414,6 +433,11 @@ public class BagItem : TappableObject
 
     public void Move4Merge(BagItem mergeTarget, Action OnComplete = null)
     {
+        // セル情報をコピー
+        foreach(BagItemCell cell in cells)
+        {
+            cell.SlotPos = mergeTarget.GetCellAtCellPos(cell.CellPos).SlotPos;
+        }
         RotateTo(mergeTarget.currentRotation);
         Move2(mergeTarget.transform.position, OnComplete);
     }

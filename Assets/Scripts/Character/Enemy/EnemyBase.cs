@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class EnemyBase : CharacterBase
@@ -9,6 +10,7 @@ public class EnemyBase : CharacterBase
 
     public void Update()
     {
+        if(IsDead()) return;
         if(isAttackMode)
         {
             elapsedCooldownTime += Time.deltaTime;
@@ -31,7 +33,12 @@ public class EnemyBase : CharacterBase
         // アタック処理を発生させる
         bool isCritical = RandUtil.GetRandomBool(0.1f);
         float damage = Random.Range(data.AttackDamage * 0.8f, data.AttackDamage * 1.2f);
-        ManagerBattlePhase.Instance.GetPlayer().GainDamage(isCritical ? damage * 1.5f : damage, isCritical ? DamageType.CriticalDamage : DamageType.NormalDamage);
+        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        player.GainDamage(isCritical ? damage * 1.5f : damage, isCritical ? DamageType.CriticalDamage : DamageType.NormalDamage);
+        // ヒットパーティクル
+        ManagerParticle.Instance.ShowOnDamageParticle(player.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+        // ヒット時の揺れ
+        player.ShakeOnDamage();
     }
 
     public void OnTriggerEnter2D(Collider2D target)
@@ -68,8 +75,13 @@ public class EnemyBase : CharacterBase
     protected override void OnDead()
     {
         // TODO 死亡処理
+        rb.linearVelocity = Vector2.zero;
         ManagerEnemy.Instance.RemoveEnemyFromList(this);
-        Destroy(gameObject);
+        ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+
+        GetImage().DOFade(0.0f, 0.1f).OnComplete(() => {
+            Destroy(gameObject);
+        });
     }
 
     /// <summary>

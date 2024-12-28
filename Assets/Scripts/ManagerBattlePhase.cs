@@ -66,6 +66,19 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
             index ++;
         }
 
+        // ミカン箱を設置する
+        Transform root = BasicUtil.GetRootObject(Consts.Roots.BoxRoot).transform;
+        float y = 5.5f;
+        for(int i = 0; i < 20; i++) // 最大20個（-5 ~ 5 範囲の、最小単位0.5なため）
+        {
+            y -= Random.Range(0.5f, 2.0f);
+            SpriteRenderer sr = new GameObject("Mikan").AddComponent<SpriteRenderer>();
+            sr.transform.SetParent(root);
+            sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Box);
+            sr.transform.position = new Vector2(-5.0f, y);
+            if(y <= -5.0f) break;
+        }
+
         // プレイヤーキャラクターの初期化
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
     }

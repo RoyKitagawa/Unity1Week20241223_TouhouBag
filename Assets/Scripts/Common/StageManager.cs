@@ -234,7 +234,6 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         ratioH = rightScreenSize.x / stageSize.x * 0.8f; // 0.8係数はマージンが割り
         ratioV = (screenCorners.height / 2.0f) / stageSize.y * 0.8f;
         battleStageInfo.stageScale = ratioH < ratioV ? ratioH : ratioV;
-        
     }
 
     public BagItem SpawnRandomItem(BagItemType type)
