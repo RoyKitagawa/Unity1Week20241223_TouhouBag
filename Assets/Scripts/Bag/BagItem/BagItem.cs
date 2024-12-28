@@ -259,46 +259,51 @@ public class BagItem : TappableObject
         // 設置可能
         if(isPlacable)
         {
-            Move2HitSlot(() => {
-                // アイテムを設置
-                OnItemPlaced();
+            BagItem mergeTarget = null;
+            // マージ対象が居れば記録する。また落下すべきアイテムがあればこの段階で落下させる
+            if(tag == Consts.Tags.Bag)
+            {
+                HashSet<BagItem> existingBags = GetBagsPlacedOnCells();
+                foreach(BagItem existingBag in existingBags)
+                {
+                    if(!existingBag.isPlaced) continue;
+                    if(existingBag.IsItemPlacedOnCells()) continue; // アイテムが上にある場合はスルー
+                    else existingBag.DropItemFromSlot(); // 落とす
+                }
+            }
+            else if(tag == Consts.Tags.Item)
+            {
+                HashSet<BagItem> existingItems = GetItemsPlacedOnCells();
+                foreach(BagItem existingItem in existingItems)
+                {
+                    if(!existingItem.isPlaced) continue;
+                    // アイテムの場合、マージするかドロップするか確認する
+                    if(data.IsMergable
+                        && data.ItemName == existingItem.data.ItemName
+                        && data.Level == existingItem.data.Level)
+                    {
+                        mergeTarget = existingItem;
+                        break;
+                    }
+                    else
+                    {
+                        // マージしない
+                        existingItem.DropItemFromSlot(); // 落とす                    
+                    }
+                }
+            }
 
-                // 既存のアイテムを落とす
-                if(tag == Consts.Tags.Bag)
-                {
-                    HashSet<BagItem> existingBags = GetBagsPlacedOnCells();
-                    foreach(BagItem existingBag in existingBags)
-                    {
-                        if(!existingBag.isPlaced) continue;
-                        if(existingBag.IsItemPlacedOnCells()) continue; // アイテムが上にある場合はスルー
-                        else existingBag.DropItemFromSlot(); // 落とす
-                    }
-                }
-                else if(tag == Consts.Tags.Item)
-                {
-                    HashSet<BagItem> existingItems = GetItemsPlacedOnCells();
-                    foreach(BagItem existingItem in existingItems)
-                    {
-                        if(!existingItem.isPlaced) continue;
-                        // アイテムの場合、マージするかドロップするか確認する
-                        if(data.IsMergable
-                            && data.ItemName == existingItem.data.ItemName
-                            && data.Level == existingItem.data.Level)
-                        {
-                            // マージする。既存アイテムを削除して、移動したアイテムを進化させる
-                            StageManager.Instance.RemoveFromList(existingItem);
-                            Destroy(existingItem.gameObject);
-                            // アイテムを進化させる
-                            EvolveItem();
-                        }
-                        else
-                        {
-                            // マージしない
-                            existingItem.DropItemFromSlot(); // 落とす                    
-                        }
-                    }
-                }
+            // 設置処理
+            if(mergeTarget != null) Move4Merge(mergeTarget, () =>
+            {
+                OnItemPlaced();
+                // マージする。既存アイテムを削除して、移動したアイテムを進化させる
+                StageManager.Instance.RemoveFromList(mergeTarget);
+                Destroy(mergeTarget.gameObject);
+                // アイテムを進化させる
+                EvolveItem();
             });
+            else Move2HitSlot(OnItemPlaced);
         }
         else DropItemFromSlot(); // アイテムをドロップする
 
@@ -316,10 +321,8 @@ public class BagItem : TappableObject
             Debug.LogError("このアイテムは進化未対応です: " + data.ItemName + " / Lv" + data.Level);
             return;
         }
-        Debug.Log("マージ前の画像パス: " + data.SpritePathItemImage);
+        // データと画像を更新する
         data = BagItemDataList.GetItemData(data.ItemName, data.NextLevel);
-
-        Debug.Log("マージ後の画像パス: " + data.SpritePathItemImage);
         GetImage().sprite = BasicUtil.LoadSprite4Resources(data.SpritePathItemImage);
         
         // TODO 進化演出
@@ -407,6 +410,12 @@ public class BagItem : TappableObject
         base.OnDrag();
         Vector3 moveAmt = dragAmt;
         transform.position += moveAmt;
+    }
+
+    public void Move4Merge(BagItem mergeTarget, Action OnComplete = null)
+    {
+        RotateTo(mergeTarget.currentRotation);
+        Move2(mergeTarget.transform.position, OnComplete);
     }
 
     /// <summary>
