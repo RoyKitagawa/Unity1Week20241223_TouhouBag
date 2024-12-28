@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum StageType
 {
@@ -20,6 +21,16 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
     public static HashSet<BagItem> Items = new HashSet<BagItem>();
     // ステージサイズ
     private Vector2Int stageSize = Vector2Int.zero;
+    [SerializeField]
+    private Transform rerollButton;
+    [SerializeField]
+    private Image rerollPriceImage;
+    private Sequence rerollButtonShakeSequence = null;
+    private Vector2 defaultRerollButtonPos = Vector2.zero;
+
+    // リロールの値段関連
+    private int rerollCount = 0;
+    private int rerollPrice = 0;
 
     private class StageInfo
     {
@@ -53,7 +64,10 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
         // ステージ情報整理
         InitStage();
-
+        // Reroll関連
+        defaultRerollButtonPos = rerollButton.transform.position;
+        UpdateRerollPriceImage();
+        
         SwitchMode(StageType.BagEditMode, 0.0f);
 
         // 初期バッグ配置
@@ -66,8 +80,10 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     public void OnStartBagEditMode()
     {
-        // リロール処理
+        // リロール処理。初回なのでカウントしない
         ReRollItems();
+        rerollCount = 0;
+        UpdateRerollPriceImage();
     }
 
     private void SpawnAndPlaceItemAt(BagItemName itemName, BagItemLevel lv, Vector2Int[] slots)
@@ -76,6 +92,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         item.transform.position = GetSlotsCenterPos(slots); // 指定スロットの中心に配置
         item.SetPhysicSimulator(false); // 物理判定OFF
         item.SetItemCellSlotAtClosestSlot(); // セルのスロット情報設定
+        // item.AddPriceRenderer(); // 値段追加
         item.SetIsPlaced(true); // アイテムを設置
         item.SetIsPurchased(true); // 追加支払いが発生しないように購入済みにしておく
         Add2List(item); // 一覧に追加
@@ -99,8 +116,43 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         BagItemType.Item
     };
 
+    public void OnClickReRollItems()
+    {
+        if(rerollPrice > ManagerInGame.Instance.GetCurrentMoney())
+        {
+            // シェイク処理
+            float posX = defaultRerollButtonPos.x;
+            float moveMin = 5;
+            float moveMax = 10;
+            float duration = 0.5f;
+            if(rerollButtonShakeSequence != null && !rerollButtonShakeSequence.IsComplete()) rerollButtonShakeSequence.Complete();
+            rerollButtonShakeSequence = DOTween.Sequence();
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(Random.Range(posX + moveMin, posX + moveMax), duration / 8f).SetEase(Ease.OutQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(posX, duration / 8f).SetEase(Ease.InQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(Random.Range(posX - moveMin, posX - moveMax), duration / 8f).SetEase(Ease.OutQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(posX, duration / 8f).SetEase(Ease.InQuad));
+
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(Random.Range(posX + moveMin, posX + moveMax), duration / 8f).SetEase(Ease.OutQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(posX, duration / 8f).SetEase(Ease.InQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(Random.Range(posX - moveMin, posX - moveMax), duration / 8f).SetEase(Ease.OutQuad));
+            rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(posX, duration / 8f).SetEase(Ease.InOutQuad));
+
+            return;
+        }
+
+        ReRollItems();
+    }
+
     public void ReRollItems()
     {
+        if(rerollPrice > ManagerInGame.Instance.GetCurrentMoney())
+        {
+            Debug.LogError("リロールの金銭不足");
+            return;
+        }
+        // 支払う
+        ManagerInGame.Instance.AddMoney(-rerollPrice);
+
         // 未購入のものは削除する
         Items.RemoveWhere(item => {
             if(!item.IsPurchased())
@@ -131,6 +183,21 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
             item.SetIsPlaced(false); // 初期のアイテムは「設置状態」ではない
             item.SetIsPurchased(false); // 購入前
         }
+
+        // 新たな値段の設定
+        rerollCount++;
+        UpdateRerollPriceImage();
+    }
+
+    private void UpdateRerollPriceImage()
+    {
+        if(rerollCount <= 0) rerollPrice = 0;
+        else if(rerollCount <= 3) rerollPrice = 1;
+        else if(rerollCount <= 5) rerollPrice = 2;
+        else if(rerollCount <= 7) rerollPrice = 3;
+        else if(rerollCount <= 10) rerollPrice = 4;
+        else rerollPrice = 5;
+        rerollPriceImage.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Prices.Price(rerollPrice));
     }
 
     public void RemoveUnPlacedItems()

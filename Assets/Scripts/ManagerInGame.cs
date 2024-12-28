@@ -1,4 +1,5 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
@@ -17,9 +18,15 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
     private GameObject waveClearPanel;
     [SerializeField]
     private GameObject gameClearPanel;
+    [SerializeField]
+    private TextMeshProUGUI moneyText;
 
     // 画面サイズ
     private Rect screenCorners;
+
+    // 所持金情報
+    private int initialMoneyAmt = 10;
+    private int currentMoneyAmt = 10;
 
     // 現状のステージ進捗ステータス
     private int currentWave;
@@ -32,10 +39,27 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
         screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
     }
 
+    public int GetCurrentMoney()
+    {
+        return currentMoneyAmt;
+    }
+
+    public void AddMoney(int moneyAmt)
+    {
+        SetMoneyAmt(currentMoneyAmt + moneyAmt);
+    }
+
+    public void SetMoneyAmt(int moneyAmt)
+    {
+        currentMoneyAmt = moneyAmt;
+        moneyText.text = "所持金：" + currentMoneyAmt + "コイン";
+    }
+
     public void StartModeBagEdit()
     {
         rootBagEdit.SetActive(true);
         rootBattle.SetActive(false);
+        SetMoneyAmt(currentMoneyAmt);
         StageManager.Instance.InitializeStage();
         StageManager.Instance.OnStartBagEditMode();
     }

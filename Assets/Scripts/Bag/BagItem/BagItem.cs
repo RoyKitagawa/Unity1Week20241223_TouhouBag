@@ -44,6 +44,8 @@ public class BagItem : TappableObject
     private bool isPlacable = false;
     // アイテムが購入済みか
     private bool isPurchased = false;
+    // アイテムの値段表記用オブジェクト
+    private SpriteRenderer priceRenderer = null;
 
     public void Start()
     {
@@ -53,6 +55,23 @@ public class BagItem : TappableObject
 
         // アイテム内のセル取得
         if(cells.Count <= 0) InitCells();
+    }
+
+    /// <summary>
+    /// 値段表記用オブジェクトを追加する
+    /// </summary>
+    public void AddPriceRenderer()
+    {
+        if(tag != Consts.Tags.StageSlot)
+        {
+            SpriteRenderer moneySR = new GameObject("Price").AddComponent<SpriteRenderer>();
+            moneySR.transform.SetParent(transform);
+            moneySR.transform.localPosition = new Vector2(data.Size.x / 2.0f, data.Size.y / 2.0f);
+            moneySR.transform.localScale = new Vector2(0.75f, 0.75f);
+            moneySR.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Prices.Price(data.Cost));
+            moneySR.sortingLayerName = Consts.SortingLayer.ItemOverlay;
+            priceRenderer = moneySR;
+        }
     }
 
     public BagItemName GetDataItemName()
@@ -179,6 +198,23 @@ public class BagItem : TappableObject
     /// </summary>
     public override bool OnTapDown()
     {
+        // お金が足りないときは何も行わない
+        if(ManagerInGame.Instance.GetCurrentMoney() < data.Cost)
+        {
+            // 左右に揺らす
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(GetImage().transform.DOLocalMoveX(UnityEngine.Random.Range(0.15f, 0.3f), 0.05f).SetEase(Ease.OutQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(0.0f, 0.05f).SetEase(Ease.InQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(UnityEngine.Random.Range(-0.15f, -0.3f), 0.05f).SetEase(Ease.OutQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(0.0f, 0.05f).SetEase(Ease.InQuad));
+
+            sequence.Append(GetImage().transform.DOLocalMoveX(UnityEngine.Random.Range(0.15f, 0.3f), 0.05f).SetEase(Ease.OutQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(0.0f, 0.05f).SetEase(Ease.InQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(UnityEngine.Random.Range(-0.15f, -0.3f), 0.05f).SetEase(Ease.OutQuad));
+            sequence.Append(GetImage().transform.DOLocalMoveX(0.0f, 0.05f).SetEase(Ease.InOutQuad));
+            return false;
+        }
+
         // これより上にアイテムが存在する場合、このアイテムでタップ処理は行わない
         if(transform.tag == Consts.Tags.Bag && isPlaced)
         {
@@ -220,6 +256,7 @@ public class BagItem : TappableObject
         if(!IsPurchased())
         {
             // TODO コストを支払う
+            ManagerInGame.Instance.AddMoney(-data.Cost);
             SetIsPurchased(true);
         }
 
@@ -563,6 +600,7 @@ public class BagItem : TappableObject
     public void SetIsPurchased(bool flag)
     {
         isPurchased = flag;
+        priceRenderer?.gameObject.SetActive(!flag);
     }
 
     /// <summary>

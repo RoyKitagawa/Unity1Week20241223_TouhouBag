@@ -16,8 +16,6 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     {
         ManagerEnemy.Instance.OnStartBattlePhase();
         InitializeBattle();
-
-        Debug.Log("攻撃可能になるX座標：" + GetPlayerAttackableBoundaryX());
     }
 
     public void OnGameClear()

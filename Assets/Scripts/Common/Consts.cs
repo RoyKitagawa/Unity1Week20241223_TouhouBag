@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public static class Consts
 {
     public static class Tags
@@ -145,6 +147,50 @@ public static class Consts
             public static class Cells
             {
                 public const string Overlay = _Items + "/Overlay";
+            }
+
+            public static class Prices
+            {
+                private const string _Prices = _Images + "/Prices";
+                public const string Price0 = _Prices + "/Price0";
+                public const string Price1 = _Prices + "/Price1";
+                public const string Price2 = _Prices + "/Price2";
+                public const string Price3 = _Prices + "/Price3";
+                public const string Price4 = _Prices + "/Price4";
+                public const string Price5 = _Prices + "/Price5";
+                public const string Price6 = _Prices + "/Price6";
+                public const string Price7 = _Prices + "/Price7";
+                public const string Price8 = _Prices + "/Price8";
+                public const string Price9 = _Prices + "/Price9";
+                public static string Price(int price)
+                {
+                    switch(price)
+                    {
+                        case 0:
+                            return Price0;
+                        case 1:
+                            return Price1;
+                        case 2:
+                            return Price2;
+                        case 3:
+                            return Price3;
+                        case 4:
+                            return Price4;
+                        case 5:
+                            return Price5;
+                        case 6:
+                            return Price6;
+                        case 7:
+                            return Price7;
+                        case 8:
+                            return Price8;
+                        case 9:
+                            return Price9;
+                        default:
+                            Debug.LogError("非対応の金額です: " + price);
+                            return Price9;
+                    }
+                }
             }
 
             public const string Box = _Images + "/mikanhako1";

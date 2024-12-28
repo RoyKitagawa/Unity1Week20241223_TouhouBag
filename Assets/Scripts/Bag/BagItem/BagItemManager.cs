@@ -70,6 +70,8 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         // Rigidbody関連
         Rigidbody2D rb = item.AddComponent<Rigidbody2D>();
         item.SetPhysicSimulator(false);
+        // 金額関連
+        item.AddPriceRenderer();
         return item;
     }
 
