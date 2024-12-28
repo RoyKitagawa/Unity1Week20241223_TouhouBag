@@ -321,8 +321,8 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         return Vector2.zero;
     }
 
-    public bool IsSlotPlacedAtSlot(Vector2Int slotPos) { return GetSlotPlacedAtSlot(slotPos).Count > 0; }
-    public HashSet<BagItem> GetSlotPlacedAtSlot(Vector2Int slotPos)
+    public bool IsSlotExistAtSlot(Vector2Int slotPos) { return GetSlotExistAtSlot(slotPos).Count > 0; }
+    public HashSet<BagItem> GetSlotExistAtSlot(Vector2Int slotPos)
     {
          HashSet<BagItem> targets = new HashSet<BagItem>();
         foreach(BagItem slot in Slots)
@@ -332,8 +332,8 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         return targets;
     }
 
-    public bool IsBagPlacedAtSlot(Vector2Int slotPos) { return GetBagsPlacedAtSlot(slotPos).Count > 0; }
-    public HashSet<BagItem> GetBagsPlacedAtSlot(Vector2Int slotPos)
+    public bool IsBagExistAtSlot(Vector2Int slotPos) { return GetBagsExistAtSlot(slotPos).Count > 0; }
+    public HashSet<BagItem> GetBagsExistAtSlot(Vector2Int slotPos)
     {
         HashSet<BagItem> targets = new HashSet<BagItem>();
         foreach(BagItem bag in Bags)

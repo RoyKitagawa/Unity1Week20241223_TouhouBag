@@ -40,6 +40,8 @@ public class BagItem : TappableObject
     private HashSet<BagItemCell> cellHitSlots = new HashSet<BagItemCell>();
     // アイテムが設置中か
     private bool isPlaced = false;
+    // アイテムが設置可能か（移動中に更新される）
+    private bool isPlacable = false;
     // アイテムが購入済みか
     private bool isPurchased = false;
 
@@ -98,6 +100,8 @@ public class BagItem : TappableObject
         // スロット衝突中は常に呼び出す処理
         if(hitSlotCells != null && hitSlotCells.Count > 0 && isTapped)
             UpdateHitSlotStatus();
+        else
+            isPlacable = false;
     }
 
     public BagItemDataBase GetData()
@@ -252,14 +256,71 @@ public class BagItem : TappableObject
             }
         }
 
-        // 必要であれば移動も行う
-        if(!Move2HitSlot())
-        {
-            DropItemFromSlot();
-        }
+        if(isPlacable) Move2HitSlot(); // 設置可能なら移動＆設置
+        else DropItemFromSlot(); // アイテムをドロップする
 
         // タップ処理が正常に終了
         return true;
+    }
+
+    /// <summary>
+    /// 自分が存在するセルスロット上に存在する自分以外のバッグを取得する
+    /// </summary>
+    /// <returns></returns>
+    private HashSet<BagItem> GetBagsPlacedOnCells()
+    {
+        HashSet<BagItem> ret = new HashSet<BagItem>();
+        foreach(BagItemCell cell in cells)
+        {
+            if(cell.SlotPos.Equals(new Vector2Int(-1, -1))) continue;
+            HashSet<BagItem> bags = StageManager.Instance.GetBagsExistAtSlot(cell.SlotPos);
+            foreach(BagItem bag in bags)
+            {
+                if(!bag.isPlaced) continue; // 設置されていないアイテムはスルー
+                if(bag == this) continue; // 自分自身はスルー
+                ret.Add(bag);
+            }
+        }
+        return ret;
+    }
+
+    /// <summary>
+    /// 自分が存在するセルスロット上に存在する自分以外のアイテムを取得する
+    /// </summary>
+    /// <returns></returns>
+    private HashSet<BagItem> GetItemsPlacedOnCells()
+    {
+        HashSet<BagItem> ret = new HashSet<BagItem>();
+        foreach(BagItemCell cell in cells)
+        {
+            if(cell.SlotPos.Equals(new Vector2Int(-1, -1))) continue;
+            HashSet<BagItem> items = StageManager.Instance.GetItemsExistAtSlot(cell.SlotPos);
+            foreach(BagItem item in items)
+            {
+                if(!item.isPlaced) continue; // 設置されていないアイテムはスルー
+                if(item == this) continue; // 自分自身はスルー
+                ret.Add(item);
+            }
+        }
+        return ret;
+    }
+
+    /// <summary>
+    /// 自分が存在するセルスロット上に、自分以外のバッグが存在するかを確認する
+    /// </summary>
+    /// <returns></returns>
+    private bool IsBagPlacedOnCells()
+    {
+        return GetBagsPlacedOnCells().Count > 0;
+    }
+
+    /// <summary>
+    /// 自分が存在するセルスロット上に、自分以外のアイテムが存在するかを確認する
+    /// </summary>
+    /// <returns></returns>
+    private bool IsItemPlacedOnCells()
+    {
+        return GetItemsPlacedOnCells().Count > 0;
     }
 
     public void DropItemFromSlot()
@@ -346,7 +407,7 @@ public class BagItem : TappableObject
         {
             foreach(BagItemCell _cell in cells)
             {
-                HashSet<BagItem> existItems = StageManager.Instance.GetBagsPlacedAtSlot(_cell.SlotPos);
+                HashSet<BagItem> existItems = StageManager.Instance.GetBagsExistAtSlot(_cell.SlotPos);
                 foreach(BagItem existItem in existItems)
                 {
                     if(existItem != this)
@@ -549,6 +610,8 @@ public class BagItem : TappableObject
             BagItemCell slot = cell.GetClosestHitSlot();
             // 対象が存在しない場合（セルがスロットに接触していない場合）スルーする
             if(slot == null) continue;
+            // 対象のスロットが未設置の場合はスルーする
+            if(!slot.GetRootItem().IsPlaced()) continue;
 
             startCellPos = cell.CellPos;
             startSlotPos = slot.SlotPos;
@@ -583,6 +646,8 @@ public class BagItem : TappableObject
                 BagItemCell slot = cell.GetClosestHitSlot();
                 // 対象が存在しない場合（セルがスロットに接触していない場合）スルーする
                 if(slot == null) continue;
+                // 対象のスロットが未設置の場合はスルーする
+                if(!slot.GetRootItem().IsPlaced()) continue;
 
                 startCellPos = cell.CellPos;
                 startSlotPos = slot.SlotPos;
@@ -617,19 +682,39 @@ public class BagItem : TappableObject
                         break;
                 }
                 BagItemCell slot = cell.GetHitSlotAt(targetSlotPos);
-                if(slot != null)
-                {
-                    targetSlots.Add(slot);
-                    // 設置候補場所として先に設置先スロットを記録
-                    cell.SlotPos = slot.SlotPos;
-                }
+                if(slot == null) continue;
+                // 対象のスロットが未設置の場合はスルーする
+                if(!slot.GetRootItem().IsPlaced()) continue;
+                targetSlots.Add(slot);
+                // 設置候補場所として先に設置先スロットを記録
+                cell.SlotPos = slot.SlotPos;
             }
         }
         // ターゲットのスロットを除外する
         foreach(BagItemCell targetSlot in targetSlots) { cellHitSlots.Remove(targetSlot); }
         foreach(BagItemCell nonTargetSlot in cellHitSlots) { nonTargetSlot.ClearOverlayColor(); }
         // アイテムが設置可能か
-        bool isPlacable = targetSlots.Count >= data.CellCount;
+        isPlacable = false;
+        // 接触セル数が足りている場合
+        if(targetSlots.Count >= data.CellCount)
+        {
+            isPlacable = true;
+            // バッグの場合、設置先に被っているバッグ上にアイテムが乗っている場合は例外で設置不可能
+            if(tag == Consts.Tags.Bag)
+            {
+                HashSet<BagItem> overplacedBags = GetBagsPlacedOnCells();
+                foreach(BagItem overplacedBag in overplacedBags)
+                {
+                    if(!overplacedBag.isPlaced) continue;
+                    if(overplacedBag.IsItemPlacedOnCells())
+                    {
+                        isPlacable = false;
+                        break;
+                    }
+                }
+            }
+        }
+        
         // 衝突済みのスロットの色を設定する
         foreach(BagItemCell slot in targetSlots) { slot.SetOverlayColor(isPlacable); }
     }
