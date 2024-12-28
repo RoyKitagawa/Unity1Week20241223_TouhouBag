@@ -19,7 +19,7 @@ public class BagItemDataScrewLv1 : BagItemDataBase
     public virtual string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv1; }
 
     // バッグ編集画面用
-    public virtual int GetCost() { return 2; }
+    public virtual int GetCost() { return 1; }
 
     // バトル画面用
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }

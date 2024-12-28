@@ -76,12 +76,12 @@ public class EnemyBase : CharacterBase
     {
         // TODO 死亡処理
         rb.linearVelocity = Vector2.zero;
-        ManagerEnemy.Instance.RemoveEnemyFromList(this);
         ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+        ManagerBattlePhase.Instance.OnEnemyDead(this);
 
         GetImage().DOFade(0.0f, 0.1f).OnComplete(() => {
             Destroy(gameObject);
-        });
+        }).SetUpdate(true);
     }
 
     /// <summary>

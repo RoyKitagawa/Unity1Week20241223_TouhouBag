@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
 {
@@ -9,6 +10,12 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     // 自機攻撃可能範囲
     [SerializeField]
     private BoxCollider2D playerAttackableArea;
+
+    // 敵機関連
+    private int totalEnemyInStage = 20;
+    [SerializeField]
+    private Slider stageProgressSlider;
+
     // キャラクターが所持しているアイテム一覧
     private HashSet<BattleListItem> items = new HashSet<BattleListItem>();
 
@@ -77,8 +84,34 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
             if(y <= -5.0f) break;
         }
 
+        // 敵機関連
+        totalEnemyInStage = 20;
+        stageProgressSlider.maxValue = totalEnemyInStage;
+        stageProgressSlider.value = totalEnemyInStage;
+
         // プレイヤーキャラクターの初期化
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
+    }
+
+    public int GetRemainEnemiesToBeSpawned()
+    {
+        return (int)stageProgressSlider.value;
+    }
+
+    public void OnEnemySpawn()
+    {
+        stageProgressSlider.value --;
+        if(stageProgressSlider.value <= 0) stageProgressSlider.value = 0;
+    }
+
+    public void OnEnemyDead(EnemyBase enemy)
+    {
+        ManagerEnemy.Instance.RemoveEnemyFromList(enemy);        
+        if(stageProgressSlider.value <= 0 // ステージから全ての敵機が出現済み
+            && ManagerEnemy.Instance.GetEnemiesCount() <= 0) // ステージ上の生存敵機が0
+        {
+            ManagerInGame.Instance.ShowWaveClearResult();
+        }
     }
 
     public void TriggerPlayerAttack(BagItemDataBase data)

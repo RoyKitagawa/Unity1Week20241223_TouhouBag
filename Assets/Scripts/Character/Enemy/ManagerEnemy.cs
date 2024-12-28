@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
 {
@@ -20,10 +21,20 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         enemySpawnElapsedTime += Time.deltaTime;
         if(enemySpawnElapsedTime >= enemySpawnCooldown)
         {
-            enemySpawnElapsedTime = 0;
-            EnemyBase enemy = SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)));
-            enemies.Add(enemy);
+            if(ManagerBattlePhase.Instance.GetRemainEnemiesToBeSpawned() > 0)
+            {
+                enemySpawnElapsedTime = 0;
+                EnemyBase enemy = SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)));
+                enemies.Add(enemy);
+
+                ManagerBattlePhase.Instance.OnEnemySpawn();
+            }
         }
+    }
+
+    public int GetEnemiesCount()
+    {
+        return enemies.Count;
     }
 
     /// <summary>
@@ -136,9 +147,9 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
 
         Rect corners = BasicUtil.GetScreenWorldCorners(Camera.main);
         enemySpawnArea = BasicUtil.CreateRectFromCenter(
-            new Vector2(corners.max.x + 2.0f, 0.5f),
+            new Vector2(corners.max.x + 2.0f, 0.0f),
             0.0f,
-            corners.height - 2.0f);
+            corners.height - 3.0f);
     }
 
     /// <summary>

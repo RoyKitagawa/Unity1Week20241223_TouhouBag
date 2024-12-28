@@ -25,8 +25,8 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
     private Rect screenCorners;
 
     // 所持金情報
-    private int initialMoneyAmt = 10;
-    private int currentMoneyAmt = 10;
+    private int initialMoneyAmt = 20;
+    private int currentMoneyAmt = 20;
 
     // 現状のステージ進捗ステータス
     private int currentWave;
@@ -79,7 +79,20 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
 
     public void ShowWaveClearResult()
     {
-        waveClearPanel.transform.position = new Vector2(BasicUtil.GetScreenWorldCorners(Camera.main).width, 0.0f);
+        // 時間を止める
+        waveClearPanel.gameObject.SetActive(true);
+        waveClearPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetUpdate(true);
+        sequence.Append(waveClearPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        sequence.Append(waveClearPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
+        sequence.OnComplete(() => {
+            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+            ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
+            waveClearPanel.gameObject.SetActive(false);
+            ResumeTimer();
+        }).SetDelay(0.5f);
+        PauseTimer();
     }
 
     public void ShowGameOverResult()
