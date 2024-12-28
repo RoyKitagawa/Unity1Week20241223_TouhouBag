@@ -255,12 +255,74 @@ public class BagItem : TappableObject
                 slot.ClearOverlayColor();
             }
         }
+        
+        // 設置可能
+        if(isPlacable)
+        {
+            Move2HitSlot(() => {
+                // アイテムを設置
+                OnItemPlaced();
 
-        if(isPlacable) Move2HitSlot(); // 設置可能なら移動＆設置
+                // 既存のアイテムを落とす
+                if(tag == Consts.Tags.Bag)
+                {
+                    HashSet<BagItem> existingBags = GetBagsPlacedOnCells();
+                    foreach(BagItem existingBag in existingBags)
+                    {
+                        if(!existingBag.isPlaced) continue;
+                        if(existingBag.IsItemPlacedOnCells()) continue; // アイテムが上にある場合はスルー
+                        else existingBag.DropItemFromSlot(); // 落とす
+                    }
+                }
+                else if(tag == Consts.Tags.Item)
+                {
+                    HashSet<BagItem> existingItems = GetItemsPlacedOnCells();
+                    foreach(BagItem existingItem in existingItems)
+                    {
+                        if(!existingItem.isPlaced) continue;
+                        // アイテムの場合、マージするかドロップするか確認する
+                        if(data.IsMergable
+                            && data.ItemName == existingItem.data.ItemName
+                            && data.Level == existingItem.data.Level)
+                        {
+                            // マージする。既存アイテムを削除して、移動したアイテムを進化させる
+                            StageManager.Instance.RemoveFromList(existingItem);
+                            Destroy(existingItem.gameObject);
+                            // アイテムを進化させる
+                            EvolveItem();
+                        }
+                        else
+                        {
+                            // マージしない
+                            existingItem.DropItemFromSlot(); // 落とす                    
+                        }
+                    }
+                }
+            });
+        }
         else DropItemFromSlot(); // アイテムをドロップする
 
         // タップ処理が正常に終了
         return true;
+    }
+
+    /// <summary>
+    /// アイテムを進化させる
+    /// </summary>
+    private void EvolveItem()
+    {
+        if(!data.IsMergable)
+        {
+            Debug.LogError("このアイテムは進化未対応です: " + data.ItemName + " / Lv" + data.Level);
+            return;
+        }
+        Debug.Log("マージ前の画像パス: " + data.SpritePathItemImage);
+        data = BagItemDataList.GetItemData(data.ItemName, data.NextLevel);
+
+        Debug.Log("マージ後の画像パス: " + data.SpritePathItemImage);
+        GetImage().sprite = BasicUtil.LoadSprite4Resources(data.SpritePathItemImage);
+        
+        // TODO 進化演出
     }
 
     /// <summary>
@@ -351,7 +413,7 @@ public class BagItem : TappableObject
     /// 接触しているスロットへと移動する
     /// 移動が発生したかをBooleanで返す
     /// </summary>
-    private bool Move2HitSlot()
+    private bool Move2HitSlot(Action OnComplete = null)
     {
         // セルサイズと接触セル数が見合ってなければ配置不能とみなし終了
         if(targetSlots.Count < data.CellCount) return false;
@@ -400,38 +462,7 @@ public class BagItem : TappableObject
                 break;
         }
         // 移動
-        Move2(slotPos + adjustDiff, OnItemPlaced);
-        // 移動先に同レイヤーのアイテムが既に存在す場合、剥がす
-        // バッグの場合
-        if(transform.tag == Consts.Tags.Bag)
-        {
-            foreach(BagItemCell _cell in cells)
-            {
-                HashSet<BagItem> existItems = StageManager.Instance.GetBagsExistAtSlot(_cell.SlotPos);
-                foreach(BagItem existItem in existItems)
-                {
-                    if(existItem != this)
-                    {
-                        existItem.DropItemFromSlot();
-                    }
-                }
-            }
-        }
-        // アイテムの場合
-        else if(transform.tag == Consts.Tags.Item)
-        {
-            foreach(BagItemCell _cell in cells)
-            {
-                HashSet<BagItem> existItems = StageManager.Instance.GetItemsExistAtSlot(_cell.SlotPos);
-                foreach(BagItem existItem in existItems)
-                {
-                    if(existItem != this)
-                    {
-                        existItem.DropItemFromSlot();
-                    }
-                }
-            }
-        }
+        Move2(slotPos + adjustDiff, OnComplete);
         return true;
     }
 

@@ -34,7 +34,7 @@ public class ProjectileWeaponBase : MonoBehaviour
         sr.transform.SetParent(weapon.transform);
         sr.transform.localPosition = Vector2.zero;
         sr.transform.localScale = Vector2.one;
-        sr.sprite = BasicUtil.LoadSprite4Resources(data.SpritePathBagEdit);
+        sr.sprite = BasicUtil.LoadSprite4Resources(data.SpritePathItemImage);
         sr.sortingLayerName = Consts.SortingLayer.BattleWeapon;
 
         // 武器を到着地点まで移動させる

@@ -85,9 +85,9 @@ public interface BagItemDataBase
     // アイテムのタグ
     public string Tag { get { return GetTag(); } }
     // アイテムの画像パス（バッグ編集画面）
-    public string SpritePathBagEdit { get { return GetSpritePathItem(); } }
+    public string SpritePathItemImage { get { return GetSpritePathItem(); } }
     // アイテムの画像パス（バトル画面）
-    public string SpritePathBattle { get { return GetSpritePathItemThumb(); } }
+    public string SpritePathThumbImage { get { return GetSpritePathItemThumb(); } }
     // コライダーの形状
     public ColliderShape Shape { get { return GetColliderShape(); } } 
     // アイテムの総セル数
@@ -97,6 +97,8 @@ public interface BagItemDataBase
 
     // レベル
     public BagItemLevel Level { get { return GetLevel(); } }
+    public BagItemLevel NextLevel { get { return GetNextLevel(); } }
+    public bool IsMergable { get { return GetIsMergable(); } }
 
     // バッグ編集画面用
     // アイテムの金額
@@ -172,6 +174,12 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     public BagItemLevel GetLevel();
+
+    /// <summary>
+    /// アイテムがマージ可能か取得
+    /// </summary>
+    /// <returns></returns>
+    public bool GetIsMergable();
 
     /// <summary>
     /// アイテムの金額を取得
@@ -252,4 +260,23 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     public TargetType GetTargetType();
+
+    /// <summary>
+    /// 次のレベルを取得
+    /// </summary>
+    /// <returns></returns>
+    public BagItemLevel GetNextLevel()
+    {
+        switch(Level)
+        {
+            case BagItemLevel.Lv1:
+                return BagItemLevel.Lv2;
+            case BagItemLevel.Lv2:
+                return BagItemLevel.Lv3;
+            case BagItemLevel.Lv3:
+            default:
+                Debug.LogError("このレベルは未対応です: " + Level);
+                return BagItemLevel.Lv1;
+        }
+    }
 }

@@ -50,7 +50,7 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         // 画像関連
         SpriteRenderer sr = new GameObject("Image").AddComponent<SpriteRenderer>();
         sr.transform.SetParent(item.transform);
-        sr.sprite = BasicUtil.LoadSprite4Resources(data.SpritePathBagEdit);
+        sr.sprite = BasicUtil.LoadSprite4Resources(data.SpritePathItemImage);
         switch(data.Tag)
         {
             case Consts.Tags.Bag:

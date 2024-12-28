@@ -5,7 +5,7 @@ using UnityEngine;
 /// 初期からステージ上に配置されているステージスロット
 /// 処理の共通化のため、アイテムとして識別しておく
 /// </summary>
-public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagItemDataBase
+public class BagItemDataStageSlot : BagItemDataBase
 {
     // 基本情報系
     BagItemType BagItemDataBase.GetItemType() { return BagItemType.StageSlot; }
@@ -27,4 +27,5 @@ public class BagItemDataStageSlot : SimpleSingleton<BagItemDataStageSlot>, BagIt
 
     // レベル
     BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
+    bool BagItemDataBase.GetIsMergable() { return false; }
 }

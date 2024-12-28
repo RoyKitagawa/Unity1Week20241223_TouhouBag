@@ -1,7 +1,7 @@
 using System.Numerics;
 using UnityEngine;
 
-public class BagItemDataBag1x1 : SimpleSingleton<BagItemDataBag1x1>, BagItemDataBase
+public class BagItemDataBag1x1 : BagItemDataBase
 {
     // 基本情報系
     BagItemType BagItemDataBase.GetItemType() { return BagItemType.Bag; }
@@ -23,9 +23,10 @@ public class BagItemDataBag1x1 : SimpleSingleton<BagItemDataBag1x1>, BagItemData
 
     // レベル
     BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
+    bool BagItemDataBase.GetIsMergable() { return false; }
 }
 
-public class BagItemDataBag3x1 : SimpleSingleton<BagItemDataBag3x1>, BagItemDataBase
+public class BagItemDataBag3x1 : BagItemDataBase
 {
     // 基本情報系
     BagItemType BagItemDataBase.GetItemType() { return BagItemType.Bag; }
@@ -47,9 +48,10 @@ public class BagItemDataBag3x1 : SimpleSingleton<BagItemDataBag3x1>, BagItemData
 
     // レベル
     BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
+    bool BagItemDataBase.GetIsMergable() { return false; }
 }
 
-public class BagItemDataBag2x2 : SimpleSingleton<BagItemDataBag2x2>, BagItemDataBase
+public class BagItemDataBag2x2 : BagItemDataBase
 {
     // 基本情報系
     BagItemType BagItemDataBase.GetItemType() { return BagItemType.Bag; }
@@ -70,9 +72,10 @@ public class BagItemDataBag2x2 : SimpleSingleton<BagItemDataBag2x2>, BagItemData
     int BagItemDataBase.GetDamage() { return 0; }
     // レベル
     BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
+    bool BagItemDataBase.GetIsMergable() { return false; }
 }
 
-public class BagItemDataBag2x1 : SimpleSingleton<BagItemDataBag2x1>, BagItemDataBase
+public class BagItemDataBag2x1 : BagItemDataBase
 {
     // 基本情報系
     BagItemType BagItemDataBase.GetItemType() { return BagItemType.Bag; }
@@ -94,4 +97,5 @@ public class BagItemDataBag2x1 : SimpleSingleton<BagItemDataBag2x1>, BagItemData
 
     // レベル
     BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
+    bool BagItemDataBase.GetIsMergable() { return false; }
 }

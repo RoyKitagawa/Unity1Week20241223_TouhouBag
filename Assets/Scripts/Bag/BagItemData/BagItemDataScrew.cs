@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 通常アップル
 /// </summary>
-public class BagItemDataScrewLv1 : SimpleSingleton<BagItemDataScrewLv1>, BagItemDataBase
+public class BagItemDataScrewLv1 : BagItemDataBase
 {
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
@@ -14,6 +14,7 @@ public class BagItemDataScrewLv1 : SimpleSingleton<BagItemDataScrewLv1>, BagItem
 
     // レベル関連
     public virtual BagItemLevel GetLevel() { return BagItemLevel.Lv1; }
+    public virtual bool GetIsMergable() { return true; }
     public virtual string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv1; }
     public virtual string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv1; }
 
@@ -31,6 +32,7 @@ public class BagItemDataScrewLv2 : BagItemDataScrewLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv2; }
+    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv2; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv2; }
 
@@ -42,6 +44,7 @@ public class BagItemDataScrewLv3 : BagItemDataScrewLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv3; }
+    public override bool GetIsMergable() { return false; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv3; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv3; }
 

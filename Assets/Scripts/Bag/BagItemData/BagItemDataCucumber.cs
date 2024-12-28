@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 通常アップル
 /// </summary>
-public class BagItemDataCucumberLv1 : SimpleSingleton<BagItemDataCucumberLv1>, BagItemDataBase
+public class BagItemDataCucumberLv1 : BagItemDataBase
 {
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
@@ -14,6 +14,7 @@ public class BagItemDataCucumberLv1 : SimpleSingleton<BagItemDataCucumberLv1>, B
 
     // レベル関連
     public virtual BagItemLevel GetLevel() { return BagItemLevel.Lv1; }
+    public virtual bool GetIsMergable() { return true; }
     public virtual string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CucumberLv1; }
     public virtual string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv1; }
 
@@ -31,6 +32,7 @@ public class BagItemDataCucumberLv2 : BagItemDataCucumberLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv2; }
+    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CucumberLv2; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv2; }
 
@@ -43,6 +45,7 @@ public class BagItemDataCucumberLv3 : BagItemDataCucumberLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv3; }
+    public override bool GetIsMergable() { return false; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CucumberLv3; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv3; }
 

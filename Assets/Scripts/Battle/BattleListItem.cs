@@ -66,7 +66,7 @@ public class BattleListItem : MonoBehaviour
         item.elapsedTime = Random.Range(0.0f, data.Cooldown);
         item.sr = item.transform.AddComponent<SpriteRenderer>();
         // アイテムの画像を設定する
-        item.sr.sprite = BasicUtil.LoadSprite4Resources(item.data.SpritePathBattle);
+        item.sr.sprite = BasicUtil.LoadSprite4Resources(item.data.SpritePathThumbImage);
         item.sr.material = BasicUtil.LoadMaterial4Resources(Consts.Resources.Materials.CoolDownWithGlow);
         item.sr.sortingLayerName = Consts.SortingLayer.UI;
         item.sr.sortingOrder = 10;

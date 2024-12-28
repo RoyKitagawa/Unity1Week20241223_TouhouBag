@@ -18,34 +18,34 @@ public class BagItemDataList
         switch(itemName)
         {
             case BagItemName.Cucumber:
-                if(lv == BagItemLevel.Lv1) return BagItemDataCucumberLv1.Instance;
-                else if(lv == BagItemLevel.Lv2) return BagItemDataCucumberLv2.Instance;
-                else return BagItemDataCucumberLv3.Instance;
+                if(lv == BagItemLevel.Lv1) return new BagItemDataCucumberLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataCucumberLv2();
+                else return new BagItemDataCucumberLv3();
 
             case BagItemName.Screw:
-                if(lv == BagItemLevel.Lv1) return BagItemDataScrewLv1.Instance;
-                else if(lv == BagItemLevel.Lv2) return BagItemDataScrewLv2.Instance;
-                else return BagItemDataScrewLv3.Instance;
+                if(lv == BagItemLevel.Lv1) return new BagItemDataScrewLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataScrewLv2();
+                else return new BagItemDataScrewLv3();
 
             case BagItemName.Spanner:
-                if(lv == BagItemLevel.Lv1) return BagItemDataSpannerLv1.Instance;
-                else if(lv == BagItemLevel.Lv2) return BagItemDataSpannerLv2.Instance;
-                else return BagItemDataSpannerLv3.Instance;
+                if(lv == BagItemLevel.Lv1) return new BagItemDataSpannerLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataSpannerLv2();
+                else return new BagItemDataSpannerLv3();
 
             case BagItemName.Bag2x2:
-                return BagItemDataBag2x2.Instance;
+                return new BagItemDataBag2x2();
 
             case BagItemName.Bag1x1:
-                return BagItemDataBag1x1.Instance;
+                return new BagItemDataBag1x1();
 
             case BagItemName.Bag2x1:
-                return BagItemDataBag2x1.Instance;
+                return new BagItemDataBag2x1();
 
             case BagItemName.Bag3x1:
-                return BagItemDataBag3x1.Instance;
+                return new BagItemDataBag3x1();
 
             case BagItemName.StageSlot:
-                return BagItemDataStageSlot.Instance;
+                return new BagItemDataStageSlot();
 
             default:
                 Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName + ", レベル: " + lv);
