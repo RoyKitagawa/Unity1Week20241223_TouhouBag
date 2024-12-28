@@ -24,7 +24,10 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
             if(ManagerBattlePhase.Instance.GetRemainEnemiesToBeSpawned() > 0)
             {
                 enemySpawnElapsedTime = 0;
-                EnemyBase enemy = SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)));
+                // ラスト1体はボス
+                EnemyBase enemy = ManagerBattlePhase.Instance.GetRemainEnemiesToBeSpawned() > 1
+                    ? SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)))
+                    : SpawnNewEnemy(CharacterName.EnemyBossChiruno);
                 enemies.Add(enemy);
 
                 ManagerBattlePhase.Instance.OnEnemySpawn();
@@ -208,6 +211,9 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         {
             case CharacterName.EnemyA:
                 return Consts.Resources.Character.EnemyA;
+
+            case CharacterName.EnemyBossChiruno:
+                return Consts.Resources.Character.EnemyBossChiruno;
 
             default:
                 Debug.LogError("不正なキャラクター名: " + characterName);

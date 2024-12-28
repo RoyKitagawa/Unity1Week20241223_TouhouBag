@@ -47,6 +47,7 @@ public static class Consts
             private const string Characters = _Prefabs + "/Characters";
             // 敵機
             public const string EnemyA = Characters + "/EnemyA";
+            public const string EnemyBossChiruno = Characters + "/EnemyBossChiruno";
         }
 
         public static class Prefabs

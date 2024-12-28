@@ -12,7 +12,7 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     private BoxCollider2D playerAttackableArea;
 
     // 敵機関連
-    private int totalEnemyInStage = 20;
+    private int totalEnemyInStage = 15;
     [SerializeField]
     private Slider stageProgressSlider;
 

@@ -13,6 +13,7 @@ public enum CharacterName
     None,
     Player,
     EnemyA,
+    EnemyBossChiruno
 }
 
 public interface CharacterDataBase

@@ -8,7 +8,7 @@ public class EnemyBase : CharacterBase
     protected bool isAttackMode = false; // 攻撃モードか（自機付近まで到達済みか）    
     protected float elapsedCooldownTime = 0.0f; // 攻撃後の経過時間
 
-    public void Update()
+    public virtual void Update()
     {
         if(IsDead()) return;
         if(isAttackMode)

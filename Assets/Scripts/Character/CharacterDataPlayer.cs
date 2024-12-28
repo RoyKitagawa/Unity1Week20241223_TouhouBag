@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CharacterDataPlayer : SimpleSingleton<CharacterDataPlayer>, CharacterDataBase
+public class CharacterDataPlayer : CharacterDataBase
 {
     // 識別情報
     CharacterType CharacterDataBase.GetType() { return CharacterType.Player; }

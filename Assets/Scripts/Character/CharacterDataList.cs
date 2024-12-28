@@ -14,9 +14,11 @@ public class CharacterDataList
         switch(characterName)
         {
             case CharacterName.EnemyA:
-                return CharacterDataEnemyA.Instance;
+                return new CharacterDataEnemyA();
+            case CharacterName.EnemyBossChiruno:
+                return new CharacterDataEnemyBossChiruno();
             case CharacterName.Player:
-                return CharacterDataPlayer.Instance;
+                return new CharacterDataPlayer();
             default:
                 Debug.LogError("不正なキャラクター名: " + characterName);
                 return null;
