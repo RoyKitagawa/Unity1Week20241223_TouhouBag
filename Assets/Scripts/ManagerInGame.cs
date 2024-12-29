@@ -25,8 +25,8 @@ public class ManagerInGame : MonoBehaviourSingleton<ManagerInGame>
     private Rect screenCorners;
 
     // 所持金情報
-    private int initialMoneyAmt = 20;
-    private int currentMoneyAmt = 20;
+    private int initialMoneyAmt = 999;
+    private int currentMoneyAmt = 999;
 
     // 現状のステージ進捗ステータス
     private int currentWave;

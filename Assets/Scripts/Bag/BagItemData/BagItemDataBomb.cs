@@ -1,4 +1,5 @@
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class BagItemDataBombLv1 : BagItemDataBase
 {
+    protected int baseDamage = 5;
+    protected float baseCooldown = 3.0f;
+
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
     public virtual BagItemName GetItemName() { return BagItemName.Bomb; }
@@ -25,33 +29,41 @@ public class BagItemDataBombLv1 : BagItemDataBase
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
     public virtual LaunchType GetLaunchType() { return LaunchType.Unique; }
     public virtual TargetType GetTargetType() { return TargetType.LowestLife; }
-    public virtual float GetCooldown() { return 3.0f; }
-    public virtual int GetDamage() { return 5; }
+    public virtual float GetCooldown() { return baseCooldown; }
+    public virtual int GetDamage() { return baseDamage; }
 }
 
 public class BagItemDataBombLv2 : BagItemDataBombLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv2; }
-    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.BombLv2; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.BombLv2; }
 
     // バトル画面用
-    public override float GetCooldown() { return 3.0f; }
-    public override int GetDamage() { return 12; }
+    public override int GetDamage() { return (int)(baseDamage * 2.25f); }
 }
 
-public class BagItemDataBombLv3 : BagItemDataCucumberLv1
+public class BagItemDataBombLv3 : BagItemDataBombLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv3; }
-    public override bool GetIsMergable() { return false; }
+    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.BombLv3; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.BombLv3; }
 
     // バトル画面用
-    public override float GetCooldown() { return 3.0f; }
-    public override int GetDamage() { return 27; }
+    public override int GetDamage() { return (int)(baseDamage * 5.0f); }
 }
 
+public class BagItemDataBombLv4 : BagItemDataBombLv1
+{
+    // レベル関連
+    public override BagItemLevel GetLevel() { return BagItemLevel.Lv4; }
+    public override bool GetIsMergable() { return false; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.BombLv4; }
+    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.BombLv4; }
+
+    // バトル画面用
+    public override int GetDamage() { return (int)(baseDamage * 12.0f); }
+}

@@ -40,6 +40,7 @@ public enum BagItemLevel
     Lv1,
     Lv2,
     Lv3,
+    Lv4,
 }
 
 public enum ColliderShape
@@ -295,9 +296,30 @@ public interface BagItemDataBase
             case BagItemLevel.Lv2:
                 return BagItemLevel.Lv3;
             case BagItemLevel.Lv3:
+                return BagItemLevel.Lv4;
+            case BagItemLevel.Lv4:
             default:
                 Debug.LogError("このレベルは未対応です: " + Level);
                 return BagItemLevel.Lv1;
         }
+    }
+
+    public int GetLevelAsInt()
+    {
+        switch(Level)
+        {
+            case BagItemLevel.Lv1:
+                return 1;
+            case BagItemLevel.Lv2:
+                return 2;
+            case BagItemLevel.Lv3:
+                return 3;
+            case BagItemLevel.Lv4:
+                return 4;
+            default:
+                Debug.LogError("このレベルは未対応です: " + Level);
+                return 1;
+        }
+
     }
 }

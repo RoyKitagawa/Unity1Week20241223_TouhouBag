@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public class BagItemDataScrewLv1 : BagItemDataBase
 {
+    protected int baseDamage = 3;
+    protected float baseCooldown = 0.5f;
+
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
     public virtual BagItemName GetItemName() { return BagItemName.Screw; }
@@ -25,8 +28,8 @@ public class BagItemDataScrewLv1 : BagItemDataBase
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
     public virtual LaunchType GetLaunchType() { return LaunchType.ThrowParabola; }
     public virtual TargetType GetTargetType() { return TargetType.Nearest; }
-    public virtual float GetCooldown() { return 0.5f; }
-    public virtual int GetDamage() { return 3; }
+    public virtual float GetCooldown() { return baseCooldown; }
+    public virtual int GetDamage() { return baseDamage; }
 }
 
 public class BagItemDataScrewLv2 : BagItemDataScrewLv1
@@ -38,7 +41,7 @@ public class BagItemDataScrewLv2 : BagItemDataScrewLv1
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv2; }
 
     // バトル画面用
-    public override int GetDamage() { return 7; }
+    public override int GetDamage() { return (int)(baseDamage * 2.25f); }
 }
 
 public class BagItemDataScrewLv3 : BagItemDataScrewLv1
@@ -50,6 +53,17 @@ public class BagItemDataScrewLv3 : BagItemDataScrewLv1
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv3; }
 
     // バトル画面用
-    public override int GetDamage() { return 15; }
+    public override int GetDamage() { return (int)(baseDamage * 5f); }
 }
 
+public class BagItemDataScrewLv4 : BagItemDataScrewLv1
+{
+    // レベル関連
+    public override BagItemLevel GetLevel() { return BagItemLevel.Lv4; }
+    public override bool GetIsMergable() { return false; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv3; }
+    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv3; }
+
+    // バトル画面用
+    public override int GetDamage() { return (int)(baseDamage * 12f); }
+}

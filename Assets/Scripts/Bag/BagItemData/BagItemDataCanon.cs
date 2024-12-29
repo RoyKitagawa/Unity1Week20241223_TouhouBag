@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public class BagItemDataCanonLv1 : BagItemDataBase
 {
+    protected int baseDamage = 10;
+    protected float baseCooldown = 5.0f;
+
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
     public virtual BagItemName GetItemName() { return BagItemName.Canon; }
@@ -25,8 +28,8 @@ public class BagItemDataCanonLv1 : BagItemDataBase
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
     public virtual LaunchType GetLaunchType() { return LaunchType.Unique; }
     public virtual TargetType GetTargetType() { return TargetType.Random; }
-    public virtual float GetCooldown() { return 5.0f; }
-    public virtual int GetDamage() { return 10; }
+    public virtual float GetCooldown() { return baseCooldown; }
+    public virtual int GetDamage() { return baseDamage; }
 }
 
 public class BagItemDataCanonLv2 : BagItemDataCanonLv1
@@ -38,20 +41,30 @@ public class BagItemDataCanonLv2 : BagItemDataCanonLv1
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CanonLv2; }
 
     // バトル画面用
-    public override float GetCooldown() { return 5.0f; }
-    public override int GetDamage() { return 22; }
+    public override int GetDamage() { return (int)(baseDamage * 2.25f); }
 }
 
-public class BagItemDataCanonLv3 : BagItemDataCucumberLv1
+public class BagItemDataCanonLv3 : BagItemDataCanonLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv3; }
-    public override bool GetIsMergable() { return false; }
+    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CanonLv3; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CanonLv3; }
 
     // バトル画面用
-    public override float GetCooldown() { return 5.0f; }
-    public override int GetDamage() { return 50; }
+    public override int GetDamage() { return (int)(baseDamage * 5.0f); }
+}
+
+public class BagItemDataCanonLv4 : BagItemDataCanonLv1
+{
+    // レベル関連
+    public override BagItemLevel GetLevel() { return BagItemLevel.Lv4; }
+    public override bool GetIsMergable() { return false; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CanonLv4; }
+    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CanonLv4; }
+
+    // バトル画面用
+    public override int GetDamage() { return (int)(baseDamage * 12.0f); }
 }
 

@@ -278,7 +278,7 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
 
     private void InitStage()
     {
-        stageSize = new Vector2Int(5, 7);
+        stageSize = new Vector2Int(6, 8);
         float ratioH;
         float ratioV;
 

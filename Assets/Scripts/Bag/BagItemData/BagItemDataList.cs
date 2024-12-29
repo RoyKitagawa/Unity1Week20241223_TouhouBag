@@ -20,37 +20,44 @@ public class BagItemDataList
             case BagItemName.Cucumber:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataCucumberLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataCucumberLv2();
-                else return new BagItemDataCucumberLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataCucumberLv3();
+                else return new BagItemDataCucumberLv4();
 
             case BagItemName.Screw:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataScrewLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataScrewLv2();
-                else return new BagItemDataScrewLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataScrewLv3();
+                else return new BagItemDataScrewLv4();
 
             case BagItemName.Spanner:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataSpannerLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataSpannerLv2();
-                else return new BagItemDataSpannerLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataSpannerLv3();
+                else return new BagItemDataSpannerLv4();
 
             case BagItemName.Bomb:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataBombLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataBombLv2();
-                else return new BagItemDataBombLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataBombLv3();
+                else return new BagItemDataBombLv4();
 
             case BagItemName.Driver:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataDriverLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataDriverLv2();
-                else return new BagItemDataDriverLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataDriverLv3();
+                else return new BagItemDataDriverLv4();
 
             case BagItemName.Canon:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataCanonLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataCanonLv2();
-                else return new BagItemDataCanonLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataCanonLv3();
+                else return new BagItemDataCanonLv4();
 
             case BagItemName.Glove:
                 if(lv == BagItemLevel.Lv1) return new BagItemDataGloveLv1();
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataGloveLv2();
-                else return new BagItemDataGloveLv3();
+                else if(lv == BagItemLevel.Lv3) return new BagItemDataGloveLv3();
+                else return new BagItemDataGloveLv4();
 
             case BagItemName.Bag2x2:
                 return new BagItemDataBag2x2();

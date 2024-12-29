@@ -6,6 +6,9 @@ using UnityEngine;
 /// </summary>
 public class BagItemDataCucumberLv1 : BagItemDataBase
 {
+    protected int baseDamage = 10;
+    protected float baseCooldown = 2.0f;
+
     // 基本情報系
     public virtual BagItemType GetItemType() { return BagItemType.Item; }
     public virtual BagItemName GetItemName() { return BagItemName.Cucumber; }
@@ -25,8 +28,8 @@ public class BagItemDataCucumberLv1 : BagItemDataBase
     public virtual DamageType GetDamageType() { return DamageType.Heal; }
     public virtual LaunchType GetLaunchType() { return LaunchType.ThrowParabola; }
     public virtual TargetType GetTargetType() { return TargetType.Self; }
-    public virtual float GetCooldown() { return 2.0f; }
-    public virtual int GetDamage() { return 10; }
+    public virtual float GetCooldown() { return baseCooldown; }
+    public virtual int GetDamage() { return baseDamage; }
 }
 
 public class BagItemDataCucumberLv2 : BagItemDataCucumberLv1
@@ -38,8 +41,7 @@ public class BagItemDataCucumberLv2 : BagItemDataCucumberLv1
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv2; }
 
     // バトル画面用
-    public override float GetCooldown() { return 2.0f; }
-    public override int GetDamage() { return 20; }
+    public override int GetDamage() { return (int)(baseDamage * 2.25f); }
 }
 
 public class BagItemDataCucumberLv3 : BagItemDataCucumberLv1
@@ -51,7 +53,17 @@ public class BagItemDataCucumberLv3 : BagItemDataCucumberLv1
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv3; }
 
     // バトル画面用
-    public override float GetCooldown() { return 2.0f; }
-    public override int GetDamage() { return 30; }
+    public override int GetDamage() { return (int)(baseDamage * 5.0f); }
 }
 
+public class BagItemDataCucumberLv4 : BagItemDataCucumberLv1
+{
+    // レベル関連
+    public override BagItemLevel GetLevel() { return BagItemLevel.Lv4; }
+    public override bool GetIsMergable() { return false; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.CucumberLv3; }
+    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.CucumberLv3; }
+
+    // バトル画面用
+    public override int GetDamage() { return (int)(baseDamage * 12.0f); }
+}
