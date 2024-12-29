@@ -48,7 +48,7 @@ public class BagItemDataScrewLv3 : BagItemDataScrewLv1
 {
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv3; }
-    public override bool GetIsMergable() { return false; }
+    public override bool GetIsMergable() { return true; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv3; }
     public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv3; }
 
@@ -61,8 +61,8 @@ public class BagItemDataScrewLv4 : BagItemDataScrewLv1
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv4; }
     public override bool GetIsMergable() { return false; }
-    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv3; }
-    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv3; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.ScrewLv4; }
+    public override string GetSpritePathItemThumb() { return Consts.Resources.Sprites.BattleItem.Thumb.ScrewLv4; }
 
     // バトル画面用
     public override int GetDamage() { return (int)(baseDamage * 12f); }

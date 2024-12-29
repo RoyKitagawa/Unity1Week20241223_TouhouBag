@@ -118,10 +118,12 @@ public static class Consts
                     public const string CucumberLv1 = _ItemsThumb + "/Apple";
                     public const string CucumberLv2 = _ItemsThumb + "/Apple";
                     public const string CucumberLv3 = _ItemsThumb + "/Apple";
+                    public const string CucumberLv4 = _ItemsThumb + "/Apple";
                     // ネジ
                     public const string ScrewLv1 = _ItemsThumb + "/Apple4";
                     public const string ScrewLv2 = _ItemsThumb + "/Apple4";
                     public const string ScrewLv3 = _ItemsThumb + "/Apple4";
+                    public const string ScrewLv4 = _ItemsThumb + "/Apple4";
                     // スパナ                
                     public const string SpannerLv1 = _ItemsThumb + "/Apple4";
                     public const string SpannerLv2 = _ItemsThumb + "/Apple4";
@@ -154,10 +156,12 @@ public static class Consts
                 public const string CucumberLv1 = _Items + "/kyuri1";
                 public const string CucumberLv2 = _Items + "/kyuri2";
                 public const string CucumberLv3 = _Items + "/kyuri3";
+                public const string CucumberLv4 = _Items + "/kyuri4";
                 // ネジ
                 public const string ScrewLv1 = _Items + "/negi1";
                 public const string ScrewLv2 = _Items + "/negi2";
                 public const string ScrewLv3 = _Items + "/negi3";
+                public const string ScrewLv4 = _Items + "/negi4";
                 // スパナ                
                 public const string SpannerLv1 = _Items + "/supana1";
                 public const string SpannerLv2 = _Items + "/supana2";
