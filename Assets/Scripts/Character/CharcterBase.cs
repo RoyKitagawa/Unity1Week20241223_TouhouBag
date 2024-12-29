@@ -86,6 +86,34 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    public void OnWeaponHit(BagItemDataBase data)
+    {
+        // 通常攻撃系以外クリティカルは発生しない
+        bool isCritical = data.WeaponDamageType == DamageType.NormalDamage ? RandUtil.GetRandomBool(0.1f) : false;
+        GainDamage(isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType);
+
+        // 回復系
+        if(data.WeaponDamageType == DamageType.Heal)
+        {
+            // 回復パーティクル
+            ManagerParticle.Instance.ShowOnHealParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+        }
+        // アーマー付与
+        else if(data.WeaponDamageType == DamageType.Shield)
+        {
+            // 回復パーティクル
+            ManagerParticle.Instance.ShowOnShieldParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+        }
+        // 攻撃系
+        else
+        {
+            // ヒットパーティクル
+            ManagerParticle.Instance.ShowOnDamageParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+            // ヒット時の揺れ
+            ShakeOnDamage();
+        }
+    }
+
     /// <summary>
     /// 現在のライフを取得する
     /// </summary>

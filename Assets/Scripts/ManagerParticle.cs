@@ -9,6 +9,11 @@ public class ManagerParticle : MonoBehaviourSingleton<ManagerParticle>
         SetIsDontDestroyOnLoad(true);
     }
 
+    public void ShowOnBombExplodeParticle(Vector2 pos, Transform parent, Action onComplete = null)
+    {
+        ShowParticle(pos, parent, Consts.Resources.Prefabs.Particles.BombExplode, onComplete);
+    }
+
     /// <summary>
     /// シールド時用のパーティクルを表示
     /// </summary>

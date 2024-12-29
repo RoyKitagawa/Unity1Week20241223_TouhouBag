@@ -11,6 +11,7 @@ TagManager:
   - StageSlotCell
   - StageSlot
   - Battle_PlayerHome
+  - PCBullet
   layers:
   - Default
   - TransparentFX

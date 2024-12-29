@@ -14,6 +14,7 @@ public static class Consts
 
         // バトル画面
         public const string BattlePlayerHome = "Battle_PlayerHome";
+        public const string Bullet = "PCBullet"; // 範囲攻撃用
     }
 
     public static class Roots
@@ -28,6 +29,7 @@ public static class Consts
         public const string BagItemsRoot = BagRoot + "/Items";
         public const string BagSlotRoot = BagRoot + "/Slots";
         // Battle
+        public const string BattleWeapons = Battle + "/Weapons";
         public const string BattleItemList = Battle + "/Items";
         // Particle
         public const string ParticlesBagEdit = BagEdit + "/Particles";
@@ -97,6 +99,7 @@ public static class Consts
                 public const string Destroy = _Particles + "/ParticleBomb";
                 public const string Heal = _Particles + "/ParticleHeal";
                 public const string Shield = _Particles + "/ParticleShield";
+                public const string BombExplode = _Particles + "/ParticleBombExplode";
             }
         }
 

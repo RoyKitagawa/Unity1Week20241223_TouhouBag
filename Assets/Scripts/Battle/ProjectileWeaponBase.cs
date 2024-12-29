@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ public class ProjectileWeaponBase : MonoBehaviour
     public static ProjectileWeaponBase Launch(BagItemDataBase data, CharacterBase target, Vector2 startPosition)
     {
         ProjectileWeaponBase weapon = new GameObject(data.ItemName.ToString()).AddComponent<ProjectileWeaponBase>();
+        weapon.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);
         weapon.transform.localScale = new Vector2(0.5f, 0.5f);
         weapon.transform.position = startPosition;
         weapon.data = data;
@@ -24,8 +24,17 @@ public class ProjectileWeaponBase : MonoBehaviour
         weapon.sr.sortingLayerName = Consts.SortingLayer.BattleWeapon;
 
         // 武器を到着地点まで移動させる
-        float duration = 1.0f;
-        float height = UnityEngine.Random.Range(1.5f, 2.5f);
+        float dist = Vector2.Distance(startPosition, target.transform.position);
+        float duration;
+        if(data.WeaponTargetType == TargetType.Self) duration = 1.0f;
+        else
+        {
+            float speed = 10f;
+            duration = Vector2.Distance(startPosition, target.transform.position) / speed;
+        }
+        // else if(dist / 10.0f > 1.0f) duration = 1.0f;
+        // else duration = dist / 10.0f;
+        float height = dist / 10.0f; // UnityEngine.Random.Range(1.5f, 2.5f);
         Vector2 endPosition = target.GetFuturePosition(duration);
 
         Sequence sequence = DOTween.Sequence();
@@ -41,7 +50,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 break;
             case LaunchType.ThrowStraight:
                 // まっすぐ刺す
-                sequence.Append(weapon.MoveInStraight(sequence, endPosition, duration));
+                sequence.Append(weapon.MoveInStraight(sequence, endPosition, duration / 2.0f));
                 // 終了処理
                 sequence.OnComplete(() => {
                     weapon.OnWeaponHit(target);
@@ -51,9 +60,20 @@ public class ProjectileWeaponBase : MonoBehaviour
                 // 各武器で別途登録する
                 if(data.ItemName == BagItemName.Canon)
                 {
-                    sequence.Append(weapon.LaunchCanon(sequence, endPosition, duration, () => {
-                        weapon.OnWeaponHit(target);
+                    sequence.Append(weapon.LaunchCanon(sequence, target, () => {
+                        weapon.sr.DOFade(0.0f, 0.5f).OnComplete(() => { Destroy(weapon.gameObject); });
+                        // weapon.OnWeaponHit(target);
                     }));
+                }
+                else if(data.ItemName == BagItemName.Bomb)
+                {
+                    // 山なり移動
+                    sequence.Append(weapon.MoveInParabola(sequence, startPosition, endPosition, height, duration));
+                    // 終了処理
+                    sequence.OnComplete(() => {
+                        weapon.BombExplode();
+                        // weapon.OnWeaponHit(target);
+                    });
                 }
                 else
                 {
@@ -67,13 +87,51 @@ public class ProjectileWeaponBase : MonoBehaviour
 
         return weapon;
     }
-    
-    private Sequence LaunchCanon(Sequence sequence, Vector2 endPosition, float duration, Action OnComplete)
+
+    private void BombExplode()
     {
+        // 一定範囲に一定時間Colliderを展開＆パーティクル表示
+        CircleCollider2D collider = new GameObject("BombExplode").AddComponent<CircleCollider2D>();
+        collider.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);
+        collider.transform.position = transform.position;
+        collider.radius = 2.0f;
+        collider.tag = Consts.Tags.Bullet;
+        collider.transform.DOLocalMoveX(0.0f, 0.2f).OnComplete(() => {
+            Destroy(collider.gameObject);
+        });
+
+        // そこに触れた敵にダメージ
+        collider.gameObject.AddComponent<Bullet>().data = data;
+
+        // 爆発パーティクル表示
+        ManagerParticle.Instance.ShowOnBombExplodeParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+
+        // 自分自身を破壊
+        Destroy(gameObject);
+    }
+    
+    /// <summary>
+    /// 河童キャノン
+    /// </summary>
+    /// <param name="sequence"></param>
+    /// <param name="target"></param>
+    /// <param name="OnComplete"></param>
+    /// <returns></returns>
+    private Sequence LaunchCanon(Sequence sequence, CharacterBase target, Action OnComplete)
+    {
+        float timeTillShot = 1.0f;
         Vector3 dest = new Vector3(transform.position.x, transform.position.y + UnityEngine.Random.Range(0.8f, 1.2f), transform.position.z);
-        Vector3 dir = (Vector3)endPosition - transform.position;
+        Vector3 dir = (Vector3)target.GetFuturePosition(timeTillShot + 0.2f) - dest;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        float timeTillShot = UnityEngine.Random.Range(0.8f, 1.2f);
+
+        // 射出ポイントオブジェクトが無ければ追加する
+        Transform launchPos = transform.Find("LaunchPos");
+        if(launchPos == null)
+        {
+            launchPos = new GameObject("LaunchPos").transform;
+            launchPos.SetParent(this.transform);
+            launchPos.localPosition = new Vector2(data.Size.x / 2f + 0.5f, 0.05f);
+        }
 
         if(sequence != null) sequence = DOTween.Sequence();
         sequence.Append(transform.DOMoveY(dest.y, timeTillShot))
@@ -81,24 +139,31 @@ public class ProjectileWeaponBase : MonoBehaviour
                 // 弾射出
                 SpriteRenderer sr = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
                 sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
-                sr.transform.position = transform.position;
+                sr.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);
+                sr.transform.position = launchPos.position;
+                sr.transform.rotation = Quaternion.Euler(0, 0, angle);
                 sr.color = new Color(1f, 1f, 1f, 0f);
                 sr.transform.localScale = new Vector2(0.1f, 0.1f);
+                sr.gameObject.AddComponent<Bullet>().data = data;
+
+                // 当たり判定とか
+                sr.tag = Consts.Tags.Bullet; // 範囲攻撃用タグ
+                Rigidbody2D rb = sr.gameObject.AddComponent<Rigidbody2D>();
+                rb.gravityScale = 0.0f;
+                rb.linearVelocity = (sr.transform.position - dest).normalized * 16f;
+                CircleCollider2D collider = sr.gameObject.AddComponent<CircleCollider2D>();
+                collider.radius = 0.5f;
+                collider.isTrigger = true;
+                
                 Sequence seq = DOTween.Sequence();
-                seq.Append(sr.transform.DOMove(endPosition, duration).OnComplete(() =>
-                {
-                    OnComplete?.Invoke();
-                    Destroy(sr.gameObject);
-                }).SetEase(Ease.Linear))
-                .Join(sr.transform.DOScale(1.0f, 1f))
-                .Join(sr.DOFade(1.0f, 1f));
+                seq.Append(sr.transform.DOScale(1.0f, 0.25f))
+                    .Join(sr.DOFade(1.0f, 0.25f))
+                    .OnComplete(() => {
+                        OnComplete?.Invoke();
+                    });
             })
             .Join(transform.DORotate(new Vector3(0.0f, 0.0f, angle), timeTillShot, RotateMode.FastBeyond360));
         return sequence;
-        // // 終了処理
-        // sequence.OnComplete(() => {
-        //     weapon.OnWeaponHit(target);
-        // });
     }
 
     private Sequence MoveInStraight(Sequence sequence, Vector2 endPosition, float duration)
@@ -136,30 +201,7 @@ public class ProjectileWeaponBase : MonoBehaviour
     {
         if(hitTarget != null)
         {
-            // 通常攻撃系以外クリティカルは発生しない
-            bool isCritical = data.WeaponDamageType == DamageType.NormalDamage ? RandUtil.GetRandomBool(0.1f) : false;
-            hitTarget.GainDamage(isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType);
-
-            // 回復系
-            if(data.WeaponDamageType == DamageType.Heal)
-            {
-                // 回復パーティクル
-                ManagerParticle.Instance.ShowOnHealParticle(hitTarget.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
-            }
-            // アーマー付与
-            else if(data.WeaponDamageType == DamageType.Shield)
-            {
-                // 回復パーティクル
-                ManagerParticle.Instance.ShowOnShieldParticle(hitTarget.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
-            }
-            // 攻撃系
-            else
-            {
-                // ヒットパーティクル
-                ManagerParticle.Instance.ShowOnDamageParticle(hitTarget.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
-                // ヒット時の揺れ
-                hitTarget.ShakeOnDamage();
-            }
+            hitTarget.OnWeaponHit(data);
             Destroy(gameObject);
         }
         else

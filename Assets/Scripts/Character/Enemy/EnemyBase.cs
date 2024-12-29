@@ -43,10 +43,17 @@ public class EnemyBase : CharacterBase
 
     public void OnTriggerEnter2D(Collider2D target)
     {
-        if(target.tag != Consts.Tags.BattlePlayerHome) return;
-        // 自機付近の範囲に触れた場合、移動終了からの攻撃開始に移行する
-        rb.linearVelocity = Vector2.zero;
-        isAttackMode = true;
+        if(target.tag == Consts.Tags.Bullet)
+        {
+            Bullet bullet = target.GetComponent<Bullet>();
+            OnWeaponHit(bullet.data);
+        }
+        if(target.tag == Consts.Tags.BattlePlayerHome)
+        {
+            // 自機付近の範囲に触れた場合、移動終了からの攻撃開始に移行する
+            rb.linearVelocity = Vector2.zero;
+            isAttackMode = true;
+        }
     }
 
     public void OnTriggerExit2D(Collider2D target)
