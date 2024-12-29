@@ -70,10 +70,6 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         
         SwitchMode(StageType.BagEditMode, 0.0f);
 
-        // 初期バッグ配置
-        SpawnAndPlaceItemAt(BagItemName.Bag2x2, BagItemLevel.Lv1, new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) });
-        SpawnAndPlaceItemAt(BagItemName.Bag2x2, BagItemLevel.Lv1, new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(3, 0), new Vector2Int(3, 1) });
-
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
     }
@@ -86,17 +82,19 @@ public class StageManager : MonoBehaviourSingleton<StageManager>
         UpdateRerollPriceImage();
     }
 
-    private void SpawnAndPlaceItemAt(BagItemName itemName, BagItemLevel lv, Vector2Int[] slots)
-    {
-        BagItem item = BagItemManager.InstantiateItem(itemName, lv); // アイテム生成
-        item.transform.position = GetSlotsCenterPos(slots); // 指定スロットの中心に配置
-        item.SetPhysicSimulator(false); // 物理判定OFF
-        item.SetItemCellSlotAtClosestSlot(); // セルのスロット情報設定
-        // item.AddPriceRenderer(); // 値段追加
-        item.SetIsPlaced(true); // アイテムを設置
-        item.SetIsPurchased(true); // 追加支払いが発生しないように購入済みにしておく
-        Add2List(item); // 一覧に追加
-    }
+    // private void PlaceItemAt()
+
+    // private void SpawnAndPlaceItemAt(BagItemName itemName, BagItemLevel lv, Vector2Int[] slots)
+    // {
+    //     BagItem item = BagItemManager.InstantiateItem(itemName, lv); // アイテム生成
+    //     item.transform.position = GetSlotsCenterPos(slots); // 指定スロットの中心に配置
+    //     item.SetPhysicSimulator(false); // 物理判定OFF
+    //     item.SetItemCellSlotAtClosestSlot(); // セルのスロット情報設定
+    //     // item.AddPriceRenderer(); // 値段追加
+    //     item.SetIsPlaced(true); // アイテムを設置
+    //     item.SetIsPurchased(true); // 追加支払いが発生しないように購入済みにしておく
+    //     Add2List(item); // 一覧に追加
+    // }
 
     private void InitItemSpawnAreaPos()
     {

@@ -32,9 +32,7 @@ public class ProjectileWeaponBase : MonoBehaviour
             float speed = 10f;
             duration = Vector2.Distance(startPosition, target.transform.position) / speed;
         }
-        // else if(dist / 10.0f > 1.0f) duration = 1.0f;
-        // else duration = dist / 10.0f;
-        float height = dist / 10.0f; // UnityEngine.Random.Range(1.5f, 2.5f);
+        float height = data.WeaponTargetType == TargetType.Self ? UnityEngine.Random.Range(1.5f, 2.5f) : dist / 10.0f;
         Vector2 endPosition = target.GetFuturePosition(duration);
 
         Sequence sequence = DOTween.Sequence();
@@ -42,7 +40,7 @@ public class ProjectileWeaponBase : MonoBehaviour
         {
             case LaunchType.ThrowParabola:
                 // 山なり移動
-                sequence.Append(weapon.MoveInParabola(sequence, startPosition, endPosition, height, duration));
+                sequence.Append(weapon.MoveInParabola(startPosition, endPosition, height, duration));
                 // 終了処理
                 sequence.OnComplete(() => {
                     weapon.OnWeaponHit(target);
@@ -50,7 +48,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 break;
             case LaunchType.ThrowStraight:
                 // まっすぐ刺す
-                sequence.Append(weapon.MoveInStraight(sequence, endPosition, duration / 2.0f));
+                sequence.Append(weapon.MoveInStraight(endPosition, duration / 2.0f));
                 // 終了処理
                 sequence.OnComplete(() => {
                     weapon.OnWeaponHit(target);
@@ -60,7 +58,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 // 各武器で別途登録する
                 if(data.ItemName == BagItemName.Canon)
                 {
-                    sequence.Append(weapon.LaunchCanon(sequence, target, () => {
+                    sequence.Append(weapon.LaunchCanon(target, () => {
                         weapon.sr.DOFade(0.0f, 0.5f).OnComplete(() => { Destroy(weapon.gameObject); });
                         // weapon.OnWeaponHit(target);
                     }));
@@ -68,7 +66,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 else if(data.ItemName == BagItemName.Bomb)
                 {
                     // 山なり移動
-                    sequence.Append(weapon.MoveInParabola(sequence, startPosition, endPosition, height, duration));
+                    sequence.Append(weapon.MoveInParabola(startPosition, endPosition, height, duration));
                     // 終了処理
                     sequence.OnComplete(() => {
                         weapon.BombExplode();
@@ -117,10 +115,10 @@ public class ProjectileWeaponBase : MonoBehaviour
     /// <param name="target"></param>
     /// <param name="OnComplete"></param>
     /// <returns></returns>
-    private Sequence LaunchCanon(Sequence sequence, CharacterBase target, Action OnComplete)
+    private Sequence LaunchCanon(CharacterBase target, Action OnComplete)
     {
         float timeTillShot = 1.0f;
-        Vector3 dest = new Vector3(transform.position.x, transform.position.y + UnityEngine.Random.Range(0.8f, 1.2f), transform.position.z);
+        Vector3 dest = new Vector3(transform.position.x, transform.position.y + UnityEngine.Random.Range(0.6f, 1.5f), transform.position.z);
         Vector3 dir = (Vector3)target.GetFuturePosition(timeTillShot + 0.2f) - dest;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
@@ -133,9 +131,14 @@ public class ProjectileWeaponBase : MonoBehaviour
             launchPos.localPosition = new Vector2(data.Size.x / 2f + 0.5f, 0.05f);
         }
 
-        if(sequence != null) sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
         sequence.Append(transform.DOMoveY(dest.y, timeTillShot))
             .OnComplete(() => {
+                // 既にバトルが終了している場合は何もしない
+                if(ManagerInGame.Instance.IsCurrentStateBagEdit == true)
+                {
+                    return;
+                }
                 // 弾射出
                 SpriteRenderer sr = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
                 sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
@@ -166,10 +169,10 @@ public class ProjectileWeaponBase : MonoBehaviour
         return sequence;
     }
 
-    private Sequence MoveInStraight(Sequence sequence, Vector2 endPosition, float duration)
+    private Sequence MoveInStraight(Vector2 endPosition, float duration)
     {
         // カスタムパスを設定して放物線移動を実現
-        if(sequence != null) sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
         sequence.Append(transform.DOLocalMove(endPosition, duration).SetEase(Ease.Linear));
 
         Vector3 dir = (Vector3)endPosition - transform.position;
@@ -178,10 +181,10 @@ public class ProjectileWeaponBase : MonoBehaviour
         return sequence;
     }
 
-    private Sequence MoveInParabola(Sequence sequence, Vector2 startPosition, Vector2 endPosition, float parabolaHeight, float duration)
+    private Sequence MoveInParabola(Vector2 startPosition, Vector2 endPosition, float parabolaHeight, float duration)
     {
         // カスタムパスを設定して放物線移動を実現
-        if(sequence != null) sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
         sequence.Append(DOTween.To(() => (Vector2)transform.position, x => transform.position = x, endPosition, duration)
             .OnUpdate(() =>
             {
@@ -213,8 +216,8 @@ public class ProjectileWeaponBase : MonoBehaviour
             Vector2 bounce2 = bounce1 + VectorUtil.Sub(bounce1, (Vector2)transform.position) / 3.0f;
 
             // シーケンスを作成
-            MoveInParabola(null, transform.position, bounce1, UnityEngine.Random.Range(0.5f, 1.0f), 0.5f).OnComplete(() => {
-                MoveInParabola(null, bounce1, bounce2, UnityEngine.Random.Range(0.2f, 0.5f), 0.3f).OnComplete(() => {
+            MoveInParabola(transform.position, bounce1, UnityEngine.Random.Range(0.5f, 1.0f), 0.5f).OnComplete(() => {
+                MoveInParabola(bounce1, bounce2, UnityEngine.Random.Range(0.2f, 0.5f), 0.3f).OnComplete(() => {
                     Destroy(gameObject);
                 });
             });

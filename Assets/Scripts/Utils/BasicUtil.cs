@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class BasicUtil
@@ -93,6 +94,13 @@ public static class BasicUtil
         Texture2D texture2D = new Texture2D(0, 0);
         texture2D.LoadImage(bytes);
         return Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), texture2D.width);
+    }
+
+    public static T ParseEnum<T>(string item) where T : struct, Enum
+    {
+        if(Enum.TryParse(item, out T output)) return output;
+        Debug.LogError("EnumのParseに失敗しました。文字列: " + item);
+        return default;
     }
 
     /// <summary>

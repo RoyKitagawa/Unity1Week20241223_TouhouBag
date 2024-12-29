@@ -141,7 +141,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         {
             foreach(EnemyBase enemy in enemies)
             {
-                Destroy(enemy.gameObject);
+                if(enemy != null) Destroy(enemy.gameObject);
             }
             enemies.Clear();
         }

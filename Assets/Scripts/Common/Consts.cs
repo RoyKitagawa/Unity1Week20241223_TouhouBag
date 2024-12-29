@@ -274,4 +274,12 @@ public static class Consts
         public const string BattleWeapon = "BattleWeapon";
         public const string UI = "UI";
     }
+
+    public static class PlayerPrefs
+    {
+        public static class Keys
+        {
+            public const string ProgressData = "ProgressData";
+        }
+    }
 }

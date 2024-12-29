@@ -72,6 +72,10 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         item.SetPhysicSimulator(false);
         // 金額関連
         item.AddPriceRenderer();
+        // Pivot
+        GameObject pivot = new GameObject(Consts.Names.Pivot);
+        item.SetPivot(pivot);
+        pivot.transform.localPosition = Vector2.zero;
         return item;
     }
 
