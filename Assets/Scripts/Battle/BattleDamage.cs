@@ -42,6 +42,13 @@ public class BattleDamage : MonoBehaviour
             case DamageType.Heal:
                 damage.text.color = Color.green;
                 break;
+            case DamageType.Shield:
+                damage.text.color = Color.gray;
+                break;
+            default:
+                Debug.LogError("未対応のDamageType: " + damageType);
+                break;
+
         }
 
         // ダメージ演出を動かす

@@ -23,6 +23,7 @@ public class BagItemDataScrewLv1 : BagItemDataBase
 
     // バトル画面用
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
+    public virtual LaunchType GetLaunchType() { return LaunchType.ThrowParabola; }
     public virtual TargetType GetTargetType() { return TargetType.Nearest; }
     public virtual float GetCooldown() { return 0.5f; }
     public virtual int GetDamage() { return 3; }

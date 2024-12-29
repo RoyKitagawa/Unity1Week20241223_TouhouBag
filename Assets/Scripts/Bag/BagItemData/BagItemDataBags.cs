@@ -17,6 +17,7 @@ public class BagItemDataBag1x1 : BagItemDataBase
 
     // バトル画面用
     DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
+    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 0f; }
     int BagItemDataBase.GetDamage() { return 0; }
@@ -42,6 +43,7 @@ public class BagItemDataBag3x1 : BagItemDataBase
 
     // バトル画面用
     DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
+    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 0f; }
     int BagItemDataBase.GetDamage() { return 0; }
@@ -67,6 +69,7 @@ public class BagItemDataBag2x2 : BagItemDataBase
 
     // バトル画面用
     DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
+    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 0f; }
     int BagItemDataBase.GetDamage() { return 0; }
@@ -91,6 +94,7 @@ public class BagItemDataBag2x1 : BagItemDataBase
 
     // バトル画面用
     DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
+    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 0f; }
     int BagItemDataBase.GetDamage() { return 0; }

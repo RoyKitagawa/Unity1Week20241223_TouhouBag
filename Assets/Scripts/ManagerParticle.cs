@@ -10,6 +10,16 @@ public class ManagerParticle : MonoBehaviourSingleton<ManagerParticle>
     }
 
     /// <summary>
+    /// シールド時用のパーティクルを表示
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="onComplete"></param>
+    public void ShowOnShieldParticle(Vector2 pos, Transform parent, Action onComplete = null)
+    {
+        ShowParticle(pos, parent, Consts.Resources.Prefabs.Particles.Shield, onComplete);
+    }
+
+    /// <summary>
     /// ヒール時用のパーティクルを表示
     /// </summary>
     /// <param name="parent"></param>

@@ -21,6 +21,7 @@ public class BagItemDataStageSlot : BagItemDataBase
 
     // バトル画面用
     DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
+    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
     TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
     float BagItemDataBase.GetCooldown() { return 1.25f; }
     int BagItemDataBase.GetDamage() { return 17; }

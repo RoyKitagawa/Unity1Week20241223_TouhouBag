@@ -7,6 +7,10 @@ public enum BagItemName
     Cucumber,
     Spanner,
     Screw,
+    Bomb,
+    Driver,
+    Canon,
+    Glove,
 
     Bag3x1,
     Bag2x2,
@@ -62,6 +66,7 @@ public enum DamageType
     NormalDamage,
     CriticalDamage,
     Heal,
+    Shield,
 }
 
 public enum TargetType
@@ -73,6 +78,14 @@ public enum TargetType
     Farthest,
     HighestLife,
     LowestLife,
+}
+
+public enum LaunchType
+{
+    None,
+    ThrowParabola,
+    ThrowStraight,
+    Unique,
 }
 
 public interface BagItemDataBase
@@ -107,6 +120,8 @@ public interface BagItemDataBase
     // バトル画面用
     // 攻撃種別
     public DamageType WeaponDamageType { get { return GetDamageType(); } }
+    // 武器射出種別
+    public LaunchType WeaponLaunchType { get { return GetLaunchType(); } }
     // 攻撃力
     public int WeaponDamage { get { return GetDamage(); } }
     // クールダウン時間
@@ -248,6 +263,12 @@ public interface BagItemDataBase
     /// </summary>
     /// <returns></returns>
     public DamageType GetDamageType();
+
+    /// <summary>
+    /// アイテムの射出方法
+    /// </summary>
+    /// <returns></returns>
+    public LaunchType GetLaunchType();
 
     /// <summary>
     /// アイテムの攻撃力

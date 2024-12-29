@@ -5,27 +5,11 @@ using UnityEngine;
 
 public class ProjectileWeaponBase : MonoBehaviour
 {
-    private static Dictionary<BagItemName, GameObject> weaponPrefab = new Dictionary<BagItemName, GameObject>();
     private BagItemDataBase data;
     private SpriteRenderer sr;
-    // public static void LaunchProjectileWeapon(BagItemName itemName, CharacterBase target)
-    // {
-    //     if(target == null || target.transform == null)
-    //     {
-    //         Debug.LogError("敵機が存在しません。武器投擲を終了します: " + itemName);
-    //     }
-    // }
 
     public static ProjectileWeaponBase Launch(BagItemDataBase data, CharacterBase target, Vector2 startPosition)
     {
-        // GameObject prefab = GetWeaponPrefab(data);
-        // if(prefab == null)
-        // {
-        //     Debug.LogError("投てき武器の生成に失敗: " + data.ItemName);
-        //     return null;
-        // }
-        // ProjectileWeaponBase weapon = Instantiate(prefab).GetComponent<ProjectileWeaponBase>();
-
         ProjectileWeaponBase weapon = new GameObject(data.ItemName.ToString()).AddComponent<ProjectileWeaponBase>();
         weapon.transform.localScale = new Vector2(0.5f, 0.5f);
         weapon.transform.position = startPosition;
@@ -44,24 +28,95 @@ public class ProjectileWeaponBase : MonoBehaviour
         float height = UnityEngine.Random.Range(1.5f, 2.5f);
         Vector2 endPosition = target.GetFuturePosition(duration);
 
-        // // 中間地点（高さを含む）を計算
-        // Vector3 peakPosition = (startPosition + endPosition) / 2;
-        // peakPosition.y += Mathf.Abs(endPosition.x - startPosition.x) / 4; // y軸方向に高さを追加（調整可能）
-
-        // シーケンスを作成
-        Sequence sequence = weapon.MoveInParabola(startPosition, endPosition, height, duration);
-        // 終了処理
-        sequence.OnComplete(() => {
-            weapon.OnWeaponHit(target);
-        });
+        Sequence sequence = DOTween.Sequence();
+        switch(data.WeaponLaunchType)
+        {
+            case LaunchType.ThrowParabola:
+                // 山なり移動
+                sequence.Append(weapon.MoveInParabola(sequence, startPosition, endPosition, height, duration));
+                // 終了処理
+                sequence.OnComplete(() => {
+                    weapon.OnWeaponHit(target);
+                });
+                break;
+            case LaunchType.ThrowStraight:
+                // まっすぐ刺す
+                sequence.Append(weapon.MoveInStraight(sequence, endPosition, duration));
+                // 終了処理
+                sequence.OnComplete(() => {
+                    weapon.OnWeaponHit(target);
+                });
+                break;
+            case LaunchType.Unique:
+                // 各武器で別途登録する
+                if(data.ItemName == BagItemName.Canon)
+                {
+                    sequence.Append(weapon.LaunchCanon(sequence, endPosition, duration, () => {
+                        weapon.OnWeaponHit(target);
+                    }));
+                }
+                else
+                {
+                    Debug.LogError("未対応なUnique武器種別: " + data.ItemName);
+                }
+                break;
+            default:
+                Debug.LogError("未対応の武器射出タイプ: " + data.WeaponLaunchType);
+                break;
+        }
 
         return weapon;
     }
-
-    private Sequence MoveInParabola(Vector2 startPosition, Vector2 endPosition, float parabolaHeight, float duration)
+    
+    private Sequence LaunchCanon(Sequence sequence, Vector2 endPosition, float duration, Action OnComplete)
     {
-        Sequence sequence = DOTween.Sequence();
+        Vector3 dest = new Vector3(transform.position.x, transform.position.y + UnityEngine.Random.Range(0.8f, 1.2f), transform.position.z);
+        Vector3 dir = (Vector3)endPosition - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        float timeTillShot = UnityEngine.Random.Range(0.8f, 1.2f);
+
+        if(sequence != null) sequence = DOTween.Sequence();
+        sequence.Append(transform.DOMoveY(dest.y, timeTillShot))
+            .OnComplete(() => {
+                // 弾射出
+                SpriteRenderer sr = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
+                sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
+                sr.transform.position = transform.position;
+                sr.color = new Color(1f, 1f, 1f, 0f);
+                sr.transform.localScale = new Vector2(0.1f, 0.1f);
+                Sequence seq = DOTween.Sequence();
+                seq.Append(sr.transform.DOMove(endPosition, duration).OnComplete(() =>
+                {
+                    OnComplete?.Invoke();
+                    Destroy(sr.gameObject);
+                }).SetEase(Ease.Linear))
+                .Join(sr.transform.DOScale(1.0f, 1f))
+                .Join(sr.DOFade(1.0f, 1f));
+            })
+            .Join(transform.DORotate(new Vector3(0.0f, 0.0f, angle), timeTillShot, RotateMode.FastBeyond360));
+        return sequence;
+        // // 終了処理
+        // sequence.OnComplete(() => {
+        //     weapon.OnWeaponHit(target);
+        // });
+    }
+
+    private Sequence MoveInStraight(Sequence sequence, Vector2 endPosition, float duration)
+    {
         // カスタムパスを設定して放物線移動を実現
+        if(sequence != null) sequence = DOTween.Sequence();
+        sequence.Append(transform.DOLocalMove(endPosition, duration).SetEase(Ease.Linear));
+
+        Vector3 dir = (Vector3)endPosition - transform.position;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+        return sequence;
+    }
+
+    private Sequence MoveInParabola(Sequence sequence, Vector2 startPosition, Vector2 endPosition, float parabolaHeight, float duration)
+    {
+        // カスタムパスを設定して放物線移動を実現
+        if(sequence != null) sequence = DOTween.Sequence();
         sequence.Append(DOTween.To(() => (Vector2)transform.position, x => transform.position = x, endPosition, duration)
             .OnUpdate(() =>
             {
@@ -91,6 +146,12 @@ public class ProjectileWeaponBase : MonoBehaviour
                 // 回復パーティクル
                 ManagerParticle.Instance.ShowOnHealParticle(hitTarget.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
             }
+            // アーマー付与
+            else if(data.WeaponDamageType == DamageType.Shield)
+            {
+                // 回復パーティクル
+                ManagerParticle.Instance.ShowOnShieldParticle(hitTarget.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
+            }
             // 攻撃系
             else
             {
@@ -110,8 +171,8 @@ public class ProjectileWeaponBase : MonoBehaviour
             Vector2 bounce2 = bounce1 + VectorUtil.Sub(bounce1, (Vector2)transform.position) / 3.0f;
 
             // シーケンスを作成
-            MoveInParabola(transform.position, bounce1, UnityEngine.Random.Range(0.5f, 1.0f), 0.5f).OnComplete(() => {
-                MoveInParabola(bounce1, bounce2, UnityEngine.Random.Range(0.2f, 0.5f), 0.3f).OnComplete(() => {
+            MoveInParabola(null, transform.position, bounce1, UnityEngine.Random.Range(0.5f, 1.0f), 0.5f).OnComplete(() => {
+                MoveInParabola(null, bounce1, bounce2, UnityEngine.Random.Range(0.2f, 0.5f), 0.3f).OnComplete(() => {
                     Destroy(gameObject);
                 });
             });

@@ -102,10 +102,9 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         float lowestLife = -1;
         foreach(CharacterBase enemy in enemies)
         {
-            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
-            if(lowestLife < 0 || lowestLife > targetEnemy.GetCurrentLife())
+            if(lowestLife < 0 || lowestLife > enemy.GetCurrentLife())
             {
-                lowestLife = targetEnemy.GetCurrentLife();
+                lowestLife = enemy.GetCurrentLife();
                 targetEnemy = enemy;
             }
         }
@@ -123,10 +122,9 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         float highestLife = -1;
         foreach(CharacterBase enemy in enemies)
         {
-            float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
-            if(highestLife < 0 || highestLife < targetEnemy.GetCurrentLife())
+            if(highestLife < 0 || highestLife < enemy.GetCurrentLife())
             {
-                highestLife = targetEnemy.GetCurrentLife();
+                highestLife = enemy.GetCurrentLife();
                 targetEnemy = enemy;
             }
         }

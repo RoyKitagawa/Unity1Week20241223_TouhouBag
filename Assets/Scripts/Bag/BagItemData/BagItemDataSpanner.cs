@@ -23,6 +23,7 @@ public class BagItemDataSpannerLv1 : BagItemDataBase
 
     // バトル画面用
     public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
+    public virtual LaunchType GetLaunchType() { return LaunchType.ThrowParabola; }
     public virtual TargetType GetTargetType() { return TargetType.Random; }
     public virtual float GetCooldown() { return 2f; }
     public virtual int GetDamage() { return 15; }

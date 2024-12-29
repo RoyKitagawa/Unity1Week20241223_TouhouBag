@@ -67,6 +67,7 @@ public class CharacterBase : MonoBehaviour
     {
         // ライフ更新
         if(damageType == DamageType.Heal) currentLife += damageAmt;
+        else if(damageType == DamageType.Shield) currentLife += damageAmt; // TODO シールド値とSliderを用意
         else currentLife -= damageAmt;
         // 余剰対策
         if(currentLife < 0) currentLife = 0;

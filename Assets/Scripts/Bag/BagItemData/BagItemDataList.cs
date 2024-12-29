@@ -32,6 +32,26 @@ public class BagItemDataList
                 else if(lv == BagItemLevel.Lv2) return new BagItemDataSpannerLv2();
                 else return new BagItemDataSpannerLv3();
 
+            case BagItemName.Bomb:
+                if(lv == BagItemLevel.Lv1) return new BagItemDataBombLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataBombLv2();
+                else return new BagItemDataBombLv3();
+
+            case BagItemName.Driver:
+                if(lv == BagItemLevel.Lv1) return new BagItemDataDriverLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataDriverLv2();
+                else return new BagItemDataDriverLv3();
+
+            case BagItemName.Canon:
+                if(lv == BagItemLevel.Lv1) return new BagItemDataCanonLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataCanonLv2();
+                else return new BagItemDataCanonLv3();
+
+            case BagItemName.Glove:
+                if(lv == BagItemLevel.Lv1) return new BagItemDataGloveLv1();
+                else if(lv == BagItemLevel.Lv2) return new BagItemDataGloveLv2();
+                else return new BagItemDataGloveLv3();
+
             case BagItemName.Bag2x2:
                 return new BagItemDataBag2x2();
 
@@ -68,7 +88,9 @@ public class BagItemDataList
                 break;
 
             case BagItemType.Item:
-                names = new HashSet<BagItemName> { BagItemName.Cucumber, BagItemName.Screw, BagItemName.Spanner };
+                names = new HashSet<BagItemName> {
+                    BagItemName.Cucumber, BagItemName.Screw, BagItemName.Spanner, BagItemName.Bomb,
+                    BagItemName.Driver, BagItemName.Canon, BagItemName.Glove };
                 break;
 
             case BagItemType.Bag:

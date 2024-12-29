@@ -96,6 +96,7 @@ public static class Consts
                 public const string Damage = _Particles + "/ParticleDamage";
                 public const string Destroy = _Particles + "/ParticleBomb";
                 public const string Heal = _Particles + "/ParticleHeal";
+                public const string Shield = _Particles + "/ParticleShield";
             }
         }
 
@@ -122,10 +123,22 @@ public static class Consts
                     public const string SpannerLv1 = _ItemsThumb + "/Apple4";
                     public const string SpannerLv2 = _ItemsThumb + "/Apple4";
                     public const string SpannerLv3 = _ItemsThumb + "/Apple4";
-
-                    public const string Apple = _ItemsThumb + "/Apple";
-                    public const string Apple4 = _ItemsThumb + "/Apple4";
-                    public const string Long = _ItemsThumb + "/Long";
+                    // 爆弾
+                    public const string BombLv1 = _ItemsThumb + "/Apple4";
+                    public const string BombLv2 = _ItemsThumb + "/Apple4";
+                    public const string BombLv3 = _ItemsThumb + "/Apple4";
+                    // ドライバー
+                    public const string DriverLv1 = _ItemsThumb + "/Apple4";
+                    public const string DriverLv2 = _ItemsThumb + "/Apple4";
+                    public const string DriverLv3 = _ItemsThumb + "/Apple4";
+                    // 河童キャノン
+                    public const string CanonLv1 = _ItemsThumb + "/Apple4";
+                    public const string CanonLv2 = _ItemsThumb + "/Apple4";
+                    public const string CanonLv3 = _ItemsThumb + "/Apple4";
+                    // 手袋
+                    public const string GloveLv1 = _ItemsThumb + "/Apple4";
+                    public const string GloveLv2 = _ItemsThumb + "/Apple4";
+                    public const string GloveLv3 = _ItemsThumb + "/Apple4";
                 }
 
                 public const string StageSlot = _Items + "/StageSlot";
@@ -141,6 +154,23 @@ public static class Consts
                 public const string SpannerLv1 = _Items + "/supana1";
                 public const string SpannerLv2 = _Items + "/supana2";
                 public const string SpannerLv3 = _Items + "/supana3";
+                // 爆弾
+                public const string BombLv1 = _Items + "/bakudan1";
+                public const string BombLv2 = _Items + "/bakudan2";
+                public const string BombLv3 = _Items + "/bakudan3";
+                // ドライバー
+                public const string DriverLv1 = _Items + "/doraibar1";
+                public const string DriverLv2 = _Items + "/doraibar2";
+                public const string DriverLv3 = _Items + "/doraibar3";
+                // 河童キャノン
+                public const string CanonLv1 = _Items + "/kappakyanon1";
+                public const string CanonLv2 = _Items + "/kappakyanon2";
+                public const string CanonLv3 = _Items + "/kappakyanon3";
+                public const string CanonBullet = _Items + "/kappatama1";
+                // 手袋
+                public const string GloveLv1 = _Items + "/tebukuro1";
+                public const string GloveLv2 = _Items + "/tebukuro2";
+                public const string GloveLv3 = _Items + "/tebukuro3";
 
                 public const string Bag2x2 = _Items + "/Bag_2x2";
             }

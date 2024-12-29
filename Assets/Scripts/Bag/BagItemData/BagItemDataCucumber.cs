@@ -23,6 +23,7 @@ public class BagItemDataCucumberLv1 : BagItemDataBase
 
     // バトル画面用
     public virtual DamageType GetDamageType() { return DamageType.Heal; }
+    public virtual LaunchType GetLaunchType() { return LaunchType.ThrowParabola; }
     public virtual TargetType GetTargetType() { return TargetType.Self; }
     public virtual float GetCooldown() { return 2.0f; }
     public virtual int GetDamage() { return 10; }
