@@ -13,6 +13,11 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
         
     }
 
+    public void DeleteSavedData()
+    {
+        PlayerPrefs.DeleteKey(Consts.PlayerPrefs.Keys.ProgressData);
+    }
+
     /// <summary>
     /// タイトルシーンへ遷移する
     /// </summary>
