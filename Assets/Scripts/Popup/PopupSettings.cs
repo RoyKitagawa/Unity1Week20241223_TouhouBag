@@ -12,8 +12,6 @@ public class PopupSettings : PopupBase
     protected override void ShowPopup()
     {
         base.ShowPopup();
-        int a = PlayerPrefs.GetInt(Consts.PlayerPrefs.Keys.VolumeMaster, 100);
-        Debug.Log("A: " + a);
         SetSliderValue(MasterSlider, MasterPercentage, PlayerPrefs.GetInt(Consts.PlayerPrefs.Keys.VolumeMaster, 100));
         SetSliderValue(SESlider, SEPercentage, PlayerPrefs.GetInt(Consts.PlayerPrefs.Keys.VolumeSE, 100));
         SetSliderValue(BGMSlider, BGMPercentage, PlayerPrefs.GetInt(Consts.PlayerPrefs.Keys.VolumeBGM, 100));
@@ -55,7 +53,6 @@ public class PopupSettings : PopupBase
 
     private int GetPercentage(Slider slider)
     {
-        int value = (int)(slider.value * 100 / slider.maxValue);
         return (int)(slider.value * 100 / slider.maxValue);
     }
 

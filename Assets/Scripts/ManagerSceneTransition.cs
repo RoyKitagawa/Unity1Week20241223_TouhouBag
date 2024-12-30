@@ -5,7 +5,8 @@ public enum SceneType
 {
     Title,
     Story,
-    InGame,
+    InGameBagEdit,
+    InGameBattle,
     Result,
 }
 
@@ -37,8 +38,10 @@ public class ManagerSceneTransition : MonoBehaviourSingleton<ManagerSceneTransit
         {
             case SceneType.Title:
                 return "Title";
-            case SceneType.InGame:
-                return "InGame";
+            case SceneType.InGameBagEdit:
+                return "InGameBag";
+            case SceneType.InGameBattle:
+                return "InGameBattle";
             case SceneType.Result:
                 return "Result";
             case SceneType.Story:

@@ -33,7 +33,7 @@ public class EnemyBase : CharacterBase
         // アタック処理を発生させる
         bool isCritical = RandUtil.GetRandomBool(0.1f);
         float damage = Random.Range(data.AttackDamage * 0.8f, data.AttackDamage * 1.2f);
-        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         player.GainDamage(isCritical ? damage * 1.5f : damage, isCritical ? DamageType.CriticalDamage : DamageType.NormalDamage);
         // ヒットパーティクル
         ManagerParticle.Instance.ShowOnDamageParticle(player.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
@@ -84,7 +84,7 @@ public class EnemyBase : CharacterBase
         // TODO 死亡処理
         rb.linearVelocity = Vector2.zero;
         ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
-        ManagerBattlePhase.Instance.OnEnemyDead(this);
+        ManagerBattleMode.Instance.OnEnemyDead(this);
 
         GetImage().DOFade(0.0f, 0.1f).OnComplete(() => {
             Destroy(gameObject);
@@ -100,8 +100,8 @@ public class EnemyBase : CharacterBase
     {
         Vector2 futurePos = VectorUtil.Add(transform.position, rb.linearVelocity * time);
         // TODO 敵が自機に近づいて止まる場合を考慮する。まだ未実装なため一旦はずっと左に行ってもらう
-        if(futurePos.x < ManagerBattlePhase.Instance.GetPlayerAttackableBoundaryX())
-            futurePos = new Vector2(ManagerBattlePhase.Instance.GetPlayerAttackableBoundaryX(), futurePos.y);
+        if(futurePos.x < ManagerBattleMode.Instance.GetPlayerAttackableBoundaryX())
+            futurePos = new Vector2(ManagerBattleMode.Instance.GetPlayerAttackableBoundaryX(), futurePos.y);
 
         return futurePos;
     }

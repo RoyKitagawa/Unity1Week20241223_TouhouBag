@@ -21,16 +21,16 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         enemySpawnElapsedTime += Time.deltaTime;
         if(enemySpawnElapsedTime >= enemySpawnCooldown)
         {
-            if(ManagerBattlePhase.Instance.GetRemainEnemiesToBeSpawned() > 0)
+            if(ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 0)
             {
                 enemySpawnElapsedTime = 0;
                 // ラスト1体はボス
-                EnemyBase enemy = ManagerBattlePhase.Instance.GetRemainEnemiesToBeSpawned() > 1
+                EnemyBase enemy = ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 1
                     ? SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)))
                     : SpawnNewEnemy(CharacterName.EnemyBossChiruno);
                 enemies.Add(enemy);
 
-                ManagerBattlePhase.Instance.OnEnemySpawn();
+                ManagerBattleMode.Instance.OnEnemySpawn();
             }
         }
     }
@@ -55,7 +55,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetNearestEnemy()
     {
-        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase nearestEnemy = null;
         float nearestDist = -1;
         foreach(CharacterBase enemy in enemies)
@@ -76,7 +76,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetFarthestEnemy()
     {
-        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase farthestEnemy = null;
         float closestDist = -1;
         foreach(CharacterBase enemy in enemies)
@@ -97,7 +97,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetEnemyWithLowestLife()
     {
-        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase targetEnemy = null;
         float lowestLife = -1;
         foreach(CharacterBase enemy in enemies)
@@ -117,7 +117,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetEnemyWithHighestLife()
     {
-        CharacterBase player = ManagerBattlePhase.Instance.GetPlayer();
+        CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase targetEnemy = null;
         float highestLife = -1;
         foreach(CharacterBase enemy in enemies)

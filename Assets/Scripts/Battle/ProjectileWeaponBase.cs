@@ -59,7 +59,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 if(data.ItemName == BagItemName.Canon)
                 {
                     sequence.Append(weapon.LaunchCanon(target, () => {
-                        weapon.sr.DOFade(0.0f, 0.5f).OnComplete(() => { Destroy(weapon.gameObject); });
+                        // weapon.sr.DOFade(0.0f, 0.5f).OnComplete(() => { Destroy(weapon.gameObject); });
                         // weapon.OnWeaponHit(target);
                     }));
                 }
@@ -134,36 +134,40 @@ public class ProjectileWeaponBase : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.Append(transform.DOMoveY(dest.y, timeTillShot))
             .OnComplete(() => {
+                // ランチャー本体を消す
+                sr.DOFade(0.0f, 0.5f).OnComplete(() => { Destroy(gameObject); });
+                
                 // 既にバトルが終了している場合は何もしない
-                if(ManagerInGame.Instance.IsCurrentStateBagEdit == true)
+                if(!ManagerBattleMode.Instance.IsBattleActive)
                 {
                     return;
                 }
                 // 弾射出
-                SpriteRenderer sr = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
-                sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
-                sr.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);
-                sr.transform.position = launchPos.position;
-                sr.transform.rotation = Quaternion.Euler(0, 0, angle);
-                sr.color = new Color(1f, 1f, 1f, 0f);
-                sr.transform.localScale = new Vector2(0.1f, 0.1f);
-                sr.gameObject.AddComponent<Bullet>().data = data;
+                SpriteRenderer bulletSR = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
+                bulletSR.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
+                bulletSR.sortingLayerName = Consts.SortingLayer.BattleWeapon;
+                bulletSR.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);
+                bulletSR.transform.position = launchPos.position;
+                bulletSR.transform.rotation = Quaternion.Euler(0, 0, angle);
+                // bulletSR.color = new Color(1f, 1f, 1f, 0f);
+                // bulletSR.transform.localScale = new Vector2(0.1f, 0.1f);
+                bulletSR.gameObject.AddComponent<Bullet>().data = data;
 
                 // 当たり判定とか
-                sr.tag = Consts.Tags.Bullet; // 範囲攻撃用タグ
-                Rigidbody2D rb = sr.gameObject.AddComponent<Rigidbody2D>();
+                bulletSR.tag = Consts.Tags.Bullet; // 範囲攻撃用タグ
+                Rigidbody2D rb = bulletSR.gameObject.AddComponent<Rigidbody2D>();
                 rb.gravityScale = 0.0f;
-                rb.linearVelocity = (sr.transform.position - dest).normalized * 16f;
-                CircleCollider2D collider = sr.gameObject.AddComponent<CircleCollider2D>();
+                rb.linearVelocity = (bulletSR.transform.position - dest).normalized * 16f;
+                CircleCollider2D collider = bulletSR.gameObject.AddComponent<CircleCollider2D>();
                 collider.radius = 0.5f;
                 collider.isTrigger = true;
                 
-                Sequence seq = DOTween.Sequence();
-                seq.Append(sr.transform.DOScale(1.0f, 0.25f))
-                    .Join(sr.DOFade(1.0f, 0.25f))
-                    .OnComplete(() => {
-                        OnComplete?.Invoke();
-                    });
+                // Sequence seq = DOTween.Sequence();
+                // seq.Append(bulletSR.transform.DOScale(1.0f, 0.25f))
+                //     // .Join(bulletSR.DOFade(1.0f, 0.25f))
+                //     .OnComplete(() => {
+                //         OnComplete?.Invoke();
+                //     });
             })
             .Join(transform.DORotate(new Vector3(0.0f, 0.0f, angle), timeTillShot, RotateMode.FastBeyond360));
         return sequence;
@@ -211,7 +215,7 @@ public class ProjectileWeaponBase : MonoBehaviour
         {
             // 対象がすでに死んでいる場合、2度ぐらい跳ねつつフェードアウトする
             // プレイヤーとの距離を取得
-            Vector2 playerPos = ManagerBattlePhase.Instance.GetPlayer().transform.position;
+            Vector2 playerPos = ManagerBattleMode.Instance.GetPlayer().transform.position;
             Vector2 bounce1 = transform.position + VectorUtil.Sub(transform.position, playerPos) / 3.0f;
             Vector2 bounce2 = bounce1 + VectorUtil.Sub(bounce1, (Vector2)transform.position) / 3.0f;
 

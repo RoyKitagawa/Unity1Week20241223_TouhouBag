@@ -43,7 +43,7 @@ public class BattleListItem : MonoBehaviour
 
     private void OnTriggerAttack()
     {
-        ManagerBattlePhase.Instance.TriggerPlayerAttack(data);
+        ManagerBattleMode.Instance.TriggerPlayerAttack(data);
     }
 
     /// <summary>

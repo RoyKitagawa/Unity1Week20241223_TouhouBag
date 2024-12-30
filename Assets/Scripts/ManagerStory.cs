@@ -36,7 +36,7 @@ public class ManagerStory : MonoBehaviour
             if(IsPageShowComplete())
             {
                 if(IsNextPageExist()) ShowNextPage();
-                else ManagerSceneTransition.Instance.Move2Scene(SceneType.InGame);
+                else ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBagEdit);
             }
             else
             {

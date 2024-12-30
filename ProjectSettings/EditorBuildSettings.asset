@@ -12,8 +12,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Story.unity
     guid: 373dcbf937f71a84cb4e1ee969973b02
   - enabled: 1
-    path: Assets/Scenes/InGame.unity
+    path: Assets/Scenes/InGameBag.unity
     guid: 60378518a1f08aa47a21e4333451df4b
+  - enabled: 1
+    path: Assets/Scenes/InGameBattle.unity
+    guid: 42256165ce052e1469d85358b22ec2fb
   - enabled: 1
     path: Assets/Scenes/Result.unity
     guid: 9214287ff08f8464ea869c43ae2614d6

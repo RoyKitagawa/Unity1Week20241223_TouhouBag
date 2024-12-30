@@ -41,7 +41,7 @@ public class CharacterPlayer : CharacterBase
         ManagerParticle.Instance.ShowOnDeadParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
         GetImage().DOFade(0.0f, 0.2f).SetUpdate(true);
         // TODO GAMEOVER演出表示＆リザルトへ
-        ManagerInGame.Instance.ShowGameOverResult();
+        ManagerBattleMode.Instance.ShowGameOverResult();
     }
 
     private bool isAlive = true;

@@ -202,7 +202,7 @@ public class BagItem : TappableObject
     public override bool OnTapDown()
     {
         // お金が足りないときは何も行わない（未購入のアイテムの場合）
-        if(!isPurchased && ManagerInGame.Instance.GetCurrentMoney() < data.Cost)
+        if(!isPurchased && ManagerGame.Instance.GetMoney() < data.Cost)
         {
             // 左右に揺らす
             Sequence sequence = DOTween.Sequence();
@@ -260,7 +260,7 @@ public class BagItem : TappableObject
         if(!IsPurchased())
         {
             // TODO コストを支払う
-            ManagerInGame.Instance.AddMoney(-data.Cost);
+            ManagerGame.Instance.AddMoney(-data.Cost);
             SetIsPurchased(true);
         }
 

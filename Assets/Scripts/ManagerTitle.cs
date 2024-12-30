@@ -37,8 +37,8 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
     /// <summary>
     /// タイトルシーンへ遷移する
     /// </summary>
-    public void Move2SceneInGame()
+    public void Move2SceneInGameBagEdit()
     {
-        ManagerSceneTransition.Instance.Move2Scene(SceneType.InGame);
+        ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBagEdit);
     }
 }

@@ -1,9 +1,17 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
+public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 {
+    [SerializeField]
+    private GameObject gameOverPanel;
+    [SerializeField]
+    private GameObject waveClearPanel;
+    [SerializeField]
+    private GameObject gameClearPanel;
+
     // 自機
     [SerializeField]
     private CharacterPlayer player;
@@ -19,6 +27,12 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     // キャラクターが所持しているアイテム一覧
     private HashSet<BattleListItem> items = new HashSet<BattleListItem>();
 
+    public bool IsBattleActive = false;
+
+    public void Start()
+    {
+        OnStartBattlePhase();
+    }
     public void OnStartBattlePhase()
     {
         ManagerEnemy.Instance.OnStartBattlePhase();
@@ -28,19 +42,19 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     public void OnGameClear()
     {
         Debug.Log("ゲームクリア！");
-        ManagerInGame.Instance.ShowGameClearResult();
+        ShowGameClearResult();
     }
 
     public void OnWaveClear()
     {
         Debug.Log("Wave成功！");
-        ManagerInGame.Instance.ShowWaveClearResult();
+        ShowWaveClearResult();
     }
 
     public void OnWaveFail()
     {
         Debug.Log("Wave失敗…");
-        ManagerInGame.Instance.ShowGameOverResult();
+        ShowGameOverResult();
     }
 
     /// <summary>
@@ -48,6 +62,9 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     /// </summary>
     public void InitializeBattle()
     {
+        // バトル開始フラグ
+        IsBattleActive = true;
+
         // 既存の（過去WAVEの）アイテムが残っている場合は削除する
         foreach(BattleListItem item in items) { GameObject.Destroy(item); }
         items.Clear();
@@ -110,7 +127,7 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
         if(stageProgressSlider.value <= 0 // ステージから全ての敵機が出現済み
             && ManagerEnemy.Instance.GetEnemiesCount() <= 0) // ステージ上の生存敵機が0
         {
-            ManagerInGame.Instance.ShowWaveClearResult();
+            ShowWaveClearResult();
         }
     }
 
@@ -174,6 +191,74 @@ public class ManagerBattlePhase : MonoBehaviourSingleton<ManagerBattlePhase>
     // {
     //     target.GainDamage(damageAmt, damageType);
     // }
+
+    public void ShowGameClearResult()
+    {
+        IsBattleActive = false;
+        gameClearPanel.transform.position = new Vector2(BasicUtil.GetScreenWorldCorners(Camera.main).width, 0.0f);
+    }
+
+    public void ShowWaveClearResult()
+    {
+        IsBattleActive = false;
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        // 時間を止める
+        waveClearPanel.gameObject.SetActive(true);
+        waveClearPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetUpdate(true);
+        sequence.Append(waveClearPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        sequence.Append(waveClearPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
+        sequence.OnComplete(() => {
+            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+            ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBagEdit);
+            waveClearPanel.gameObject.SetActive(false);
+            ResumeTimer();
+
+            // 各種オブジェクト削除
+            GameObject weapons = BasicUtil.GetRootObject(Consts.Roots.BattleWeapons);
+            Destroy(weapons);
+            GameObject items = BasicUtil.GetRootObject(Consts.Roots.BattleItemList);
+            Destroy(items.gameObject);
+
+        }).SetDelay(0.5f);
+        PauseTimer();
+
+        // 進捗を保存する
+        SaveDataManager.SaveProgress();
+    }
+
+    public void ShowGameOverResult()
+    {
+        IsBattleActive = false;
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        // 時間を止める
+        gameOverPanel.gameObject.SetActive(true);
+        gameOverPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetUpdate(true);
+        sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
+        sequence.OnComplete(() => {
+            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+            ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
+            gameOverPanel.gameObject.SetActive(false);
+            ResumeTimer();
+        }).SetDelay(0.5f);
+        PauseTimer();
+    }
+
+
+    private void PauseTimer()
+    {
+        Time.timeScale = 0.0f;
+    }
+
+    private void ResumeTimer()
+    {
+        Time.timeScale = 1.0f;
+    }
+
 
     public float GetPlayerAttackableBoundaryX()
     {
