@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
@@ -222,7 +223,7 @@ public class BagItem : TappableObject
         if(transform.tag == Consts.Tags.Bag && isPlaced)
         {
             // タップした座標での確認
-            BagItem item = StageManager.Instance.GetItemExistAtWorld(BasicUtil.GetMousePos());
+            BagItem item = ManagerGame.Instance.GetItemExistAtWorld(BasicUtil.GetMousePos());
             if(item != null)
             {
                 // バッグの上にアイテムがあるため、アイテムの方の処理を優先する
@@ -233,7 +234,7 @@ public class BagItem : TappableObject
             foreach(BagItemCell cell in cells)
             {
                 if(cell.SlotPos.Equals(new Vector2Int(-1, -1))) continue;
-                if(StageManager.Instance.IsItemExistAtSlot(cell.SlotPos))
+                if(ManagerGame.Instance.IsItemExistAtSlot(cell.SlotPos))
                 {
                     // バッグ上にアイテムがあるため、なにもしない
                     return false;
@@ -343,7 +344,7 @@ public class BagItem : TappableObject
             {
                 OnItemPlaced();
                 // マージする。既存アイテムを削除して、移動したアイテムを進化させる
-                StageManager.Instance.RemoveFromList(mergeTarget);
+                ManagerGame.Instance.RemoveFromList(mergeTarget);
                 Destroy(mergeTarget.gameObject);
                 // アイテムを進化させる
                 EvolveItem();
@@ -398,7 +399,7 @@ public class BagItem : TappableObject
         foreach(BagItemCell cell in cells)
         {
             if(cell.SlotPos.Equals(new Vector2Int(-1, -1))) continue;
-            HashSet<BagItem> bags = StageManager.Instance.GetBagsExistAtSlot(cell.SlotPos);
+            HashSet<BagItem> bags = ManagerGame.Instance.GetBagsExistAtSlot(cell.SlotPos);
             foreach(BagItem bag in bags)
             {
                 if(!bag.isPlaced) continue; // 設置されていないアイテムはスルー
@@ -419,7 +420,7 @@ public class BagItem : TappableObject
         foreach(BagItemCell cell in cells)
         {
             if(cell.SlotPos.Equals(new Vector2Int(-1, -1))) continue;
-            HashSet<BagItem> items = StageManager.Instance.GetItemsExistAtSlot(cell.SlotPos);
+            HashSet<BagItem> items = ManagerGame.Instance.GetItemsExistAtSlot(cell.SlotPos);
             foreach(BagItem item in items)
             {
                 if(!item.isPlaced) continue; // 設置されていないアイテムはスルー
@@ -573,7 +574,7 @@ public class BagItem : TappableObject
         if(cells.Count <= 0) InitCells();
         foreach(BagItemCell cell in cells)
         {
-            Vector2Int slotPos = StageManager.Instance.GetClosestSlotPos(cell.transform.position);
+            Vector2Int slotPos = ManagerGame.Instance.GetClosestSlotPos(cell.transform.position);
             cell.SlotPos = slotPos;
         }
     }
@@ -631,16 +632,16 @@ public class BagItem : TappableObject
     /// <param name="slotPos"></param>
     public void PlaceItemAt(Rotation rot, Vector2Int[] slotPos)
     {
-        string spos = "";
-        int i = 0;
-        foreach(Vector2Int p in slotPos)
-        {
-            if(i != 0) spos += " / ";
-            spos += p;
-            i++;
-        }
-        Debug.Log("PlaceItemAt: " + name + " / rot = " + rot + " / slotPos = " + spos);
-        Vector2 pos = StageManager.Instance.GetSlotsCenterPos(slotPos);
+        // string spos = "";
+        // int i = 0;
+        // foreach(Vector2Int p in slotPos)
+        // {
+        //     if(i != 0) spos += " / ";
+        //     spos += p;
+        //     i++;
+        // }
+        // Debug.Log("PlaceItemAt: " + name + " / rot = " + rot + " / slotPos = " + spos);
+        Vector2 pos = ManagerGame.Instance.GetSlotsCenterPos(slotPos);
         PlaceItemAt(rot, pos);
     }
 
@@ -711,6 +712,17 @@ public class BagItem : TappableObject
         }
         return slotPos;
     }
+
+    public void SetSlotPos(Vector2Int[] slotPos)
+    {
+        if(slotPos.Length != cells.Count)
+        {
+            Debug.LogError("SlotPosの設定に失敗: name = " + name);
+            return;
+        }
+
+    }
+
     /// <summary>
     /// 指定SlotPosにセルが存在するか確認する
     /// </summary>

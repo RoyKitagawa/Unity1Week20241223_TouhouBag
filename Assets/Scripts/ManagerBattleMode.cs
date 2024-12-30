@@ -31,10 +31,6 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
     public void Start()
     {
-        OnStartBattlePhase();
-    }
-    public void OnStartBattlePhase()
-    {
         ManagerEnemy.Instance.OnStartBattlePhase();
         InitializeBattle();
     }
@@ -62,6 +58,10 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     /// </summary>
     public void InitializeBattle()
     {
+        // データ更新（念のため）
+        SaveData data = SaveDataManager.LoadProgress();
+        if(data != null) SaveDataManager.ApplySavedData(data, false);
+
         // バトル開始フラグ
         IsBattleActive = true;
 
@@ -70,7 +70,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         items.Clear();
 
         // BagEditModeの最新アイテムを取得し、Battle用のアイテムリストを作成する
-        foreach(BagItem item in StageManager.Items)
+        foreach(BagItem item in ManagerGame.Items)
         {
             if(!item.IsPlaced()) continue;
             BattleListItem battleItem = BattleListItem.InstantiateBattleListItem(item.GetDataItemName(), item.GetDataItemLevel());

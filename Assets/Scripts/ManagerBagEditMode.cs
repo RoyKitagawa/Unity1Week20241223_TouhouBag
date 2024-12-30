@@ -25,7 +25,8 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     private Rect itemSpawnArea;
     private bool isInitialized = false;
     
-    // // 現状のステージ進捗ステータス
+    // 現状のステージ進捗ステータス
+    private Vector2Int stageSize = new Vector2Int(6, 8);
     // private int currentWave;
     // private int totalWave;
 
@@ -50,23 +51,21 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
 
         // スロット初期化処理
-        StageManager.Instance.ClearAllInStageObjectLists();
+        ManagerGame.Instance.ClearAllInStageObjectLists();
         CreateBorderColliders();
 
         // ステージ情報整理
-        StageManager.Instance.InitStage();
+        InitStageScale();
     
         // Reroll関連
         defaultRerollButtonPos = rerollButton.transform.position;
         UpdateRerollPriceImage();
         
-    
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
 
+        // 金銭初期化
         ManagerGame.Instance.SetMoney(ManagerGame.Instance.InitialMoneyAmt);
-        // StageManager.Instance.InitializeStage();
-        // StageManager.Instance.OnStartBagEditMode();
 
         // ロード処理
         SaveData saveData = SaveDataManager.LoadProgress();
@@ -76,17 +75,77 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             BagItem bagA = BagItemManager.InstantiateItem(BagItemName.Bag2x2, BagItemLevel.Lv1);
             bagA.SetIsPurchased(true);
             bagA.PlaceItemAt(Rotation.Default, new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) });
-            StageManager.Instance.Add2List(bagA);
+            ManagerGame.Instance.Add2List(bagA);
             BagItem bagB = BagItemManager.InstantiateItem(BagItemName.Bag2x2, BagItemLevel.Lv1);
             bagB.SetIsPurchased(true);
             bagB.PlaceItemAt(Rotation.Default, new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(3, 0), new Vector2Int(3, 1) });
-            StageManager.Instance.Add2List(bagB);
+            ManagerGame.Instance.Add2List(bagB);
         }
         else
         {
             // データをもとにゲーム進捗、バッグの状況を復元
-            SaveDataManager.ApplySavedData(saveData);
+            SaveDataManager.ApplySavedData(saveData, true);
         }
+    }
+
+    /// <summary>
+    /// 指定マス分のバッグ配置用ステージスロットを作成する
+    /// </summary>
+    /// <param name="sizeX"></param>
+    /// <param name="sizeY"></param>
+    private void CreateStageSlots(int sizeX, int sizeY)
+    {
+        for(int x = 0; x < sizeX; x++)
+        {
+            for(int y = 0; y < sizeY; y++)
+            {
+                BagItem slot = BagItemManager.InstantiateItem(BagItemName.StageSlot, BagItemLevel.Lv1);
+                slot.SetPhysicSimulator(false);
+                slot.transform.localPosition = new Vector2(x, y);
+                slot.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BagSlotRoot).transform);
+
+                // 色味お試し変更
+                if((x + y) % 2 == 0) slot.SetImageColor(Color.gray);
+                else slot.SetImageColor(Color.white);
+                // スロット情報設定
+                slot.InitCells();
+                BagItemCell cell = slot.GetCellAtCellPos(Vector2Int.zero);
+                cell.SlotPos = new Vector2Int(x, y);
+                cell.ClearOverlayColor();
+                slot.SetIsPlaced(true);
+
+                // リストに追加
+                ManagerGame.Slots.Add(slot);
+            }
+        }
+
+        Transform root = BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform;
+        root.localPosition = new Vector2((-sizeX / 2.0f) + 0.5f, (-sizeY / 2.0f) + 0.5f);
+    }
+
+    private void InitStageScale()
+    {
+        float ratioH;
+        float ratioV;
+
+        // スロット生成
+        CreateStageSlots(stageSize.x, stageSize.y);
+        
+        // 画像サイズ取得
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        Vector2 rightScreenSize = new Vector2(screenCorners.width / 2.0f, screenCorners.height);
+        Vector2 rightScreenCenterPos = new Vector2(rightScreenSize.x / 2.0f, 0.0f);
+
+        // 画面の右半分の中央に配置する。画面右半分になるべくしっかり入るスケールにする
+        ratioH = rightScreenSize.x / stageSize.x  * 0.8f; // 0.8係数はマージンが割り
+        ratioV = rightScreenSize.y / stageSize.y * 0.8f;
+        float scale = ratioH < ratioV ? ratioH : ratioV;
+
+        BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform.localScale = new Vector2(scale, scale);
+        BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform.position = new Vector2(
+            rightScreenCenterPos.x - (stageSize.x / 2f),
+            rightScreenCenterPos.y - (stageSize.y / 2f)
+        );
     }
 
     private BagItemType[] spawnItemTypes = {
@@ -145,7 +204,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         ManagerGame.Instance.AddMoney(-rerollPrice);
 
         // 未購入のものは削除する
-        StageManager.Items.RemoveWhere(item => {
+        ManagerGame.Items.RemoveWhere(item => {
             if(!item.IsPurchased())
             {
                 Destroy(item.gameObject);
@@ -153,7 +212,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             }
             return false; // 残す
         });
-        StageManager.Bags.RemoveWhere(item => {
+        ManagerGame.Bags.RemoveWhere(item => {
             if(!item.IsPurchased())
             {
                 Destroy(item.gameObject);
@@ -166,7 +225,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         int spawnMaxItem = 3;
         for(int i = 0; i < spawnMaxItem; i++)
         {
-            BagItem item = StageManager.Instance.SpawnRandomItem(RandUtil.GetRandomItem(spawnItemTypes));
+            BagItem item = ManagerGame.Instance.SpawnRandomItem(RandUtil.GetRandomItem(spawnItemTypes));
             item.transform.position = new Vector2(
                 itemSpawnArea.min.x + (itemSpawnArea.width / (spawnMaxItem - 1) * i), 
                 itemSpawnArea.y);
@@ -195,7 +254,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     {
         HashSet<BagItem> removeList = new HashSet<BagItem>();
         // バッグリスト
-        foreach(BagItem bag in StageManager.Bags)
+        foreach(BagItem bag in ManagerGame.Bags)
         {
             if(!bag.IsPlaced())
             {
@@ -204,7 +263,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             }
         }
         // アイテムリスト
-        foreach(BagItem item in StageManager.Items)
+        foreach(BagItem item in ManagerGame.Items)
         {
             if(!item.IsPlaced())
             {
@@ -215,7 +274,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         // 実際にリストから削除
         foreach(BagItem item in removeList)
         {
-            StageManager.Instance.RemoveFromList(item);
+            ManagerGame.Instance.RemoveFromList(item);
         }
     }
 
