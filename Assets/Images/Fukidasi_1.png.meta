@@ -199,7 +199,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Fukidasi_1_0: -8610987531335963970
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

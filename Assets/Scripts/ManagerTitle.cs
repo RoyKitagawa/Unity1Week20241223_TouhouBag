@@ -1,7 +1,12 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
 {
+
+
+    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -12,6 +17,17 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
     {
         
     }
+
+    public void OnClickSettings()
+    {
+        PopupBase.Show(PopupType.Settings);
+    }
+
+    public void OnClickTutorialStart()
+    {
+        PopupBase.Show(PopupType.Tutorial);
+    }
+
 
     public void DeleteSavedData()
     {

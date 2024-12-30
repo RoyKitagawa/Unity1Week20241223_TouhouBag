@@ -280,6 +280,9 @@ public static class Consts
         public static class Keys
         {
             public const string ProgressData = "ProgressData";
+            public const string VolumeMaster = "VolumeMaster";
+            public const string VolumeSE = "VolumeSE";
+            public const string VolumeBGM = "VolumeBGM";
         }
     }
 }
