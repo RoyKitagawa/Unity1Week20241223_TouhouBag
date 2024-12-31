@@ -12,6 +12,7 @@ public class CharacterBase : MonoBehaviour
     protected SpriteRenderer sr;
     protected bool isInitialized = false; // 初期化済みか
     // 現状のライフ
+    protected float currentArmor = 0.0f;
     protected float currentLife = 1.0f;
     // ShakeSequence
     private Sequence shakeSequence = null;
@@ -66,12 +67,7 @@ public class CharacterBase : MonoBehaviour
     public virtual void GainDamage(float damageAmt, DamageType damageType)
     {
         // ライフ更新
-        if(damageType == DamageType.Heal) currentLife += damageAmt;
-        else if(damageType == DamageType.Shield) currentLife += damageAmt; // TODO シールド値とSliderを用意
-        else currentLife -= damageAmt;
-        // 余剰対策
-        if(currentLife < 0) currentLife = 0;
-        else if(currentLife > data.MaxLife) currentLife = data.MaxLife;
+        ApplyDamage2Life(damageAmt, damageType);
         
         // ダメージ表記演出を行う
         BattleDamage.ShowDamageEffect(
@@ -84,6 +80,42 @@ public class CharacterBase : MonoBehaviour
         {
             OnDead();
         }
+    }
+
+    private void ApplyDamage2Life(float damageAmt, DamageType damageType)
+    {
+        // ヒールは体力回復
+        if(damageType == DamageType.Heal)
+        {
+            currentLife += damageAmt;
+        }
+        // シールドはアーマー回復
+        else if(damageType == DamageType.Shield)
+        {
+            currentArmor += damageAmt;
+        }
+        // 通常時はシールドを優先してダメージを負う
+        else
+        {
+            // アーマーだけで受けきれる場合
+            if(currentArmor > damageAmt)
+            {
+                currentArmor -= damageAmt;
+            }
+            // 肉に貫通する場合
+            else
+            {
+                damageAmt -= currentArmor;
+                currentArmor = 0.0f;
+                currentLife -= damageAmt;
+            }
+        }
+
+        // 余剰対策
+        if(currentArmor < 0) currentArmor = 0;
+        else if(currentArmor > data.MaxLife) currentArmor = data.MaxLife;
+        if(currentLife < 0) currentLife = 0;
+        else if(currentLife > data.MaxLife) currentLife = data.MaxLife;
     }
 
     public void OnWeaponHit(BagItemDataBase data)

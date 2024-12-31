@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     private GameObject waveClearPanel;
     [SerializeField]
     private GameObject gameClearPanel;
+    [SerializeField]
+    private TextMeshProUGUI enemyProgressText;
 
     // 自機
     [SerializeField]
@@ -58,7 +61,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     /// </summary>
     public void InitializeBattle()
     {
-        // データ更新（念のため）
+        // データ更新：デバッグ用処理
         SaveData data = SaveDataManager.LoadProgress();
         if(data != null) SaveDataManager.ApplySavedData(data, false);
 
@@ -80,17 +83,18 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         // 画面内にアイテム一覧を表示する
         int index = 0;
         GameObject itemsRoot = BasicUtil.GetRootObject(Consts.Roots.BattleItemList);
-        Vector2 itemListStartPos = new Vector2(-8f, -4.25f);
+        Vector2 itemListStartPos = new Vector2(-8f, -4.3f);
         foreach(BattleListItem item in items)
         {
             item.transform.SetParent(itemsRoot.transform);
-            item.transform.localPosition = new Vector2(itemListStartPos.x + index * 1.2f, itemListStartPos.y);
+            item.transform.localScale = new Vector2(0.8f, 0.8f);
+            item.transform.localPosition = new Vector2(itemListStartPos.x + index * 1.2f * 0.8f, itemListStartPos.y);
             index ++;
         }
 
         // ミカン箱を設置する
         Transform root = BasicUtil.GetRootObject(Consts.Roots.BoxRoot).transform;
-        float y = 5.5f;
+        float y = 4.0f;
         for(int i = 0; i < 20; i++) // 最大20個（-5 ~ 5 範囲の、最小単位0.5なため）
         {
             y -= Random.Range(0.5f, 2.0f);
@@ -102,12 +106,21 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         }
 
         // 敵機関連
-        totalEnemyInStage = 20;
         stageProgressSlider.maxValue = totalEnemyInStage;
         stageProgressSlider.value = totalEnemyInStage;
 
         // プレイヤーキャラクターの初期化
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
+    }
+
+    public void Update()
+    {
+        UpdateEnemySpawnProgressText();
+    }
+
+    public void UpdateEnemySpawnProgressText()
+    {
+        enemyProgressText.text = "敵出現率：" + (int)(stageProgressSlider.value / stageProgressSlider.maxValue * 100) + "%";
     }
 
     public int GetRemainEnemiesToBeSpawned()
@@ -231,20 +244,21 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     public void ShowGameOverResult()
     {
         IsBattleActive = false;
-        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
-        // 時間を止める
-        gameOverPanel.gameObject.SetActive(true);
-        gameOverPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
-        Sequence sequence = DOTween.Sequence();
-        sequence.SetUpdate(true);
-        sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
-        sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
-        sequence.OnComplete(() => {
-            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
-            ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
-            gameOverPanel.gameObject.SetActive(false);
-            ResumeTimer();
-        }).SetDelay(0.5f);
+        // Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        // // 時間を止める
+        // gameOverPanel.gameObject.SetActive(true);
+        // gameOverPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
+        // Sequence sequence = DOTween.Sequence();
+        // sequence.SetUpdate(true);
+        // sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
+        // sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
+        // sequence.OnComplete(() => {
+        //     // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+        //     ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
+        //     gameOverPanel.gameObject.SetActive(false);
+        //     ResumeTimer();
+        // }).SetDelay(0.5f);
+        PopupBase.Show(PopupType.GameOver);
         PauseTimer();
     }
 

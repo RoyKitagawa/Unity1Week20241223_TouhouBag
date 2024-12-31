@@ -5,7 +5,7 @@ using UnityEngine;
 public class CharacterPlayer : CharacterBase
 {
     [SerializeField]
-    private HPBar hpBar;
+    private HPBar hpBar, armorBar;
     
     public override void InitializeCharacter(CharacterDataBase characterData)
     {
@@ -13,6 +13,7 @@ public class CharacterPlayer : CharacterBase
         base.InitializeCharacter(characterData);
 
         // HPバー初期化
+        armorBar.Initialize(data.MaxLife, 0.0f); // アーマーは一旦HPと同じ値をMAXとする
         hpBar.Initialize(data.MaxLife, currentLife);
     }
 
@@ -24,6 +25,7 @@ public class CharacterPlayer : CharacterBase
     public override void GainDamage(float damageAmt, DamageType damageType)
     {
         base.GainDamage(damageAmt, damageType);
+        armorBar.SetCurrentValue(currentArmor);
         hpBar.SetCurrentValue(currentLife);
     }
 

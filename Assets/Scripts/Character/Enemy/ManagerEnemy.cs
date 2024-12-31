@@ -150,7 +150,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         enemySpawnArea = BasicUtil.CreateRectFromCenter(
             new Vector2(corners.max.x + 2.0f, 0.0f),
             0.0f,
-            corners.height - 3.0f);
+            corners.height - 4.0f);
     }
 
     /// <summary>

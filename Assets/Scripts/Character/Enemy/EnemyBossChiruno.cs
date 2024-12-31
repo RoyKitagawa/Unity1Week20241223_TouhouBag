@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class EnemyBossChiruno : EnemyBase
 {
-    Sequence moveImageSequence;
+    [SerializeField]
+    private HPBar hpBar;
+    private RectTransform hpBarRectTransform;
+    private Vector3 offset = new Vector3(0.0f, -1.6f, 0.0f);
+    private Sequence moveImageSequence;
+
     public void Start()
     {
         moveImageSequence = DOTween.Sequence();
@@ -13,6 +18,29 @@ public class EnemyBossChiruno : EnemyBase
             .AppendInterval(1f)
             .SetLoops(-1)
             .SetAutoKill(true);
+
+        // HPBar対応
+        hpBar.Initialize(data.MaxLife, data.MaxLife);
+        hpBarRectTransform = hpBar.GetComponent<RectTransform>();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(transform.position + offset);
+        hpBarRectTransform.position = screenPos;
+    }
+
+    /// <summary>
+    /// ダメージ付与
+    /// </summary>
+    /// <param name="damageAmt"></param>
+    /// <param name="damageType"></param>
+    public override void GainDamage(float damageAmt, DamageType damageType)
+    {
+        // ダメージ演出
+        base.GainDamage(damageAmt, damageType);
+        hpBar.SetCurrentValue(currentLife);
     }
 
     public void OnDestroy()

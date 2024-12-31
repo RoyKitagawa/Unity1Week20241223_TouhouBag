@@ -5,6 +5,7 @@ public enum PopupType
 {
     Tutorial,
     Settings,
+    GameOver,
 }
 
 public abstract class PopupBase : MonoBehaviour
@@ -15,7 +16,7 @@ public abstract class PopupBase : MonoBehaviour
 
     public static void Show(PopupType type)
     {
-        Time.timeScale = 0.0f;
+        // Time.timeScale = 0.0f;
         GameObject obj = BasicUtil.LoadGameObject4Resources(GetPopupResourcesPath(type));
         PopupBase popup = Instantiate(obj).GetComponentInChildren<PopupBase>();
         popup.ShowPopup();
@@ -31,8 +32,11 @@ public abstract class PopupBase : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         sequence.Append(transform.DOScale(1.0f, duration));
         sequence.Join(canvasGroup.DOFade(1.0f, duration));
+        sequence.OnComplete(() => { OnShown(); });
         sequence.SetUpdate(true);
     }
+
+    protected virtual void OnShown() {}
 
     protected virtual void HidePopup()
     {
@@ -45,8 +49,11 @@ public abstract class PopupBase : MonoBehaviour
             Time.timeScale = 1.0f;
             Destroy(RootCanvas.gameObject);
         });
+        sequence.OnComplete(() => { OnHidden(); });
         sequence.SetUpdate(true);
     }
+
+    protected virtual void OnHidden() {}
 
     protected static string GetPopupResourcesPath(PopupType type)
     {
@@ -56,6 +63,8 @@ public abstract class PopupBase : MonoBehaviour
                 return "Prefabs/Popup/TutorialPopupWindowCanvas";
             case PopupType.Settings:
                 return "Prefabs/Popup/SettingsPopupWindowCanvas";
+            case PopupType.GameOver:
+                return "Prefabs/Popup/GameOverPopupWindowCanvas";
             default:
                 Debug.LogError("不正なポップアップタイプ: " + type);
                 return "";
