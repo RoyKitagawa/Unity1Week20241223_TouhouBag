@@ -12,7 +12,7 @@ public class BattleDamage : MonoBehaviour
     [SerializeField]
     private SpriteRenderer criticalBG;
 
-    public static BattleDamage ShowDamageEffect(int damageAmt, DamageType damageType, Vector2 pos)
+    public static BattleDamage ShowDamageEffect(int damageAmt, DamageType damageType, bool isCritical, Vector2 pos)
     {
         BattleDamage damage = Instantiate(GetDamagePrefab()).GetComponent<BattleDamage>();
         if(damage == null)
@@ -32,12 +32,16 @@ public class BattleDamage : MonoBehaviour
         // 色味設定／背景設定
         switch(damageType)
         {
-            case DamageType.NormalDamage:
-                damage.text.color = Color.white;
-                break;
-            case DamageType.CriticalDamage:
-                damage.text.color = Color.red;
-                damage.criticalBG.gameObject.SetActive(true);
+            case DamageType.Damage:
+                if(isCritical)
+                {
+                    damage.text.color = Color.white;
+                }
+                else
+                {
+                    damage.text.color = Color.red;
+                    damage.criticalBG.gameObject.SetActive(true);
+                }
                 break;
             case DamageType.Heal:
                 damage.text.color = Color.green;

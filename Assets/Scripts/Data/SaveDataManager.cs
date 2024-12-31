@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class SaveDataManager
 {
+    public static void ClearProgress()
+    {
+        PlayerPrefs.DeleteKey(Consts.PlayerPrefs.Keys.ProgressData);
+    }
+
     public static void SaveProgress()
     {
         // セーブ用の情報をセット
@@ -62,7 +67,7 @@ public class SaveDataManager
         foreach(ItemData itemData in saveData.Bags)
         {
             BagItem item = BagItemManager.InstantiateItem(itemData.GetName(), itemData.GetLevel());
-            item.SetIsPurchased(true);
+            // item.SetIsPurchased(true);
             item.SetIsPlaced(true);
             if(doPlaceItem)
             {
@@ -81,7 +86,7 @@ public class SaveDataManager
         foreach(ItemData itemData in saveData.Weapons)
         {
             BagItem item = BagItemManager.InstantiateItem(itemData.GetName(), itemData.GetLevel());
-            item.SetIsPurchased(true);
+            // item.SetIsPurchased(true);
             item.SetIsPlaced(true);
             if(doPlaceItem)
             {

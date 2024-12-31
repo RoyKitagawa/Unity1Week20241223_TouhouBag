@@ -36,10 +36,10 @@ public class EnemyBossChiruno : EnemyBase
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public override void GainDamage(float damageAmt, DamageType damageType)
+    public override void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
     {
         // ダメージ演出
-        base.GainDamage(damageAmt, damageType);
+        base.GainDamage(damageAmt, damageType, isCritical);
         hpBar.SetCurrentValue(currentLife);
     }
 

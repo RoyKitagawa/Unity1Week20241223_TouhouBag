@@ -13,7 +13,6 @@ public class FireFlower
             new Color32(0xFF, 0xA5, 0x00, 0xFF), // オレンジ
             new Color32(0x7F, 0xFF, 0xD4, 0xFF), // 緑
             new Color32(0x87, 0xCE, 0xFA, 0xFF), // 青
-            // new Color32(0xFF, 0x63, 0x47, 0xFF), // 赤
             new Color32(0xFF, 0xF0, 0xF5, 0xFF), // 白っぽい赤 
             new Color32(0xFF, 0xFA, 0xF0, 0xFF), // 白っぽい黄色 
             new Color32(0xFF, 0xFF, 0xFF, 0xFF), // 白
@@ -50,24 +49,14 @@ public class FireFlower
         seedSeq.Append(fireFlower.transform.DOMoveY(destPos.y, seedLaunchDuration));
         seedSeq.SetUpdate(true);
         seedSeq.OnComplete(() => {
-            Debug.Log("TriggerExplode");
             Explode(fireFlower, color, scale, onComplete);
         });
     }
 
     private static void Explode(Transform fireflower, Color color, float scale, Action<Transform> onComplete)
     {
-        // foreach(SpriteRenderer seeds in fireflower.GetComponentsInChildren<SpriteRenderer>())
-        // {
-        //     Destroy(seeds.gameObject);
-        // }
-
-        Debug.Log("OnTriggerExplode");
         ManagerParticle.Instance.ShowFireFlowerExplodePartocle(fireflower.position, fireflower, color, scale, () => {
-            Debug.Log("Complete");
             onComplete(fireflower);
         });
-        // public void ShowFireFlowerExplodePartocle(Vector2 pos, Transform parent, Color color, float scale, Action onComplete = null)
-
     }
 }

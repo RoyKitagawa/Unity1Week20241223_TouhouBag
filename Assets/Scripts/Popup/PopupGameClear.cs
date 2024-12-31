@@ -29,14 +29,8 @@ public class PopupGameClear : PopupBase
         toTitleButton.alpha = 0.0f;
         toTitleButton.transform.localScale = Vector2.zero;
 
-
         bg.transform.localScale = new Vector2(1.0f, 0.0f);
         bg.transform.DOScaleY(0.6f, 0.5f).OnComplete(() => {
-
-            // titleText.DOFade(1.0f, duration);
-            // descriptionText.DOFade(1.0f, duration);
-            // toTitleButton.DOFade(1.0f, duration);
-
             StartCoroutine(CoShowFireFlower(0.0f));
         }).SetUpdate(true);
 
@@ -55,7 +49,8 @@ public class PopupGameClear : PopupBase
 
             toTitleButton.gameObject.SetActive(true);
             Sequence seq2 = DOTween.Sequence();
-            seq2.Join(toTitleButton.DOFade(2.0f, duration));
+            seq2.Append(toTitleButton.transform.DOScale(1.0f, duration / 2f));
+            seq2.Join(toTitleButton.DOFade(1.0f, duration / 2f));
             seq2.SetUpdate(true);
         });
     }

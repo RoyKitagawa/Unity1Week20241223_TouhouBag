@@ -64,7 +64,7 @@ public class CharacterBase : MonoBehaviour
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public virtual void GainDamage(float damageAmt, DamageType damageType)
+    public virtual void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
     {
         // ライフ更新
         ApplyDamage2Life(damageAmt, damageType);
@@ -73,6 +73,7 @@ public class CharacterBase : MonoBehaviour
         BattleDamage.ShowDamageEffect(
             (int)damageAmt,
             damageType,
+            isCritical,
             new Vector2(transform.position.x, transform.position.y + boxCollider2D.bounds.size.y / 2f));
         
         // 死亡判定
@@ -121,8 +122,8 @@ public class CharacterBase : MonoBehaviour
     public void OnWeaponHit(BagItemDataBase data)
     {
         // 通常攻撃系以外クリティカルは発生しない
-        bool isCritical = data.WeaponDamageType == DamageType.NormalDamage ? RandUtil.GetRandomBool(0.1f) : false;
-        GainDamage(isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType);
+        bool isCritical = data.WeaponDamageType == DamageType.Damage ? RandUtil.GetRandomBool(0.1f) : false;
+        GainDamage(isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType, isCritical);
 
         // 回復系
         if(data.WeaponDamageType == DamageType.Heal)

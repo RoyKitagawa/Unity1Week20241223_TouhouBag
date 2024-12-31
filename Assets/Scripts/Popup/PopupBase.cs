@@ -56,8 +56,8 @@ public abstract class PopupBase : MonoBehaviour
         sequence.OnComplete(() => {
             Time.timeScale = 1.0f;
             Destroy(RootCanvas.gameObject);
+            OnHidden();
         });
-        sequence.OnComplete(() => { OnHidden(); });
         sequence.SetUpdate(true);
     }
 

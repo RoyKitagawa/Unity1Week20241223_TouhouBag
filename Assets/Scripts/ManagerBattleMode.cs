@@ -25,7 +25,6 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     private BoxCollider2D playerAttackableArea;
 
     // 敵機関連
-    private int totalEnemyInStage = 15;
     [SerializeField]
     private Slider stageProgressSlider;
 
@@ -36,8 +35,34 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
     public void Start()
     {
-        ManagerEnemy.Instance.OnStartBattlePhase();
         InitializeBattle();
+        StartSpawnEnemy();
+    }
+
+    private void StartSpawnEnemy()
+    {
+        // ランダムで時間を定義
+        // 時間ごとにSpawnよ呼びなおす
+        // 最後の敵はボスか中ボス系
+        SpawnEnemy();
+    }
+
+    private void SpawnEnemy()
+    {
+        int remainSpawn = GetRemainEnemiesToBeSpawned();
+        if(remainSpawn <= 0) return;
+
+        ManagerEnemy.Instance.SpawnEnemy(remainSpawn <= 1 ? CharacterType.EnemyBoss : CharacterType.EnemyNormal);
+
+        // 1割の確率でラッシュを止める
+        bool isInterval = RandUtil.GetRandomBool(0.1f);
+        // ボス待ちで時間があると萎えるので、ボス直前だけはインターバル禁止
+        if(remainSpawn <= 2) isInterval = false;
+        // 再帰処理
+        float nextSpawnDuration = isInterval ? Random.Range(5.0f, 7.0f) : Random.Range(1.0f, 3.0f);
+        DOTween.Sequence()
+            .AppendInterval(nextSpawnDuration)
+            .AppendCallback(() => SpawnEnemy());
     }
 
     public void OnWaveClear()
@@ -67,12 +92,12 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     /// </summary>
     public void InitializeBattle()
     {
-        // // データ更新：デバッグ用処理
-        // SaveData data = SaveDataManager.LoadProgress();
-        // if(data != null) SaveDataManager.ApplySavedData(data, false);
-
         // バトル開始フラグ
         IsBattleActive = true;
+
+        // EnemyManager初期化処理
+        ManagerEnemy.Instance.ClearAllEnemies();
+        ManagerEnemy.Instance.InitializeEnemySpawnArea();
 
         // 既存の（過去WAVEの）アイテムが残っている場合は削除する
         foreach(BattleListItem item in items) { GameObject.Destroy(item); }
@@ -112,8 +137,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         }
 
         // 敵機関連
-        stageProgressSlider.maxValue = totalEnemyInStage;
-        stageProgressSlider.value = totalEnemyInStage;
+        stageProgressSlider.maxValue = ManagerGame.Instance.GetTotalEnemyInStage();
+        stageProgressSlider.value = stageProgressSlider.maxValue;
 
         // プレイヤーキャラクターの初期化
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
@@ -142,14 +167,11 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         return (int)stageProgressSlider.value;
     }
 
-    public void OnEnemySpawn()
+    public void OnEnemyDead(EnemyBase enemy)
     {
         stageProgressSlider.value --;
         if(stageProgressSlider.value <= 0) stageProgressSlider.value = 0;
-    }
 
-    public void OnEnemyDead(EnemyBase enemy)
-    {
         ManagerEnemy.Instance.RemoveEnemyFromList(enemy);        
         if(stageProgressSlider.value <= 0 // ステージから全ての敵機が出現済み
             && ManagerEnemy.Instance.GetEnemiesCount() <= 0) // ステージ上の生存敵機が0
@@ -222,12 +244,11 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     private void ShowGameClearResult()
     {
         IsBattleActive = false;
-        // gameClearPanel.transform.position = new Vector2(BasicUtil.GetScreenWorldCorners(Camera.main).width, 0.0f);
         PopupBase.Show(PopupType.GameClear);
         PauseTimer();
 
-        // 進捗を保存する
-        SaveDataManager.SaveProgress();
+        // 進捗を削除する
+        SaveDataManager.ClearProgress();
     }
 
     private void ShowWaveClearResult()
@@ -268,22 +289,11 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     private void ShowGameOverResult()
     {
         IsBattleActive = false;
-        // Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
-        // // 時間を止める
-        // gameOverPanel.gameObject.SetActive(true);
-        // gameOverPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
-        // Sequence sequence = DOTween.Sequence();
-        // sequence.SetUpdate(true);
-        // sequence.Append(gameOverPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
-        // sequence.Append(gameOverPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
-        // sequence.OnComplete(() => {
-        //     // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
-        //     ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
-        //     gameOverPanel.gameObject.SetActive(false);
-        //     ResumeTimer();
-        // }).SetDelay(0.5f);
         PopupBase.Show(PopupType.GameOver);
         PauseTimer();
+
+        // 進捗を削除する
+        SaveDataManager.ClearProgress();
     }
 
 

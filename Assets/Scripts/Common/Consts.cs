@@ -19,13 +19,13 @@ public static class Consts
 
     public static class Roots
     {
-        public const string BagEdit = "BagEdit";
+        public const string BagEdit = "Bag";
         public const string Battle = "Battle";
         // Area
         public const string BoxRoot = Battle + "/Areas/PlayerHome";
         // BagEdit
-        public const string StageBorders = BagEdit + "/StageBorders";
-        public const string BagRoot = BagEdit + "/BagArea/Bag";
+        public const string StageBorders = "StageBorders";
+        public const string BagRoot = BagEdit;
         public const string BagItemsRoot = BagRoot + "/Items";
         public const string BagSlotRoot = BagRoot + "/Slots";
         // Battle

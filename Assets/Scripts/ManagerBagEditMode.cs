@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 {
-    [SerializeField]
-    private TextMeshProUGUI moneyText;
+    // [SerializeField]
+    // private TextMeshProUGUI moneyText;
     [SerializeField]
     private TextMeshProUGUI waveText;
     
@@ -15,6 +15,11 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     private Transform rerollButton;
     [SerializeField]
     private Image rerollPriceImage;
+    [SerializeField]
+    private ShopSlot[] shopSlots;
+    [SerializeField]
+    private TextMeshProUGUI moneyTxt, attackTxt, shieldTxt, healTxt;
+
     private Sequence rerollButtonShakeSequence = null;
     private Vector2 defaultRerollButtonPos = Vector2.zero;
 
@@ -78,11 +83,11 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         {
             // 初期バッグ配置
             BagItem bagA = BagItemManager.InstantiateItem(BagItemName.Bag2x2, BagItemLevel.Lv1);
-            bagA.SetIsPurchased(true);
+            // bagA.SetIsPurchased(true);
             bagA.PlaceItemAt(Rotation.Default, new Vector2Int[] { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) });
             ManagerGame.Instance.Add2List(bagA);
             BagItem bagB = BagItemManager.InstantiateItem(BagItemName.Bag2x2, BagItemLevel.Lv1);
-            bagB.SetIsPurchased(true);
+            // bagB.SetIsPurchased(true);
             bagB.PlaceItemAt(Rotation.Default, new Vector2Int[] { new Vector2Int(2, 0), new Vector2Int(2, 1), new Vector2Int(3, 0), new Vector2Int(3, 1) });
             ManagerGame.Instance.Add2List(bagB);
         }
@@ -91,6 +96,40 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             // データをもとにゲーム進捗、バッグの状況を復元
             SaveDataManager.ApplySavedData(saveData, true);
         }
+    }
+
+    public void OnBagWeaponUpdate()
+    {
+        int attack = 0;
+        int shield = 0;
+        int heal= 0;
+        foreach(BagItem item in ManagerGame.Items)
+        {
+            if(!item.IsPlaced()) continue;
+            BagItemDataBase data = item.GetData();
+            switch(data.WeaponDamageType)
+            {
+                case DamageType.Damage:
+                    attack += data.WeaponDamage;
+                    break;
+
+                case DamageType.Shield:
+                    shield += data.WeaponDamage;
+                    break;
+
+                case DamageType.Heal:
+                    heal += data.WeaponDamage;
+                    break;
+            }
+        }
+        attackTxt.text = attack.ToString();
+        shieldTxt.text = shield.ToString();
+        healTxt.text = heal.ToString();
+    }
+
+    public void OnMoneyUpdate()
+    {
+        moneyTxt.text = ManagerGame.Instance.GetMoney().ToString();
     }
 
     /// <summary>
@@ -227,16 +266,16 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         });
 
         // アイテムの生成
-        int spawnMaxItem = 3;
-        for(int i = 0; i < spawnMaxItem; i++)
+        for(int i = 0; i < shopSlots.Length; i++)
         {
             BagItem item = ManagerGame.Instance.SpawnRandomItem(RandUtil.GetRandomItem(spawnItemTypes));
-            item.transform.position = new Vector2(
-                itemSpawnArea.min.x + (itemSpawnArea.width / (spawnMaxItem - 1) * i), 
-                itemSpawnArea.y);
+            shopSlots[i].PlaceItem(item);
+            // item.transform.position = new Vector2(
+            //     itemSpawnArea.min.x + (itemSpawnArea.width / (spawnMaxItem - 1) * i), 
+            //     itemSpawnArea.y);
             item.SetPhysicSimulator(false);
             item.SetIsPlaced(false); // 初期のアイテムは「設置状態」ではない
-            item.SetIsPurchased(false); // 購入前
+            // item.SetIsPurchased(false); // 購入前
         }
 
         // 新たな値段の設定

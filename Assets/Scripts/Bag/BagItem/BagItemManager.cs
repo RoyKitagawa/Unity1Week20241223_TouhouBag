@@ -9,9 +9,9 @@ using UnityEngine;
 /// </summary>
 public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
 {
-    // アイテム生成用Prefabのキャッシュ管理
-    private static Dictionary<BagItemName, GameObject> itemPrefabs = new Dictionary<BagItemName, GameObject>();
-    private static Dictionary<BagCellName, GameObject> cellPrefabs = new Dictionary<BagCellName, GameObject>();
+    // // アイテム生成用Prefabのキャッシュ管理
+    // private static Dictionary<BagItemName, GameObject> itemPrefabs = new Dictionary<BagItemName, GameObject>();
+    // private static Dictionary<BagCellName, GameObject> cellPrefabs = new Dictionary<BagCellName, GameObject>();
 
     /// <summary>
     /// アイテムを生成、初期化する
@@ -70,8 +70,8 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
         // Rigidbody関連
         Rigidbody2D rb = item.AddComponent<Rigidbody2D>();
         item.SetPhysicSimulator(false);
-        // 金額関連
-        item.AddPriceRenderer();
+        // // 金額関連
+        // item.AddPriceRenderer();
         // Pivot
         GameObject pivot = new GameObject(Consts.Names.Pivot);
         item.SetPivot(pivot);

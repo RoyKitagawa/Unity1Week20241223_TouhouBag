@@ -25,7 +25,7 @@ public class BagItemDataDriverLv1 : BagItemDataBase
     public virtual int GetCost() { return 3; }
 
     // バトル画面用
-    public virtual DamageType GetDamageType() { return DamageType.NormalDamage; }
+    public virtual DamageType GetDamageType() { return DamageType.Damage; }
     public virtual LaunchType GetLaunchType() { return LaunchType.ThrowStraight; }
     public virtual TargetType GetTargetType() { return TargetType.Nearest; }
     public virtual float GetCooldown() { return baseCooldown; }

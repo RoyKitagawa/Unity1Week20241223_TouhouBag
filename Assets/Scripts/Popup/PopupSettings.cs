@@ -59,7 +59,6 @@ public class PopupSettings : PopupBase
     private void SetSliderValue(Slider slider, TextMeshProUGUI text, int percentage)
     {
         slider.value = slider.maxValue * percentage / 100;
-        Debug.Log("b: " + slider.value + " / 値: " + percentage);
         text.text = GetPercentageText(slider);
     }
 }

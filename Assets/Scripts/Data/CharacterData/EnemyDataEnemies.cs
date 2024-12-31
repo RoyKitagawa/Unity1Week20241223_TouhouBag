@@ -9,7 +9,7 @@ public class CharacterDataEnemyA : CharacterDataBase
     CharacterType CharacterDataBase.GetType() { return CharacterType.EnemyNormal; }
     CharacterName CharacterDataBase.GetName() { return CharacterName.EnemyA; }
     // 敵の強さ関連
-    float CharacterDataBase.GetMaxLife() { return 50.0f; }
+    float CharacterDataBase.GetMaxLife() { return 10f; } // 50.0f; }
     float CharacterDataBase.GetCooldown() { return 1.0f; }
     float CharacterDataBase.GetAttackDamage() { return 5.0f; }
     // 敵の挙動関連
@@ -25,7 +25,7 @@ public class CharacterDataEnemyBossChiruno : CharacterDataBase
     CharacterType CharacterDataBase.GetType() { return CharacterType.EnemyBoss; }
     CharacterName CharacterDataBase.GetName() { return CharacterName.EnemyBossChiruno; }
     // 敵の強さ関連
-    float CharacterDataBase.GetMaxLife() { return 500.0f; }
+    float CharacterDataBase.GetMaxLife() { return 10; } // 500.0f; }
     float CharacterDataBase.GetCooldown() { return 3.0f; }
     float CharacterDataBase.GetAttackDamage() { return 99.0f; }
     // 敵の挙動関連

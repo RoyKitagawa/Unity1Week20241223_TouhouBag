@@ -45,8 +45,10 @@ public class BagItem : TappableObject
     private bool isPlacable = false;
     // アイテムが購入済みか
     private bool isPurchased = false;
+    // アイテムが配置されたショップスロット
+    private ShopSlot shopSlot = null;
     // アイテムの値段表記用オブジェクト
-    private SpriteRenderer priceRenderer = null;
+    // private SpriteRenderer priceRenderer = null;
 
     public void Start()
     {
@@ -54,21 +56,26 @@ public class BagItem : TappableObject
         if(cells.Count <= 0) InitCells();
     }
 
-    /// <summary>
-    /// 値段表記用オブジェクトを追加する
-    /// </summary>
-    public void AddPriceRenderer()
+    // /// <summary>
+    // /// 値段表記用オブジェクトを追加する
+    // /// </summary>
+    // public void AddPriceRenderer()
+    // {
+    //     if(tag != Consts.Tags.StageSlot)
+    //     {
+    //         SpriteRenderer moneySR = new GameObject("Price").AddComponent<SpriteRenderer>();
+    //         moneySR.transform.SetParent(transform);
+    //         moneySR.transform.localPosition = new Vector2(data.Size.x / 2.0f, data.Size.y / 2.0f);
+    //         moneySR.transform.localScale = new Vector2(0.75f, 0.75f);
+    //         moneySR.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Prices.Price(data.Cost));
+    //         moneySR.sortingLayerName = Consts.SortingLayer.ItemOverlay;
+    //         priceRenderer = moneySR;
+    //     }
+    // }
+
+    public void SetShopSlot(ShopSlot slot)
     {
-        if(tag != Consts.Tags.StageSlot)
-        {
-            SpriteRenderer moneySR = new GameObject("Price").AddComponent<SpriteRenderer>();
-            moneySR.transform.SetParent(transform);
-            moneySR.transform.localPosition = new Vector2(data.Size.x / 2.0f, data.Size.y / 2.0f);
-            moneySR.transform.localScale = new Vector2(0.75f, 0.75f);
-            moneySR.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Prices.Price(data.Cost));
-            moneySR.sortingLayerName = Consts.SortingLayer.ItemOverlay;
-            priceRenderer = moneySR;
-        }
+        shopSlot = slot;
     }
 
     public BagItemName GetDataItemName()
@@ -260,9 +267,12 @@ public class BagItem : TappableObject
         // アイテム購入処理
         if(!IsPurchased())
         {
-            // TODO コストを支払う
+            // コストを支払う
             ManagerGame.Instance.AddMoney(-data.Cost);
-            SetIsPurchased(true);
+            shopSlot.OnPurchase();
+            SetShopSlot(null);
+            ManagerBagEditMode.Instance.OnMoneyUpdate();
+            // SetIsPurchased(true);
         }
 
         // タップ処理完了を伝える
@@ -461,6 +471,8 @@ public class BagItem : TappableObject
         {
             cell.SlotPos = new Vector2Int(-1, -1);
         }
+
+        ManagerBagEditMode.Instance.OnBagWeaponUpdate();
     }
 
     /// <summary>
@@ -587,6 +599,8 @@ public class BagItem : TappableObject
         SetIsPlaced(true);
         // 設置中は衝突を起こさないように
         GetCollider().isTrigger = true;
+
+        ManagerBagEditMode.Instance.OnBagWeaponUpdate();
     }
 
     /// <summary>
@@ -596,7 +610,7 @@ public class BagItem : TappableObject
     public void SetIsPurchased(bool flag)
     {
         isPurchased = flag;
-        priceRenderer?.gameObject.SetActive(!flag);
+        // priceRenderer?.gameObject.SetActive(!flag);
     }
 
     /// <summary>
@@ -605,7 +619,8 @@ public class BagItem : TappableObject
     /// <returns></returns>
     public bool IsPurchased()
     {
-        return isPurchased;
+        return shopSlot == null;
+        // return isPurchased;
     }
 
     /// <summary>
@@ -654,7 +669,7 @@ public class BagItem : TappableObject
         transform.position = position;
         RotateTo(rot, 0.0f);
         SetItemCellSlotAtClosestSlot();
-        Move2(position, 0.0f);
+        Move2(position, 0.0f, OnItemPlaced);
         SetIsPlaced(true);
     }
 

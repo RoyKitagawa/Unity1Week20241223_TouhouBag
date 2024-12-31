@@ -64,8 +64,7 @@ public enum ColliderShape
 public enum DamageType
 {
     None,
-    NormalDamage,
-    CriticalDamage,
+    Damage,
     Heal,
     Shield,
 }

@@ -16,9 +16,11 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public int InitialMoneyAmt = 999;
     private int moneyAmt;
     // WAVE関連
-    private const int totalWaves = 1;
+    private const int totalWaves = 3;
     private int currentWave;
     private int clearedWave;
+    // 敵機関連
+    private int baseTotalEnemyInStage = 15;
 
 
     // 金銭関連
@@ -34,7 +36,8 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public int GetClearedWave() { return clearedWave; }
     public void SetClearedWave(int wave) { clearedWave = wave; }
     public bool IsGameClear() { return clearedWave >= totalWaves; }
-
+    // 敵機関連
+    public int GetTotalEnemyInStage() { return baseTotalEnemyInStage + (int)(baseTotalEnemyInStage * currentWave * 0.3f); }
 
     public BagItem SpawnRandomItem(BagItemType type)
     {

@@ -34,7 +34,7 @@ public class EnemyBase : CharacterBase
         bool isCritical = RandUtil.GetRandomBool(0.1f);
         float damage = Random.Range(data.AttackDamage * 0.8f, data.AttackDamage * 1.2f);
         CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
-        player.GainDamage(isCritical ? damage * 1.5f : damage, isCritical ? DamageType.CriticalDamage : DamageType.NormalDamage);
+        player.GainDamage(isCritical ? damage * 1.5f : damage, DamageType.Damage, isCritical);
         // ヒットパーティクル
         ManagerParticle.Instance.ShowOnDamageParticle(player.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
         // ヒット時の揺れ
@@ -69,10 +69,10 @@ public class EnemyBase : CharacterBase
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public override void GainDamage(float damageAmt, DamageType damageType)
+    public override void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
     {
         // ダメージ演出
-        base.GainDamage(damageAmt, damageType);
+        base.GainDamage(damageAmt, damageType, isCritical);
     }
 
 

@@ -3,21 +3,6 @@ using UnityEngine;
 
 public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
 {
-
-
-    
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnClickSettings()
     {
         PopupBase.Show(PopupType.Settings);
@@ -27,7 +12,6 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
     {
         PopupBase.Show(PopupType.Tutorial);
     }
-
 
     public void DeleteSavedData()
     {

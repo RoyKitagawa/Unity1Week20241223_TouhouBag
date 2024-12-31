@@ -15,25 +15,25 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     private const float enemySpawnCooldown = 1f;
     private float enemySpawnElapsedTime = enemySpawnCooldown; // スポーン時間（初期値はすぐに1体敵が出るようにする）
 
-    public void Update()
-    {
-        // 敵機出現処理
-        enemySpawnElapsedTime += Time.deltaTime;
-        if(enemySpawnElapsedTime >= enemySpawnCooldown)
-        {
-            if(ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 0)
-            {
-                enemySpawnElapsedTime = 0;
-                // ラスト1体はボス
-                EnemyBase enemy = ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 1
-                    ? SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)))
-                    : SpawnNewEnemy(CharacterName.EnemyBossChiruno);
-                enemies.Add(enemy);
+    // public void Update()
+    // {
+    //     // 敵機出現処理
+    //     enemySpawnElapsedTime += Time.deltaTime;
+    //     if(enemySpawnElapsedTime >= enemySpawnCooldown)
+    //     {
+    //         if(ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 0)
+    //         {
+    //             enemySpawnElapsedTime = 0;
+    //             // ラスト1体はボス
+    //             EnemyBase enemy = ManagerBattleMode.Instance.GetRemainEnemiesToBeSpawned() > 1
+    //                 ? SpawnNewEnemy(RandUtil.GetRandomItem(CharacterDataList.GetCharacterNames(CharacterType.EnemyNormal)))
+    //                 : SpawnNewEnemy(CharacterName.EnemyBossChiruno);
+    //             enemies.Add(enemy);
 
-                ManagerBattleMode.Instance.OnEnemySpawn();
-            }
-        }
-    }
+    //             ManagerBattleMode.Instance.OnEnemySpawn();
+    //         }
+    //     }
+    // }
 
     public int GetEnemiesCount()
     {
@@ -132,11 +132,10 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     }
 
     /// <summary>
-    /// バトル開始時に呼び出す
+    /// 残っている敵をDestroyする
     /// </summary>
-    public void OnStartBattlePhase()
+    public void ClearAllEnemies()
     {
-        // 過去の敵機排除（念のため）
         if(enemies.Count > 0)
         {
             foreach(EnemyBase enemy in enemies)
@@ -145,7 +144,10 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
             }
             enemies.Clear();
         }
+    }
 
+    public void InitializeEnemySpawnArea()
+    {
         Rect corners = BasicUtil.GetScreenWorldCorners(Camera.main);
         enemySpawnArea = BasicUtil.CreateRectFromCenter(
             new Vector2(corners.max.x + 2.0f, 0.0f),
@@ -154,25 +156,53 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     }
 
     /// <summary>
+    /// 指定種別の敵を出現させる
+    /// </summary>
+    /// <param name="type"></param>
+    public void SpawnEnemy(CharacterType type)
+    {
+        HashSet<CharacterName> names = new HashSet<CharacterName>();
+        int maxWave = ManagerGame.Instance.GetTotalWaves();
+        int currentWave = ManagerGame.Instance.GetCurrentWave();
+        switch(type)
+        {
+            case CharacterType.EnemyNormal:
+                names.Add(CharacterName.EnemyA);
+                break;
+            case CharacterType.EnemyBoss:
+                names.Add(CharacterName.EnemyBossChiruno);
+                break;
+            default:
+                Debug.LogError("未対応の敵種別: " + type);
+                break;
+        }
+        if(names.Count <= 0)
+        {
+            Debug.LogError("Spawnする敵種別が存在しません: " + type);
+            return;
+        }
+        SpawnEnemy(type, RandUtil.GetRandomItem(names));
+    }
+
+    /// <summary>
     /// 指定の敵機を出現させる
     /// </summary>
     /// <param name="characterName"></param>
     /// <returns></returns>
-    public EnemyBase SpawnNewEnemy(CharacterName characterName)
+    public EnemyBase SpawnEnemy(CharacterType type, CharacterName characterName)
     {
         GameObject prefab = GetCharacterPrefab(characterName);
         if(prefab == null) return null;
+
         EnemyBase enemy = Instantiate(prefab).GetComponent<EnemyBase>();
         enemy.InitializeCharacter(CharacterDataList.GetCharacterData(characterName));
         Vector2 spawnPos = RandUtil.GetRandomVector2In(enemySpawnArea);
-        if(characterName == CharacterName.EnemyBossChiruno)
-        {
+        if(type == CharacterType.EnemyBoss)
             enemy.transform.position = new Vector2(spawnPos.x, spawnPos.y / 2f);
-        }
         else
-        {
-            enemy.transform.position = spawnPos;            
-        }
+            enemy.transform.position = spawnPos;
+
+        enemies.Add(enemy);
         return enemy;
     }
 
