@@ -6,6 +6,7 @@ public enum PopupType
     Tutorial,
     Settings,
     GameOver,
+    GameClear
 }
 
 public abstract class PopupBase : MonoBehaviour
@@ -14,12 +15,19 @@ public abstract class PopupBase : MonoBehaviour
     protected GameObject RootCanvas;
     protected float duration = 0.2f;
 
-    public static void Show(PopupType type)
+    public static bool Show(PopupType type)
     {
+        // 既に同名のオブジェクトが存在する場合は何もしない
+        if(GameObject.Find(GetPopupResourceName(type) + "(Clone)") != null)
+        {
+            return false;
+        }
+
         // Time.timeScale = 0.0f;
         GameObject obj = BasicUtil.LoadGameObject4Resources(GetPopupResourcesPath(type));
         PopupBase popup = Instantiate(obj).GetComponentInChildren<PopupBase>();
         popup.ShowPopup();
+        return true;
     }
 
     protected virtual void ShowPopup()
@@ -57,14 +65,21 @@ public abstract class PopupBase : MonoBehaviour
 
     protected static string GetPopupResourcesPath(PopupType type)
     {
+        return "Prefabs/Popup/" + GetPopupResourceName(type);
+    }
+
+    protected static string GetPopupResourceName(PopupType type)
+    {
         switch(type)
         {
             case PopupType.Tutorial:
-                return "Prefabs/Popup/TutorialPopupWindowCanvas";
+                return "TutorialPopupWindowCanvas";
             case PopupType.Settings:
-                return "Prefabs/Popup/SettingsPopupWindowCanvas";
+                return "SettingsPopupWindowCanvas";
             case PopupType.GameOver:
-                return "Prefabs/Popup/GameOverPopupWindowCanvas";
+                return "GameOverPopupWindowCanvas";
+            case PopupType.GameClear:
+                return "GameClearPopupWindowCanvas";
             default:
                 Debug.LogError("不正なポップアップタイプ: " + type);
                 return "";

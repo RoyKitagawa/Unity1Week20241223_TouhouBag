@@ -14,6 +14,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     private GameObject gameClearPanel;
     [SerializeField]
     private TextMeshProUGUI enemyProgressText;
+    [SerializeField]
+    private TextMeshProUGUI waveText;
 
     // 自機
     [SerializeField]
@@ -38,21 +40,25 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         InitializeBattle();
     }
 
-    public void OnGameClear()
-    {
-        Debug.Log("ゲームクリア！");
-        ShowGameClearResult();
-    }
-
     public void OnWaveClear()
     {
         Debug.Log("Wave成功！");
-        ShowWaveClearResult();
+        ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
+
+        // 全てのWAVEを終えた場合
+        if(ManagerGame.Instance.IsGameClear())
+        {
+            ShowGameClearResult();
+        }
+        // まだWAVEが残っている場合
+        else
+        {
+            ShowWaveClearResult();
+        }
     }
 
     public void OnWaveFail()
     {
-        Debug.Log("Wave失敗…");
         ShowGameOverResult();
     }
 
@@ -61,9 +67,9 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     /// </summary>
     public void InitializeBattle()
     {
-        // データ更新：デバッグ用処理
-        SaveData data = SaveDataManager.LoadProgress();
-        if(data != null) SaveDataManager.ApplySavedData(data, false);
+        // // データ更新：デバッグ用処理
+        // SaveData data = SaveDataManager.LoadProgress();
+        // if(data != null) SaveDataManager.ApplySavedData(data, false);
 
         // バトル開始フラグ
         IsBattleActive = true;
@@ -111,6 +117,9 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
         // プレイヤーキャラクターの初期化
         player.InitializeCharacter(CharacterDataList.GetCharacterData(CharacterName.Player));
+
+        // ステージ情報
+        SetWaveInformationText();
     }
 
     public void Update()
@@ -120,7 +129,12 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
     public void UpdateEnemySpawnProgressText()
     {
-        enemyProgressText.text = "敵出現率：" + (int)(stageProgressSlider.value / stageProgressSlider.maxValue * 100) + "%";
+        enemyProgressText.text = "このWAVEの残りの敵：" + (int)(stageProgressSlider.value / stageProgressSlider.maxValue * 100) + "%";
+    }
+
+    public void SetWaveInformationText()
+    {
+        waveText.text = ManagerGame.Instance.GetWaveStatusText();
     }
 
     public int GetRemainEnemiesToBeSpawned()
@@ -140,7 +154,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         if(stageProgressSlider.value <= 0 // ステージから全ての敵機が出現済み
             && ManagerEnemy.Instance.GetEnemiesCount() <= 0) // ステージ上の生存敵機が0
         {
-            ShowWaveClearResult();
+            OnWaveClear();
         }
     }
 
@@ -205,16 +219,25 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     //     target.GainDamage(damageAmt, damageType);
     // }
 
-    public void ShowGameClearResult()
+    private void ShowGameClearResult()
     {
         IsBattleActive = false;
-        gameClearPanel.transform.position = new Vector2(BasicUtil.GetScreenWorldCorners(Camera.main).width, 0.0f);
+        // gameClearPanel.transform.position = new Vector2(BasicUtil.GetScreenWorldCorners(Camera.main).width, 0.0f);
+        PopupBase.Show(PopupType.GameClear);
+        PauseTimer();
+
+        // 進捗を保存する
+        SaveDataManager.SaveProgress();
     }
 
-    public void ShowWaveClearResult()
+    private void ShowWaveClearResult()
     {
         IsBattleActive = false;
         Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+
+        // ステージ情報の更新
+        ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
+        
         // 時間を止める
         waveClearPanel.gameObject.SetActive(true);
         waveClearPanel.transform.position = new Vector3(screenCorners.width, 0.0f, 0.0f);
@@ -223,7 +246,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         sequence.Append(waveClearPanel.transform.DOMove(Vector3.zero, 0.5f).SetEase(Ease.Linear));
         sequence.Append(waveClearPanel.transform.DOMove(new Vector3(-screenCorners.width, 0.0f, 0.0f), 0.5f).SetDelay(1.0f).SetEase(Ease.Linear));
         sequence.OnComplete(() => {
-            // TODO ユーザーがクリックしたらタイトルに遷移するようにしたい
+
+            // バッグ編集へと戻る
             ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBagEdit);
             waveClearPanel.gameObject.SetActive(false);
             ResumeTimer();
@@ -241,7 +265,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         SaveDataManager.SaveProgress();
     }
 
-    public void ShowGameOverResult()
+    private void ShowGameOverResult()
     {
         IsBattleActive = false;
         // Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);

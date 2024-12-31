@@ -8,7 +8,8 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 {
     [SerializeField]
     private TextMeshProUGUI moneyText;
-
+    [SerializeField]
+    private TextMeshProUGUI waveText;
     
     [SerializeField]
     private Transform rerollButton;
@@ -66,6 +67,10 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 
         // 金銭初期化
         ManagerGame.Instance.SetMoney(ManagerGame.Instance.InitialMoneyAmt);
+
+        // ステージ情報の更新
+        ManagerGame.Instance.SetCurrentWave(ManagerGame.Instance.GetClearedWave() + 1);
+        waveText.text = ManagerGame.Instance.GetWaveStatusText();
 
         // ロード処理
         SaveData saveData = SaveDataManager.LoadProgress();

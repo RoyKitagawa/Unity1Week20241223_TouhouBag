@@ -1174,6 +1174,7 @@ MonoBehaviour:
   waveClearPanel: {fileID: 1220302682}
   gameClearPanel: {fileID: 724111779}
   enemyProgressText: {fileID: 1333491676}
+  waveText: {fileID: 754571410}
   player: {fileID: 1455620563}
   playerAttackableArea: {fileID: 193980916}
   stageProgressSlider: {fileID: 71344403}

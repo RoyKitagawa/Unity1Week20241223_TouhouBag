@@ -16,6 +16,7 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public int InitialMoneyAmt = 999;
     private int moneyAmt;
     // WAVE関連
+    private const int totalWaves = 1;
     private int currentWave;
     private int clearedWave;
 
@@ -26,11 +27,13 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public void AddMoney(int value) { moneyAmt += value; }
     public void AddMoneyForNewWave(int nextWave) { AddMoney(7 + nextWave); }
     // WAVE関連
+    public string GetWaveStatusText() { return "WAVE " + GetCurrentWave() + " / " + GetTotalWaves(); }
+    public int GetTotalWaves() { return totalWaves; }
     public int GetCurrentWave() { return currentWave; }
     public void SetCurrentWave(int wave) { currentWave = wave; }
     public int GetClearedWave() { return clearedWave; }
     public void SetClearedWave(int wave) { clearedWave = wave; }
-
+    public bool IsGameClear() { return clearedWave >= totalWaves; }
 
 
     public BagItem SpawnRandomItem(BagItemType type)

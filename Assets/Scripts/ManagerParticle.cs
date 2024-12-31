@@ -9,6 +9,85 @@ public class ManagerParticle : MonoBehaviourSingleton<ManagerParticle>
         SetIsDontDestroyOnLoad(true);
     }
 
+    public void ShowFireFlowerExplodePartocle(Vector2 pos, Transform parent, Color color, float scale, Action onComplete = null)
+    {
+        // ShowParticle(pos, parent, Consts.Resources.Prefabs.Particles.FireFlowerExplode, onComplete);
+        // GameObject particlePrefab = BasicUtil.LoadGameObject4Resources(Consts.Resources.Prefabs.Particles.FireFlowerExplode);
+        // ParticleSystem particle = Instantiate(particlePrefab).GetComponent<ParticleSystem>();
+        // // particle.transform.SetParent(parent);
+        // // particle.transform.localScale = Vector2.one;
+        // // particle.transform.position = pos;
+        // particle.transform.rotation = Quaternion.Euler(Vector3.zero);
+
+        // // ParticleSystem particle = CreateParticleSystem(pos, parent, resourcesPath);
+        // ParticleSystem.MainModule mainModule = particle.main;
+        // mainModule.useUnscaledTime = true;
+        // particle.Play();
+        // // SetOnParticleComplete(particle, () => {
+        // //     Destroy(particle.gameObject);
+        // //     onComplete?.Invoke();
+        // // });
+
+
+
+
+        
+        ParticleSystem particle = CreateParticleSystem(pos, parent, Consts.Resources.Prefabs.Particles.FireFlowerExplode);
+        particle.transform.rotation = Quaternion.Euler(Vector3.zero);
+        ParticleSystem.MainModule mainModule = particle.main;
+        mainModule.useUnscaledTime = true;
+
+        // ランダム性
+        float randValue = UnityEngine.Random.Range(0.8f, 1.2f);
+
+        // 花火特有の情報を設定する
+        float baseStartSpeed = 7f;
+        float baseStartSize = 0.25f;
+        float actualSpeed = baseStartSpeed * scale * randValue;
+        // 速度
+        ParticleSystem.MainModule main = particle.main;
+        //  main.simulationSpeed = 1.0f;
+        main.startSpeed = actualSpeed;
+        main.startSize = baseStartSize * scale;
+        
+        // 射出量
+        float defaultEmissionBurstCount = 200;
+        float actualEmissionCount = defaultEmissionBurstCount * scale * randValue;
+        if(actualEmissionCount < defaultEmissionBurstCount / 2) actualEmissionCount = defaultEmissionBurstCount / 2;
+        ParticleSystem.EmissionModule emission = particle.emission;
+        ParticleSystem.Burst burst = new ParticleSystem.Burst(0.0f, actualEmissionCount);
+        emission.SetBursts(new ParticleSystem.Burst[] { burst });
+
+        // 色味
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] {
+                new GradientColorKey(color, 0.0f), // 開始時
+                new GradientColorKey(color, 1.0f), // 終了時
+            },
+            new GradientAlphaKey[] {
+                new GradientAlphaKey(1.0f, 0.0f), // 開始時
+                new GradientAlphaKey(1.0f, 0.5f),
+                new GradientAlphaKey(0.0f, 1.0f), // 終了時
+            }
+        );
+
+        ParticleSystem.ColorOverLifetimeModule colorOverLifetime =  particle.colorOverLifetime;
+        colorOverLifetime.enabled = true;
+        colorOverLifetime.color = new ParticleSystem.MinMaxGradient(gradient);
+
+        ParticleSystem.TrailModule trails = particle.trails;
+        trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(gradient);
+        trails.colorOverTrail = new ParticleSystem.MinMaxGradient(gradient);
+
+
+        particle.Play();
+        SetOnParticleComplete(particle, () => {
+            Destroy(particle.gameObject);
+            onComplete?.Invoke();
+        });
+    }
+
     public void ShowOnBombExplodeParticle(Vector2 pos, Transform parent, Action onComplete = null)
     {
         ShowParticle(pos, parent, Consts.Resources.Prefabs.Particles.BombExplode, onComplete);
@@ -70,16 +149,16 @@ public class ManagerParticle : MonoBehaviourSingleton<ManagerParticle>
     /// <param name="parent"></param>
     /// <param name="resourcesPath"></param>
     /// <param name="onComplete"></param>
-    private void ShowParticle(Vector2 pos, Transform parent, string resourcesPath, Action onComplete = null)
+    public void ShowParticle(Vector2 pos, Transform parent, string resourcesPath, Action onComplete = null)
     {
         ParticleSystem particle = CreateParticleSystem(pos, parent, resourcesPath);
         ParticleSystem.MainModule mainModule = particle.main;
-        mainModule.useUnscaledTime = true;
+        // mainModule.useUnscaledTime = true;
         particle.Play();
-        SetOnParticleComplete(particle, () => {
-            Destroy(particle.gameObject);
-            onComplete?.Invoke();
-        });
+        // SetOnParticleComplete(particle, () => {
+        //     Destroy(particle.gameObject);
+        //     onComplete?.Invoke();
+        // });
     }
 
     /// <summary>
@@ -93,7 +172,7 @@ public class ManagerParticle : MonoBehaviourSingleton<ManagerParticle>
         GameObject particlePrefab = BasicUtil.LoadGameObject4Resources(resourcesPath);
         ParticleSystem particle = Instantiate(particlePrefab).GetComponent<ParticleSystem>();
         particle.transform.SetParent(parent);
-        particle.transform.localScale = Vector2.one;
+        // particle.transform.localScale = Vector2.one;
         particle.transform.position = pos;
         return particle;
     }

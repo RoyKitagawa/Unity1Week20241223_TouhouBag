@@ -100,6 +100,7 @@ public static class Consts
                 public const string Heal = _Particles + "/ParticleHeal";
                 public const string Shield = _Particles + "/ParticleShield";
                 public const string BombExplode = _Particles + "/ParticleBombExplode";
+                public const string FireFlowerExplode = _Particles + "/ParticleFireFlowerExplode";
             }
         }
 
@@ -242,6 +243,7 @@ public static class Consts
             }
 
             public const string Box = _Images + "/mikanhako1";
+            public const string FireFlowerParticle = "Images/FireFlowerParticle";
         }
 
         public static class Materials
@@ -273,6 +275,7 @@ public static class Consts
         public const string DragItem = "DragItem";
         public const string BattleWeapon = "BattleWeapon";
         public const string UI = "UI";
+        public const string UIOverlay = "OverlayUI";
     }
 
     public static class PlayerPrefs

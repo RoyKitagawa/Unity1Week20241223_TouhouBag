@@ -164,7 +164,15 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         if(prefab == null) return null;
         EnemyBase enemy = Instantiate(prefab).GetComponent<EnemyBase>();
         enemy.InitializeCharacter(CharacterDataList.GetCharacterData(characterName));
-        enemy.transform.position = RandUtil.GetRandomVector2In(enemySpawnArea);
+        Vector2 spawnPos = RandUtil.GetRandomVector2In(enemySpawnArea);
+        if(characterName == CharacterName.EnemyBossChiruno)
+        {
+            enemy.transform.position = new Vector2(spawnPos.x, spawnPos.y / 2f);
+        }
+        else
+        {
+            enemy.transform.position = spawnPos;            
+        }
         return enemy;
     }
 
