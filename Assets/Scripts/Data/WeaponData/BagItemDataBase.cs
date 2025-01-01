@@ -57,7 +57,7 @@ public class BagItemDataBase : BagItemData
     public virtual float GetCooldown() { return baseCooldown; }
     public virtual int GetDamage() {
         int value = (int)(baseDamage * Mathf.Pow(perLevelBuff, GetLevelAsInt() - 1));
-        Debug.Log("Weapon: " + GetItemName() + " / Level: " + GetLevelAsInt() + " / " + value);
+        // Debug.Log("Weapon: " + GetItemName() + " / Level: " + GetLevelAsInt() + " / " + value);
         return value;
     }
 

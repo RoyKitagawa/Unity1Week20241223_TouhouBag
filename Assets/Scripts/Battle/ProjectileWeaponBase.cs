@@ -33,6 +33,7 @@ public class ProjectileWeaponBase : MonoBehaviour
             duration = Vector2.Distance(startPosition, target.transform.position) / speed;
         }
         float height = data.WeaponTargetType == TargetType.Self ? UnityEngine.Random.Range(1.5f, 2.5f) : dist / 10.0f;
+        height *= UnityEngine.Random.Range(1.0f, 1.5f);
         Vector2 endPosition = target.GetFuturePosition(duration);
 
         Sequence sequence = DOTween.Sequence();

@@ -10,31 +10,31 @@ public class CharacterDataEnemyBase : CharacterDataBase
         public const float WeakBuffer = 1.2f;
         public static class Weak
         {
-            public const float BaseLife = 20.0f;
-            public const float BaseCoolDown = 1.0f;
+            public const float BaseLife = 12.0f;
+            public const float BaseCoolDown = 1.2f;
             public const float BaseAttack = 8.0f;
             public const float BaseSpeed = -2.0f;
         }
         public static class Normal
         {
             public const float BaseLife = Weak.BaseLife * 1.75f;
-            public const float BaseCoolDown = 1.1f;
+            public const float BaseCoolDown = 1.3f;
             public const float BaseAttack = Weak.BaseLife * 1.75f;
             public const float BaseSpeed = -1.75f;
         }
         // 中ボス
         public static class Strong
         {
-            public const float BaseLife = Normal.BaseLife * 2.5f;
-            public const float BaseCoolDown = 1.5f;
+            public const float BaseLife = Normal.BaseLife * 3.5f;
+            public const float BaseCoolDown = 1.75f;
             public const float BaseAttack = Normal.BaseLife * 2.5f;
             public const float BaseSpeed = -1.5f;
         }
         // 大ボス
         public static class Boss
         {
-            public const float BaseLife = Strong.BaseLife * 2.5f;
-            public const float BaseCoolDown = 1.75f;
+            public const float BaseLife = Strong.BaseLife * 3.5f;
+            public const float BaseCoolDown = 2.0f;
             public const float BaseAttack = Strong.BaseLife * 2.5f;
             public const float BaseSpeed = -1.0f;
         }

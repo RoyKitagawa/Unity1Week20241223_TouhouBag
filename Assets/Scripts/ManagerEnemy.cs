@@ -46,7 +46,15 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetRandomEnemy()
     {
-        return RandUtil.GetRandomItem(enemies);
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        HashSet<CharacterBase> targets = new HashSet<CharacterBase>();
+        foreach(CharacterBase enemy in enemies)
+        {
+            // まだ画面内に入っていない敵はスルー
+            if(enemy.transform.position.x > screenCorners.max.x) continue;
+            targets.Add(enemy);
+        }
+        return RandUtil.GetRandomItem(targets);
     }
 
     /// <summary>
@@ -55,11 +63,14 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetNearestEnemy()
     {
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
         CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase nearestEnemy = null;
         float nearestDist = -1;
         foreach(CharacterBase enemy in enemies)
         {
+            // まだ画面内に入っていない敵はスルー
+            if(enemy.transform.position.x > screenCorners.max.x) continue;
             float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
             if(nearestDist < 0 || dist < nearestDist)
             {
@@ -76,11 +87,14 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetFarthestEnemy()
     {
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
         CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase farthestEnemy = null;
         float closestDist = -1;
         foreach(CharacterBase enemy in enemies)
         {
+            // まだ画面内に入っていない敵はスルー
+            if(enemy.transform.position.x > screenCorners.max.x) continue;
             float dist = Vector2.Distance(player.transform.position, enemy.transform.position);
             if(closestDist < 0 || dist > closestDist)
             {
@@ -97,11 +111,14 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetEnemyWithLowestLife()
     {
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
         CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase targetEnemy = null;
         float lowestLife = -1;
         foreach(CharacterBase enemy in enemies)
         {
+            // まだ画面内に入っていない敵はスルー
+            if(enemy.transform.position.x > screenCorners.max.x) continue;
             if(lowestLife < 0 || lowestLife > enemy.GetCurrentLife())
             {
                 lowestLife = enemy.GetCurrentLife();
@@ -117,11 +134,14 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <returns></returns>
     public CharacterBase GetEnemyWithHighestLife()
     {
+        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
         CharacterBase player = ManagerBattleMode.Instance.GetPlayer();
         CharacterBase targetEnemy = null;
         float highestLife = -1;
         foreach(CharacterBase enemy in enemies)
         {
+            // まだ画面内に入っていない敵はスルー
+            if(enemy.transform.position.x > screenCorners.max.x) continue;
             if(highestLife < 0 || highestLife < enemy.GetCurrentLife())
             {
                 highestLife = enemy.GetCurrentLife();

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum PopupType
 {
@@ -23,7 +24,7 @@ public abstract class PopupBase : MonoBehaviour
             return false;
         }
 
-        // Time.timeScale = 0.0f;
+        Time.timeScale = 0.0f;
         GameObject obj = BasicUtil.LoadGameObject4Resources(GetPopupResourcesPath(type));
         PopupBase popup = Instantiate(obj).GetComponentInChildren<PopupBase>();
         popup.ShowPopup();
@@ -54,7 +55,14 @@ public abstract class PopupBase : MonoBehaviour
         sequence.Append(transform.DOScale(0.0f, duration));
         sequence.Join(canvasGroup.DOFade(0.0f, duration));
         sequence.OnComplete(() => {
-            Time.timeScale = 1.0f;
+            string sceneName = SceneManager.GetActiveScene().name;
+    
+            // インゲームのバトル中ならバトルの速度に戻す
+            if(sceneName == "InGameBattle")
+                ManagerBattleMode.Instance.ResumeTimer();
+            else
+                Time.timeScale = 1.0f;
+                
             Destroy(RootCanvas.gameObject);
             OnHidden();
         });

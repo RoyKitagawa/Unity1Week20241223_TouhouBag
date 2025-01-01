@@ -2,6 +2,18 @@ using UnityEngine;
 
 public class SaveDataManager
 {
+    public static void SaveBattleSpeed(float speed)
+    {
+        PlayerPrefs.SetFloat(Consts.PlayerPrefs.Keys.GameSpeed, speed);
+        PlayerPrefs.Save();
+    }
+
+    public static float LoadBattleSpeed()
+    {
+        float speed = PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.GameSpeed, 1.0f);
+        return speed;
+    }
+
     public static void ClearProgress()
     {
         PlayerPrefs.DeleteKey(Consts.PlayerPrefs.Keys.ProgressData);
@@ -46,21 +58,41 @@ public class SaveDataManager
         return saveData;
     }
 
-    public static void ApplySavedData(SaveData saveData, bool doPlaceItem)
+    public static void ApplyMoneySaveData(SaveData saveData)
     {
         if(saveData == null)
         {
-            Debug.LogError("セーブデータが存在しません");
+            Debug.Log("セーブデータが存在しません");
             return;
         }
         Debug.Log("セーブデータの反映を実施します");
 
         // 金銭情報
         ManagerGame.Instance.SetMoney(saveData.CurrentMoney);
+    }
+
+    public static void ApplyWavesSaveData(SaveData saveData)
+    {
+        if(saveData == null)
+        {
+            Debug.Log("セーブデータが存在しません");
+            return;
+        }
+        Debug.Log("セーブデータの反映を実施します");
         
         // ウェーブ情報
         ManagerGame.Instance.SetClearedWave(saveData.ClearedWaves);
         ManagerGame.Instance.SetCurrentWave(saveData.ClearedWaves + 1);
+    }
+
+    public static void ApplyItemsSavedData(SaveData saveData, bool doPlaceItem)
+    {
+        if(saveData == null)
+        {
+            Debug.Log("セーブデータが存在しません");
+            return;
+        }
+        Debug.Log("セーブデータの反映を実施します");
 
         // バッグ系
         ManagerGame.Bags.Clear();

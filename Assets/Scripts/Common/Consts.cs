@@ -113,6 +113,8 @@ public static class Consts
                 public const string BombExplode = _Particles + "/ParticleBombExplode";
                 public const string FireFlowerExplode = _Particles + "/ParticleFireFlowerExplode";
             }
+
+            public const string ItemDescription = _Prefabs + "/ItemDescription";
         }
 
         public static class Sprites
@@ -127,40 +129,40 @@ public static class Consts
                 public class Thumb
                 {
                     // きゅうり
-                    public const string CucumberLv1 = _ItemsThumb + "/Apple";
-                    public const string CucumberLv2 = _ItemsThumb + "/Apple";
-                    public const string CucumberLv3 = _ItemsThumb + "/Apple";
-                    public const string CucumberLv4 = _ItemsThumb + "/Apple";
+                    public const string CucumberLv1 = _ItemsThumb + "/ic_cucumber_lv1";
+                    public const string CucumberLv2 = _ItemsThumb + "/ic_cucumber_lv2";
+                    public const string CucumberLv3 = _ItemsThumb + "/ic_cucumber_lv3";
+                    public const string CucumberLv4 = _ItemsThumb + "/ic_cucumber_lv4";
                     // ネジ
-                    public const string ScrewLv1 = _ItemsThumb + "/Apple4";
-                    public const string ScrewLv2 = _ItemsThumb + "/Apple4";
-                    public const string ScrewLv3 = _ItemsThumb + "/Apple4";
-                    public const string ScrewLv4 = _ItemsThumb + "/Apple4";
+                    public const string ScrewLv1 = _ItemsThumb + "/ic_screw_lv1";
+                    public const string ScrewLv2 = _ItemsThumb + "/ic_screw_lv2";
+                    public const string ScrewLv3 = _ItemsThumb + "/ic_screw_lv3";
+                    public const string ScrewLv4 = _ItemsThumb + "/ic_screw_lv4";
                     // スパナ                
-                    public const string SpannerLv1 = _ItemsThumb + "/Apple4";
-                    public const string SpannerLv2 = _ItemsThumb + "/Apple4";
-                    public const string SpannerLv3 = _ItemsThumb + "/Apple4";
-                    public const string SpannerLv4 = _ItemsThumb + "/Apple4";
+                    public const string SpannerLv1 = _ItemsThumb + "/ic_spanner_lv1";
+                    public const string SpannerLv2 = _ItemsThumb + "/ic_spanner_lv2";
+                    public const string SpannerLv3 = _ItemsThumb + "/ic_spanner_lv3";
+                    public const string SpannerLv4 = _ItemsThumb + "/ic_spanner_lv4";
                     // 爆弾
-                    public const string BombLv1 = _ItemsThumb + "/Apple4";
-                    public const string BombLv2 = _ItemsThumb + "/Apple4";
-                    public const string BombLv3 = _ItemsThumb + "/Apple4";
-                    public const string BombLv4 = _ItemsThumb + "/Apple4";
+                    public const string BombLv1 = _ItemsThumb + "/ic_bomb_lv1";
+                    public const string BombLv2 = _ItemsThumb + "/ic_bomb_lv2";
+                    public const string BombLv3 = _ItemsThumb + "/ic_bomb_lv3";
+                    public const string BombLv4 = _ItemsThumb + "/ic_bomb_lv4";
                     // ドライバー
-                    public const string DriverLv1 = _ItemsThumb + "/Apple4";
-                    public const string DriverLv2 = _ItemsThumb + "/Apple4";
-                    public const string DriverLv3 = _ItemsThumb + "/Apple4";
-                    public const string DriverLv4 = _ItemsThumb + "/Apple4";
+                    public const string DriverLv1 = _ItemsThumb + "/ic_driver_lv1";
+                    public const string DriverLv2 = _ItemsThumb + "/ic_driver_lv2";
+                    public const string DriverLv3 = _ItemsThumb + "/ic_driver_lv3";
+                    public const string DriverLv4 = _ItemsThumb + "/ic_driver_lv4";
                     // 河童キャノン
-                    public const string CanonLv1 = _ItemsThumb + "/Apple4";
-                    public const string CanonLv2 = _ItemsThumb + "/Apple4";
-                    public const string CanonLv3 = _ItemsThumb + "/Apple4";
-                    public const string CanonLv4 = _ItemsThumb + "/Apple4";
+                    public const string CanonLv1 = _ItemsThumb + "/ic_canon_lv1";
+                    public const string CanonLv2 = _ItemsThumb + "/ic_canon_lv2";
+                    public const string CanonLv3 = _ItemsThumb + "/ic_canon_lv3";
+                    public const string CanonLv4 = _ItemsThumb + "/ic_canon_lv4";
                     // 手袋
-                    public const string GloveLv1 = _ItemsThumb + "/Apple4";
-                    public const string GloveLv2 = _ItemsThumb + "/Apple4";
-                    public const string GloveLv3 = _ItemsThumb + "/Apple4";
-                    public const string GloveLv4 = _ItemsThumb + "/Apple4";
+                    public const string GloveLv1 = _ItemsThumb + "/ic_glove_lv1";
+                    public const string GloveLv2 = _ItemsThumb + "/ic_glove_lv2";
+                    public const string GloveLv3 = _ItemsThumb + "/ic_glove_lv3";
+                    public const string GloveLv4 = _ItemsThumb + "/ic_glove_lv4";
                 }
 
                 public const string StageSlot = _Items + "/StageSlot";
@@ -297,6 +299,7 @@ public static class Consts
             public const string VolumeMaster = "VolumeMaster";
             public const string VolumeSE = "VolumeSE";
             public const string VolumeBGM = "VolumeBGM";
+            public const string GameSpeed = "GameSpeed";
         }
     }
 }

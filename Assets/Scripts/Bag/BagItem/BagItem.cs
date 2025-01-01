@@ -44,11 +44,15 @@ public class BagItem : TappableObject
     // アイテムが設置可能か（移動中に更新される）
     private bool isPlacable = false;
     // アイテムが購入済みか
-    private bool isPurchased = false;
+    // private bool isPurchased = false;
     // アイテムが配置されたショップスロット
     private ShopSlot shopSlot = null;
     // アイテムの値段表記用オブジェクト
     // private SpriteRenderer priceRenderer = null;
+
+    private float mouseHoverTime = 0.0f;
+    private float showDescriptionDuration = 0.3f;
+    private ItemDescription itemDescription = null;
 
     public void Start()
     {
@@ -201,6 +205,41 @@ public class BagItem : TappableObject
         cell.ClearOverlayColor();
     }
 
+    void OnMouseOver()
+    {
+        // マウスクリック中はなにもしない
+        if(Input.GetMouseButton(0))
+        {
+            OnMouseExit();
+            return;
+        }
+
+        mouseHoverTime += Time.deltaTime;
+        if(mouseHoverTime > showDescriptionDuration && itemDescription == null)
+        {
+            itemDescription = ItemDescription.Show(data, transform.position);
+        }
+        // if (!isMouseOver)
+        // {
+        //     isMouseOver = true; // マウスが乗ったことを記録
+        //     hoverTimer = 0.0f;  // タイマーリセット
+        // }
+    }
+
+    void OnMouseExit()
+    {
+        // Debug.Log("OnHoverExit");
+        mouseHoverTime = 0;
+        if(itemDescription != null)
+        {
+            itemDescription?.Hide();
+            itemDescription = null;
+        }
+        // isMouseOver = false; // マウスが離れたことを記録
+        // hoverTimer = 0.0f;   // タイマーリセット
+        // OnMouseHoverExit(); // 離れた時の処理
+    }
+
     /// <summary>
     /// タップ開始時に呼び出される
     /// 
@@ -209,8 +248,9 @@ public class BagItem : TappableObject
     /// </summary>
     public override bool OnTapDown()
     {
+        mouseHoverTime = 0.0f;
         // お金が足りないときは何も行わない（未購入のアイテムの場合）
-        if(!isPurchased && ManagerGame.Instance.GetMoney() < data.Cost)
+        if(!IsPurchased() && ManagerGame.Instance.GetMoney() < data.Cost)
         {
             // 左右に揺らす
             Sequence sequence = DOTween.Sequence();
@@ -265,16 +305,24 @@ public class BagItem : TappableObject
         SetIsPlaced(false);
 
         // アイテム購入処理
+        Debug.Log("Is Before Purchase");
         if(!IsPurchased())
         {
             // コストを支払う
             ManagerGame.Instance.AddMoney(-data.Cost);
             shopSlot.OnPurchase();
             SetShopSlot(null);
+            
+            Debug.Log("IsPurchased");
             ManagerBagEditMode.Instance.OnMoneyUpdate();
+
             // SetIsPurchased(true);
         }
+        Debug.Log("Is After Purchase");
 
+        // ステータス更新
+        ManagerBagEditMode.Instance.OnBagWeaponUpdate();
+        
         // タップ処理完了を伝える
         return true;
     }
@@ -397,6 +445,9 @@ public class BagItem : TappableObject
         float rot = 360.0f * UnityEngine.Random.Range(1, 5);
         Sequence rotateSequence = DOTween.Sequence();
         rotateSequence.Append(GetImage().transform.DORotate(new Vector2(0.0f, rot), 0.6f).SetRelative());
+
+        // ステータス数値更新
+        ManagerBagEditMode.Instance.OnBagWeaponUpdate();
     }
 
     /// <summary>
@@ -603,15 +654,15 @@ public class BagItem : TappableObject
         ManagerBagEditMode.Instance.OnBagWeaponUpdate();
     }
 
-    /// <summary>
-    /// アイテム購入フラグをセット
-    /// </summary>
-    /// <param name="flag"></param>
-    public void SetIsPurchased(bool flag)
-    {
-        isPurchased = flag;
-        // priceRenderer?.gameObject.SetActive(!flag);
-    }
+    // /// <summary>
+    // /// アイテム購入フラグをセット
+    // /// </summary>
+    // /// <param name="flag"></param>
+    // public void SetIsPurchased(bool flag)
+    // {
+    //     isPurchased = flag;
+    //     // priceRenderer?.gameObject.SetActive(!flag);
+    // }
 
     /// <summary>
     /// アイテムが購入済みか

@@ -28,6 +28,13 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     [SerializeField]
     private Slider stageProgressSlider;
 
+    // 速度関連
+    [SerializeField]
+    private Slider speedSlider;
+    [SerializeField]
+    private TextMeshProUGUI speedText;
+    private float gameSpeed = 1.0f;
+
     // キャラクターが所持しているアイテム一覧
     private HashSet<BattleListItem> items = new HashSet<BattleListItem>();
 
@@ -80,6 +87,27 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
             .AppendCallback(() => SpawnEnemy());
     }
 
+    public void OnClickSettings()
+    {
+        PopupBase.Show(PopupType.Settings);
+    }
+
+    public void OnSpeedSliderUpdate()
+    {
+        float value = speedSlider.value;
+        SetSpeed(value);
+    }
+
+    private void SetSpeed(float speed)
+    {
+        speedSlider.value = speed;
+        gameSpeed = speed;
+        speedText.text = "Speed: x" + speed.ToString("F1");
+        ResumeTimer();
+
+        SaveDataManager.SaveBattleSpeed(speed);
+    }
+
     public void OnWaveClear()
     {
         Debug.Log("Wave成功！");
@@ -109,6 +137,9 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
     {
         // バトル開始フラグ
         IsBattleActive = true;
+
+        // 速度設定
+        SetSpeed(SaveDataManager.LoadBattleSpeed());
 
         // EnemyManager初期化処理
         ManagerEnemy.Instance.ClearAllEnemies();
@@ -147,7 +178,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
             SpriteRenderer sr = new GameObject("Mikan").AddComponent<SpriteRenderer>();
             sr.transform.SetParent(root);
             sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Box);
-            sr.transform.position = new Vector2(-5.0f, y);
+            sr.transform.position = new Vector2(-4.5f, y);
             if(y <= -4.0f) break;
         }
 
@@ -179,7 +210,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
     public int GetRemainEnemiesToBeSpawned()
     {
-        return (int)stageProgressSlider.value;
+        return (int)stageProgressSlider.value - ManagerEnemy.Instance.GetEnemiesCount();
     }
 
     public void OnEnemyDead(EnemyBase enemy)
@@ -286,7 +317,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
             // バッグ編集へと戻る
             ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBagEdit);
             waveClearPanel.gameObject.SetActive(false);
-            ResumeTimer();
+            ResumeTimer(1.0f);
 
             // 各種オブジェクト削除
             GameObject weapons = BasicUtil.GetRootObject(Consts.Roots.BattleWeapons);
@@ -300,6 +331,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         // 進捗を保存する
         SaveDataManager.SaveProgress();
     }
+
+    
 
     private void ShowGameOverResult()
     {
@@ -317,9 +350,14 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         Time.timeScale = 0.0f;
     }
 
-    private void ResumeTimer()
+    /// <summary>
+    /// Scaleを指定するとそのScaleに設定可能
+    /// </summary>
+    /// <param name="scale"></param>
+    public void ResumeTimer(float scale = -1)
     {
-        Time.timeScale = 1.0f;
+        if(scale < 0.0f) Time.timeScale = gameSpeed;
+        else Time.timeScale = scale;
     }
 
 

@@ -39,6 +39,9 @@ public class EnemyBase : CharacterBase
         ManagerParticle.Instance.ShowOnDamageParticle(player.transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
         // ヒット時の揺れ
         player.ShakeOnDamage();
+
+        // 自分を揺らす
+        transform.DOShakePosition(0.5f, 0.3f, 20);
     }
 
     public void OnTriggerEnter2D(Collider2D target)

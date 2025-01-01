@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class EnemyBoss : EnemyBase
 {
+    public Vector3 offset;
     [SerializeField]
     private HPBar hpBar;
     private RectTransform hpBarRectTransform;
-    private Vector3 offset = new Vector3(0.0f, -1.6f, 0.0f);
     private Sequence moveImageSequence;
 
     public void Start()
     {
+        data = CharacterDataList.GetCharacterData(CharacterName.EnemyStrongA);
         moveImageSequence = DOTween.Sequence();
         moveImageSequence.Append(GetImage().transform.DORotate(new Vector3(0.0f, 0.0f, 10.0f), 0.0f))
             .AppendInterval(1f)

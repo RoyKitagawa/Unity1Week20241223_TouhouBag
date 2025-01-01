@@ -69,20 +69,12 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 
         // ステージ情報整理
         InitStageScale();
-    
-        // Reroll関連
-        defaultRerollButtonPos = rerollButton.transform.position;
-        UpdateRerollPriceImage();
-        
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
 
-        // 金銭初期化
-        ManagerGame.Instance.SetMoney(ManagerGame.Instance.InitialMoneyAmt);
-
-        // ステージ情報の更新
-        ManagerGame.Instance.SetCurrentWave(ManagerGame.Instance.GetClearedWave() + 1);
-        waveText.text = ManagerGame.Instance.GetWaveStatusText();
+        // Reroll関連
+        defaultRerollButtonPos = rerollButton.GetComponent<RectTransform>().localPosition;
+        UpdateRerollPriceImage();        
 
         // ロード処理
         SaveData saveData = SaveDataManager.LoadProgress();
@@ -101,8 +93,19 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         else
         {
             // データをもとにゲーム進捗、バッグの状況を復元
-            SaveDataManager.ApplySavedData(saveData, true);
+            SaveDataManager.ApplyItemsSavedData(saveData, true);
         }
+
+        // 残りのデータを反映
+        SaveDataManager.ApplyWavesSaveData(saveData);
+        SaveDataManager.ApplyMoneySaveData(saveData);
+
+        // 次のWAVEを開始する。WAVE増加＆MONEY増加
+        ManagerGame.Instance.StartNextWave();
+        waveText.text = ManagerGame.Instance.GetWaveStatusText();    
+        // 金銭初期化
+        OnMoneyUpdate();
+
     }
 
     private void StartNitoriWalk()
@@ -165,7 +168,14 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 
     public void OnMoneyUpdate()
     {
-        moneyTxt.text = ManagerGame.Instance.GetMoney().ToString();
+        int money = ManagerGame.Instance.GetMoney();
+        // Debug.Log("Money: " + money);
+        moneyTxt.text = money.ToString();
+    }
+
+    public void OnClickSettings()
+    {
+        PopupBase.Show(PopupType.Settings);
     }
 
     /// <summary>
@@ -291,6 +301,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         }
         // 支払う
         ManagerGame.Instance.AddMoney(-rerollPrice);
+        OnMoneyUpdate();
 
         // 未購入のものは削除する
         ManagerGame.Items.RemoveWhere(item => {

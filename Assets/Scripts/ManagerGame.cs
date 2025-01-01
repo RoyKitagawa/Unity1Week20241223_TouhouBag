@@ -13,22 +13,39 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     // ステージに存在するアイテムの一覧
     public static HashSet<BagItem> Items = new HashSet<BagItem>();
     // 所持金情報
-    public int InitialMoneyAmt = 999;
-    private int moneyAmt;
+    // // public int InitialMoneyAmt = 14;
+    // private const int defaultMoney = 14;
+    private int moneyAmt = 14;
     // WAVE関連
     private const int totalWaves = 15;
-    private int currentWave;
+    private int currentWave = 0;
     private int clearedWave;
     // 敵機関連
     private int baseTotalEnemyInStage = 15;
     private float maxBuffRate { get { return totalWaves / 4; } } // 最大マックスステージ数 / 4倍まで敵をバフする
 
+    // アクション
+    public void StartNextWave()
+    {
+        int nextWave = currentWave + 1;
+        Debug.Log("Next Wave = " + nextWave);
+        SetCurrentWave(nextWave);
+        AddMoneyForNewWave(nextWave);
+    }
 
     // 金銭関連
-    public int GetMoney() { return moneyAmt; }
+    public int GetMoney() { return moneyAmt; }// < 0 ? defaultMoney : moneyAmt; } // Moneyがマイナス値なら未設定として初期値を渡す
     public void SetMoney(int value) { moneyAmt = value; }
-    public void AddMoney(int value) { moneyAmt += value; }
-    public void AddMoneyForNewWave(int nextWave) { AddMoney(7 + nextWave); }
+    public void AddMoney(int value) {
+        Debug.Log("Add前Money: " + moneyAmt + " / value = " + value);
+        moneyAmt += value;
+        Debug.Log("Add後Money: " + moneyAmt + " / value = " + value);
+        }
+    public void AddMoneyForNewWave(int nextWave)
+    {
+        Debug.Log("AddMoneyForNextWave = " + nextWave);
+        if(nextWave > 1) AddMoney(10 + nextWave);
+    }
     // WAVE関連
     public string GetWaveStatusText() { return "WAVE " + GetCurrentWave() + " / " + GetTotalWaves(); }
     public bool IsLastWave() { return currentWave >= totalWaves; }

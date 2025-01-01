@@ -112,4 +112,125 @@ public class BagItemDataList
         }
         return names;
     }
+
+    public static string GetItemDescriptionName(BagItemName itemName, BagItemLevel lv)
+    {
+        string ret = "";
+        switch(itemName)
+        {
+            case BagItemName.Cucumber:
+                ret += "にとり印のおいしいきゅうり";
+                break;
+
+            case BagItemName.Screw:
+                ret += "余ったネジ";
+                break;
+
+            case BagItemName.Spanner:
+                ret += "相棒スパナ";
+                break;
+
+            case BagItemName.Bomb:
+                ret += "解体工事用爆弾";
+                break;
+
+            case BagItemName.Driver:
+                ret += "マイナスドライバー";
+                break;
+
+            case BagItemName.Canon:
+                ret += "河童キャノン";
+                break;
+
+            case BagItemName.Glove:
+                ret += "軍手";
+                break;
+
+            case BagItemName.Bag2x2:
+            case BagItemName.Bag1x1:
+            case BagItemName.Bag2x1:
+            case BagItemName.Bag3x1:
+                ret += "四次元鞄（自称）";
+                break;
+
+            case BagItemName.StageSlot:
+                ret += "ステージ用スロット";
+                break;
+
+            default:
+                Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName + ", レベル: " + lv);
+                return null;
+        }
+        // レベルの情報
+        switch(lv)
+        {   
+            case BagItemLevel.Lv1:
+                ret += " lv1";
+                break;
+            case BagItemLevel.Lv2:
+                ret += " lv2";
+                break;
+            case BagItemLevel.Lv3:
+                ret += " lv3";
+                break;
+            case BagItemLevel.Lv4:
+                ret += " lv4";
+                break;
+            default:
+                Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName + ", レベル: " + lv);
+                break;
+        }
+        return ret;
+    }
+
+    public static string GetItemDescriptionContent(BagItemName itemName, BagItemLevel lv)
+    {
+        string ret = "";
+        switch(itemName)
+        {
+            case BagItemName.Cucumber:
+                ret += "【HP回復】冷やして食べると元気満タン！";
+                break;
+
+            case BagItemName.Screw:
+                ret += "ネジなんて余っても動けばいいのよ";
+                break;
+
+            case BagItemName.Spanner:
+                ret += "エンジニアといえばやっぱりコレ";
+                break;
+
+            case BagItemName.Bomb:
+                ret += "【範囲攻撃】危ないから人に投げちゃだめだよ";
+                break;
+
+            case BagItemName.Driver:
+                ret += "ドライバーはマイナス一本あればなんとかなるよね";
+                break;
+
+            case BagItemName.Canon:
+                ret += "【範囲攻撃】河童と言えばキャノンだけど…ご存じない？";
+                break;
+
+            case BagItemName.Glove:
+                ret += "【シールド回復】寒い冬には防寒具にもなる有能な子";
+                break;
+
+            case BagItemName.Bag2x2:
+            case BagItemName.Bag1x1:
+            case BagItemName.Bag2x1:
+            case BagItemName.Bag3x1:
+                ret += "アイテムを買う前に、まずは鞄を買わないとね！\nアイテムは鞄の上に置けるよ";
+                break;
+
+            case BagItemName.StageSlot:
+                ret += "ステージ用スロット";
+                break;
+
+            default:
+                Debug.LogError("アイテムデータ取得失敗。不正なタイプ: " + itemName + ", レベル: " + lv);
+                return null;
+        }
+        return ret;
+    }
 }
