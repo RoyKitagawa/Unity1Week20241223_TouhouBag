@@ -18,7 +18,7 @@ public class BagItemDataBag1x1 : BagItemDataBase
     // レベル関連
     public override BagItemLevel GetLevel() { return BagItemLevel.Lv1; }
     public override bool GetIsMergable() { return false; }
-    public override string GetSpritePathItem() { return ""; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.Bag1x1; }
     public override string GetSpritePathItemThumb() { return ""; }
 
     // バトル画面用
@@ -29,7 +29,6 @@ public class BagItemDataBag1x1 : BagItemDataBase
 
 public class BagItemDataBag3x1 : BagItemDataBag1x1
 {
-    protected new int baseCost = 2;
     public override BagItemName GetItemName() { return BagItemName.Bag3x1; }
     public override ColliderShape GetColliderShape() { return ColliderShape.Rectangle3x1; }
     public override string GetSpritePathItem() { return ""; }
@@ -38,7 +37,7 @@ public class BagItemDataBag3x1 : BagItemDataBag1x1
 
 public class BagItemDataBag2x2 : BagItemDataBag1x1
 {
-    protected new int baseCost = 2;
+    protected override int GetBaseCost() { return 3; }
     public override BagItemName GetItemName() { return BagItemName.Bag2x2; }
     public override ColliderShape GetColliderShape() { return ColliderShape.Square2x2; }
     public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.Bag2x2; }
@@ -50,6 +49,6 @@ public class BagItemDataBag2x1 : BagItemDataBag1x1
     protected new int baseCost = 2;
     public override BagItemName GetItemName() { return BagItemName.Bag2x1; }
     public override ColliderShape GetColliderShape() { return ColliderShape.Rectangle2x1; }
-    public override string GetSpritePathItem() { return ""; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.Bag2x1; }
     public override string GetSpritePathItemThumb() { return ""; }
 }

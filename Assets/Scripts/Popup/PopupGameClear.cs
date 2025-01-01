@@ -53,6 +53,8 @@ public class PopupGameClear : PopupBase
             seq2.Join(toTitleButton.DOFade(1.0f, duration / 2f));
             seq2.SetUpdate(true);
         });
+
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipGameClear);
     }
 
     private IEnumerator CoShowFireFlower(float delay)
@@ -77,6 +79,9 @@ public class PopupGameClear : PopupBase
 
     public void OnClickToTitleButton()
     {
+        // 進捗データを消す
+        ManagerGame.Instance.ResetAllData();
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
     }
 

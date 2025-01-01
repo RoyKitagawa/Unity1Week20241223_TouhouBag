@@ -129,18 +129,21 @@ public class CharacterBase : MonoBehaviour
         // 回復系
         if(data.WeaponDamageType == DamageType.Heal)
         {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponCucumber, 0.3f);
             // 回復パーティクル
             ManagerParticle.Instance.ShowOnHealParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
         }
         // アーマー付与
         else if(data.WeaponDamageType == DamageType.Shield)
         {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponGlove, 0.3f);
             // 回復パーティクル
             ManagerParticle.Instance.ShowOnShieldParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
         }
         // 攻撃系
         else
         {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipDamageHit, 0.3f);
             // ヒットパーティクル
             ManagerParticle.Instance.ShowOnDamageParticle(transform.position, BasicUtil.GetRootObject(Consts.Roots.ParticlesBattle).transform);
             // ヒット時の揺れ

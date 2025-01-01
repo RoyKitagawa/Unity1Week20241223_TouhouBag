@@ -44,6 +44,9 @@ public class FireFlower
             seq.Append(sr.DOFade(0.0f, seedLaunchDuration));
             seq.SetUpdate(true);
         }
+        
+        // 花火音
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipFireFlowerLaunch, 0.6f);
 
         Sequence seedSeq = DOTween.Sequence();
         seedSeq.Append(fireFlower.transform.DOMoveY(destPos.y, seedLaunchDuration));
@@ -55,6 +58,7 @@ public class FireFlower
 
     private static void Explode(Transform fireflower, Color color, float scale, Action<Transform> onComplete)
     {
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipFireFlowerExplode);
         ManagerParticle.Instance.ShowFireFlowerExplodePartocle(fireflower.position, fireflower, color, scale, () => {
             onComplete(fireflower);
         });

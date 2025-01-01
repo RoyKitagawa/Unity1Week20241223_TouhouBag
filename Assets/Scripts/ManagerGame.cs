@@ -23,6 +23,10 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     // 敵機関連
     private int baseTotalEnemyInStage = 15;
     private float maxBuffRate { get { return totalWaves / 4; } } // 最大マックスステージ数 / 4倍まで敵をバフする
+    // 音量関連
+    private float volumeMaster;
+    private float volumeSE;
+    private float volumeBGM;
 
     // アクション
     public void StartNextWave()
@@ -31,6 +35,17 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
         Debug.Log("Next Wave = " + nextWave);
         SetCurrentWave(nextWave);
         AddMoneyForNewWave(nextWave);
+    }
+
+    public void ResetAllData()
+    {
+        moneyAmt = 14;
+        currentWave = 0;
+        clearedWave = 0;
+        Slots.Clear();
+        Bags.Clear();
+        Items.Clear();
+        SaveDataManager.ClearProgress();
     }
 
     // 金銭関連
@@ -54,7 +69,7 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public void SetCurrentWave(int wave) { currentWave = wave; }
     public int GetClearedWave() { return clearedWave; }
     public void SetClearedWave(int wave) { clearedWave = wave; }
-    public bool IsGameClear() { return clearedWave >= totalWaves; }
+    public bool IsGameClear(int clearedWaveIndex) { return clearedWaveIndex >= totalWaves; }
     // 敵機関連
     public int GetTotalEnemyInStage() { return baseTotalEnemyInStage + (int)(baseTotalEnemyInStage * currentWave * 0.3f); }
     public float GetEnemyBuffRateWave() { return (float)totalWaves / maxBuffRate * (float)currentWave / (float)totalWaves; } // WAVEが進むにつれてバフが強化されるように
@@ -231,11 +246,32 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     private void RemoveFromBagList(BagItem bag) { if(bag != null) Bags.Remove(bag); }
     private void RemoveFromItemList(BagItem item) { if(item != null) Items.Remove(item); }
 
-
     public void ClearAllInStageObjectLists()
     {
         Slots.Clear();
         Bags.Clear();
         Items.Clear();
     }
+
+    public void LoadVolume()
+    {
+        SetVolume(
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeMaster, 1.0f),
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeSE, 1.0f),
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeBGM, 1.0f));            
+    }
+
+    public void SetVolume(float master, float se, float bgm)
+    {
+        volumeMaster = master;
+        volumeSE = se;
+        volumeBGM = bgm;
+
+        // AudioManagerにも変更を反映する
+        ManagerBGM.Instance.SetVolume(GetVolumeBGM());
+        ManagerSE.Instance.SetVolume(GetVolumeSE());
+    }
+    public float GetVolumeMaster() { return volumeMaster; }
+    public float GetVolumeSE() { return volumeMaster * volumeSE; }
+    public float GetVolumeBGM() { return volumeMaster * volumeBGM; }
 }

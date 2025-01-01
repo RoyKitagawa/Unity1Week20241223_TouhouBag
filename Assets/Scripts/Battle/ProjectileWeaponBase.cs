@@ -46,6 +46,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 sequence.OnComplete(() => {
                     weapon.OnWeaponHit(target);
                 });
+                ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponThrow, 0.2f);
                 break;
             case LaunchType.ThrowStraight:
                 // まっすぐ刺す
@@ -54,6 +55,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                 sequence.OnComplete(() => {
                     weapon.OnWeaponHit(target);
                 });
+                ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponThrow, 0.2f);
                 break;
             case LaunchType.Unique:
                 // 各武器で別途登録する
@@ -73,6 +75,7 @@ public class ProjectileWeaponBase : MonoBehaviour
                         weapon.BombExplode();
                         // weapon.OnWeaponHit(target);
                     });
+                    // ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponThrow);
                 }
                 else
                 {
@@ -107,6 +110,8 @@ public class ProjectileWeaponBase : MonoBehaviour
 
         // 自分自身を破壊
         Destroy(gameObject);
+
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponBombExplode, 0.1f);
     }
     
     /// <summary>
@@ -143,6 +148,9 @@ public class ProjectileWeaponBase : MonoBehaviour
                 {
                     return;
                 }
+
+                ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponCanonShot, 0.3f);
+
                 // 弾射出
                 SpriteRenderer bulletSR = new GameObject("CanonBullet").AddComponent<SpriteRenderer>();
                 bulletSR.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.BattleItem.CanonBullet);
@@ -178,11 +186,14 @@ public class ProjectileWeaponBase : MonoBehaviour
     {
         // カスタムパスを設定して放物線移動を実現
         Sequence sequence = DOTween.Sequence();
-        sequence.Append(transform.DOLocalMove(endPosition, duration).SetEase(Ease.Linear));
+        sequence.Append(transform.DOLocalMove(endPosition, duration).SetEase(Ease.Linear).OnComplete(() => {
+                // ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponDriver);
+        }));
 
         Vector3 dir = (Vector3)endPosition - transform.position;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle - 90);
+        
         return sequence;
     }
 
@@ -198,7 +209,9 @@ public class ProjectileWeaponBase : MonoBehaviour
                 Vector3 currentPosition = Vector3.Lerp(startPosition, endPosition, progress);
                 currentPosition.y += heightOffset;
                 transform.position = currentPosition;
-            }));
+            })).OnComplete(() => {
+                // ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponSpanner);
+            });
         // 回転を追加
         bool isRotPlus = RandUtil.GetRandomBool(0.5f);
         sequence.Join(transform.DORotate(new Vector3(0, 0, isRotPlus ? UnityEngine.Random.Range(180f, 540) : UnityEngine.Random.Range(-540f, -180f)), duration, RotateMode.FastBeyond360).SetEase(Ease.Linear));
@@ -220,8 +233,11 @@ public class ProjectileWeaponBase : MonoBehaviour
             Vector2 bounce1 = transform.position + VectorUtil.Sub(transform.position, playerPos) / 3.0f;
             Vector2 bounce2 = bounce1 + VectorUtil.Sub(bounce1, (Vector2)transform.position) / 3.0f;
 
+
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponBounce, 0.3f);
             // シーケンスを作成
             MoveInParabola(transform.position, bounce1, UnityEngine.Random.Range(0.5f, 1.0f), 0.5f).OnComplete(() => {
+                ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipWeaponBounce, 0.2f);
                 MoveInParabola(bounce1, bounce2, UnityEngine.Random.Range(0.2f, 0.5f), 0.3f).OnComplete(() => {
                     Destroy(gameObject);
                 });

@@ -102,7 +102,7 @@ public class BagItemDataList
 
             case BagItemType.Bag:
                 // names = new HashSet<BagItemName> { BagItemName.Bag2x2, BagItemName.Bag2x1, BagItemName.Bag1x1, BagItemName.Bag3x1 };
-                names = new HashSet<BagItemName> { BagItemName.Bag2x2 };
+                names = new HashSet<BagItemName> { BagItemName.Bag2x2, BagItemName.Bag2x1, BagItemName.Bag1x1 };
                 break;
 
             default:

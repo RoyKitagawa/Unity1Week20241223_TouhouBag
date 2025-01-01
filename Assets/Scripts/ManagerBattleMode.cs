@@ -110,11 +110,11 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
     public void OnWaveClear()
     {
-        Debug.Log("Wave成功！");
-        ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
+        // Debug.Log("Wave成功！");
+        // ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
 
         // 全てのWAVEを終えた場合
-        if(ManagerGame.Instance.IsGameClear())
+        if(ManagerGame.Instance.IsGameClear(ManagerGame.Instance.GetCurrentWave()))
         {
             ShowGameClearResult();
         }
@@ -302,8 +302,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         IsBattleActive = false;
         Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
 
-        // ステージ情報の更新
-        ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
+        // // ステージ情報の更新
+        // ManagerGame.Instance.SetClearedWave(ManagerGame.Instance.GetCurrentWave());
         
         // 時間を止める
         waveClearPanel.gameObject.SetActive(true);

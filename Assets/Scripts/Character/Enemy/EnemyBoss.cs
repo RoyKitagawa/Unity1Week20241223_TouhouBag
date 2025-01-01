@@ -44,6 +44,11 @@ public class EnemyBoss : EnemyBase
         hpBar.SetCurrentValue(currentLife);
     }
 
+    protected override void PlayAttackSE()
+    {
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipDamageHitHeavy, 0.3f);
+    }
+
     public void OnDestroy()
     {
         if(moveImageSequence != null && moveImageSequence.IsActive())

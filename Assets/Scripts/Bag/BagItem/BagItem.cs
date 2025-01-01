@@ -252,6 +252,8 @@ public class BagItem : TappableObject
         // お金が足りないときは何も行わない（未購入のアイテムの場合）
         if(!IsPurchased() && ManagerGame.Instance.GetMoney() < data.Cost)
         {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickError);
+
             // 左右に揺らす
             Sequence sequence = DOTween.Sequence();
             sequence.Append(GetImage().transform.DOLocalMoveX(UnityEngine.Random.Range(0.15f, 0.3f), 0.05f).SetEase(Ease.OutQuad));
@@ -312,16 +314,22 @@ public class BagItem : TappableObject
             ManagerGame.Instance.AddMoney(-data.Cost);
             shopSlot.OnPurchase();
             SetShopSlot(null);
-            
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipPurchaseItem);
+
             Debug.Log("IsPurchased");
             ManagerBagEditMode.Instance.OnMoneyUpdate();
 
             // SetIsPurchased(true);
         }
+        else
+        {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipGrabItem, 0.6f);
+        }
         Debug.Log("Is After Purchase");
 
         // ステータス更新
         ManagerBagEditMode.Instance.OnBagWeaponUpdate();
+
         
         // タップ処理完了を伝える
         return true;
@@ -408,8 +416,13 @@ public class BagItem : TappableObject
                 EvolveItem();
             });
             else Move2HitSlot(0.2f, OnItemPlaced);
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipPlaceItem);
         }
-        else DropItemFromSlot(); // アイテムをドロップする
+        else
+        {
+            DropItemFromSlot(); // アイテムをドロップする
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipReleaseItem);
+        }
 
         // タップ処理が正常に終了
         return true;
@@ -448,6 +461,7 @@ public class BagItem : TappableObject
 
         // ステータス数値更新
         ManagerBagEditMode.Instance.OnBagWeaponUpdate();
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipEvolveItem);
     }
 
     /// <summary>

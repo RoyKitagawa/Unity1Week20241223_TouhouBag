@@ -47,6 +47,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 
     void Start()
     {
+        Time.timeScale = 1.0f;
         Initialize();
         InitializeReroll();
         StartNitoriWalk();
@@ -176,6 +177,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     public void OnClickSettings()
     {
         PopupBase.Show(PopupType.Settings);
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
     }
 
     /// <summary>
@@ -286,7 +288,12 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(Random.Range(posX - moveMin, posX - moveMax), duration / 8f).SetEase(Ease.OutQuad));
             rerollButtonShakeSequence.Append(rerollButton.DOLocalMoveX(posX, duration / 8f).SetEase(Ease.InOutQuad));
 
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickCancel);
             return;
+        }
+        else
+        {
+            ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         }
 
         ReRollItems();
@@ -512,7 +519,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         
         // rootBagEdit.SetActive(false);
         // rootBattle.SetActive(true);
-
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipSceneTransition);
         ManagerSceneTransition.Instance.Move2Scene(SceneType.InGameBattle);
 
         // ManagerBattleMode.Instance.OnStartBattlePhase();

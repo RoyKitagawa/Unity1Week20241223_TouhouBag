@@ -42,6 +42,13 @@ public class EnemyBase : CharacterBase
 
         // 自分を揺らす
         transform.DOShakePosition(0.5f, 0.3f, 20);
+
+        PlayAttackSE();
+    }
+
+    protected virtual void PlayAttackSE()
+    {
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipDamageHit, 0.3f);
     }
 
     public void OnTriggerEnter2D(Collider2D target)

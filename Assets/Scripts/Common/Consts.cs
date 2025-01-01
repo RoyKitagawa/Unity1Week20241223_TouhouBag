@@ -204,6 +204,8 @@ public static class Consts
                 public const string GloveLv4 = _Items + "/tebukuro4";
 
                 public const string Bag2x2 = _Items + "/Bag_2x2";
+                public const string Bag2x1 = _Items + "/Bag_2x1";
+                public const string Bag1x1 = _Items + "/Bag_1x1";
             }
 
             public static class Cells

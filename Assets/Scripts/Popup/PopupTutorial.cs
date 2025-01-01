@@ -42,11 +42,13 @@ public class PopupTutorial : PopupBase
 
     public void OnClickTutorialNext()
     {
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ShowTutorialPage(currentTutorialPage + 1);
     }
 
     public void OnClickTutorialPrev()
     {
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ShowTutorialPage(currentTutorialPage -1);
     }
 }

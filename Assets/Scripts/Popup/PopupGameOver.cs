@@ -35,10 +35,16 @@ public class PopupGameOver : PopupBase
         });
         gameOverText.text = "";
         StartCoroutine(ScrollText());
+
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipGameOver);
+        ManagerBGM.Instance.FadeBGM(2.0f, () => { ManagerBGM.Instance.StopBGM(); });
     }
 
     public void OnClickMove2Title()
     {
+        // 進捗データを消す
+        ManagerGame.Instance.ResetAllData();
+        ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
     }
 
