@@ -16,13 +16,13 @@ public class SaveDataManager
         foreach(BagItem bag in ManagerGame.Bags)
         {
             if(!bag.IsPlaced()) continue;
-            BagItemDataBase data = bag.GetData();
+            BagItemData data = bag.GetData();
             saveData.AddBagData(new ItemData(data.ItemName, data.Level, bag.GetRotation(), bag.GetSlotPos()));
         }
         foreach(BagItem item in ManagerGame.Items)
         {
             if(!item.IsPlaced()) continue;
-            BagItemDataBase data = item.GetData();
+            BagItemData data = item.GetData();
             saveData.AddWeaponData(new ItemData(data.ItemName, data.Level, item.GetRotation(), item.GetSlotPos()));
         }
         // 実際にセーブ

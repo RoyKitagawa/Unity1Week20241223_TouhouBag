@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class EnemyBossChiruno : EnemyBase
+public class EnemyBoss : EnemyBase
 {
     [SerializeField]
     private HPBar hpBar;
@@ -36,10 +36,10 @@ public class EnemyBossChiruno : EnemyBase
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public override void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
+    public override void GainDamage(BagItemName weaponName, float damageAmt, DamageType damageType, bool isCritical)
     {
         // ダメージ演出
-        base.GainDamage(damageAmt, damageType, isCritical);
+        base.GainDamage(weaponName, damageAmt, damageType, isCritical);
         hpBar.SetCurrentValue(currentLife);
     }
 

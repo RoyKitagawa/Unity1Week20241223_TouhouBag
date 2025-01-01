@@ -16,11 +16,12 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public int InitialMoneyAmt = 999;
     private int moneyAmt;
     // WAVE関連
-    private const int totalWaves = 3;
+    private const int totalWaves = 15;
     private int currentWave;
     private int clearedWave;
     // 敵機関連
     private int baseTotalEnemyInStage = 15;
+    private float maxBuffRate { get { return totalWaves / 4; } } // 最大マックスステージ数 / 4倍まで敵をバフする
 
 
     // 金銭関連
@@ -30,6 +31,7 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public void AddMoneyForNewWave(int nextWave) { AddMoney(7 + nextWave); }
     // WAVE関連
     public string GetWaveStatusText() { return "WAVE " + GetCurrentWave() + " / " + GetTotalWaves(); }
+    public bool IsLastWave() { return currentWave >= totalWaves; }
     public int GetTotalWaves() { return totalWaves; }
     public int GetCurrentWave() { return currentWave; }
     public void SetCurrentWave(int wave) { currentWave = wave; }
@@ -38,6 +40,7 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public bool IsGameClear() { return clearedWave >= totalWaves; }
     // 敵機関連
     public int GetTotalEnemyInStage() { return baseTotalEnemyInStage + (int)(baseTotalEnemyInStage * currentWave * 0.3f); }
+    public float GetEnemyBuffRateWave() { return (float)totalWaves / maxBuffRate * (float)currentWave / (float)totalWaves; } // WAVEが進むにつれてバフが強化されるように
 
     public BagItem SpawnRandomItem(BagItemType type)
     {

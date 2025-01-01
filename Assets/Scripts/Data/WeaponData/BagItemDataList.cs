@@ -13,7 +13,7 @@ public class BagItemDataList
     /// </summary>
     /// <param name="itemName"></param>
     /// <returns></returns>
-    public static BagItemDataBase GetItemData(BagItemName itemName, BagItemLevel lv)
+    public static BagItemData GetItemData(BagItemName itemName, BagItemLevel lv)
     {
         switch(itemName)
         {

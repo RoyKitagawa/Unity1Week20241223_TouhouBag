@@ -20,7 +20,7 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
     /// <returns></returns>
     public static BagItem InstantiateItem(BagItemName itemName, BagItemLevel lv)
     {
-        BagItemDataBase data = BagItemDataList.GetItemData(itemName, lv);
+        BagItemData data = BagItemDataList.GetItemData(itemName, lv);
         if(data == null) return null;
         BagItem item = GetItemInstance(data);
         if(item == null) return null;
@@ -39,7 +39,7 @@ public class BagItemManager : MonoBehaviourSingleton<BagItemManager>
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
-    private static BagItem GetItemInstance(BagItemDataBase data)
+    private static BagItem GetItemInstance(BagItemData data)
     {
         GameObject obj = new GameObject(data.ItemName.ToString());
         obj.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BagItemsRoot).transform);

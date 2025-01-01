@@ -8,7 +8,7 @@ public class BattleListItem : MonoBehaviour
 {
     private static GameObject itemPrefab; // 基礎となるアイテムオブジェクトのPrefab
 
-    private BagItemDataBase data; // アイテムのデータ
+    private BagItemData data; // アイテムのデータ
     private float elapsedTime = 0.0f; // 経過時間
     private SpriteRenderer sr; // SpriteRenderer
     
@@ -53,7 +53,7 @@ public class BattleListItem : MonoBehaviour
     /// <returns></returns>
     public static BattleListItem InstantiateBattleListItem(BagItemName itemName, BagItemLevel lv)
     {
-        BagItemDataBase data = BagItemDataList.GetItemData(itemName, lv);
+        BagItemData data = BagItemDataList.GetItemData(itemName, lv);
         if(data == null) return null;
 
         // // Prefabの取得

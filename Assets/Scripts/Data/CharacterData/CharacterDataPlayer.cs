@@ -3,8 +3,8 @@ using UnityEngine;
 public class CharacterDataPlayer : CharacterDataBase
 {
     // 識別情報
-    CharacterType CharacterDataBase.GetType() { return CharacterType.Player; }
-    CharacterName CharacterDataBase.GetName() { return CharacterName.Player; }
+    CharacterType CharacterDataBase.GetCharacterType() { return CharacterType.Player; }
+    CharacterName CharacterDataBase.GetCharacterName() { return CharacterName.Player; }
     // 強さ関連
     float CharacterDataBase.GetMaxLife() { return 1000.0f; }
     float CharacterDataBase.GetCooldown() { return 1.0f; } // 自機の場合使わない

@@ -152,7 +152,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         enemySpawnArea = BasicUtil.CreateRectFromCenter(
             new Vector2(corners.max.x + 2.0f, 0.0f),
             0.0f,
-            corners.height - 4.0f);
+            corners.height - 5.0f);
     }
 
     /// <summary>
@@ -161,21 +161,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     /// <param name="type"></param>
     public void SpawnEnemy(CharacterType type)
     {
-        HashSet<CharacterName> names = new HashSet<CharacterName>();
-        int maxWave = ManagerGame.Instance.GetTotalWaves();
-        int currentWave = ManagerGame.Instance.GetCurrentWave();
-        switch(type)
-        {
-            case CharacterType.EnemyNormal:
-                names.Add(CharacterName.EnemyA);
-                break;
-            case CharacterType.EnemyBoss:
-                names.Add(CharacterName.EnemyBossChiruno);
-                break;
-            default:
-                Debug.LogError("未対応の敵種別: " + type);
-                break;
-        }
+        HashSet<CharacterName> names = CharacterDataList.GetCharacterNames(type);
         if(names.Count <= 0)
         {
             Debug.LogError("Spawnする敵種別が存在しません: " + type);
@@ -197,7 +183,7 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
         EnemyBase enemy = Instantiate(prefab).GetComponent<EnemyBase>();
         enemy.InitializeCharacter(CharacterDataList.GetCharacterData(characterName));
         Vector2 spawnPos = RandUtil.GetRandomVector2In(enemySpawnArea);
-        if(type == CharacterType.EnemyBoss)
+        if(type == CharacterType.EnemyMidBoss || type == CharacterType.EnemyFinalBoss)
             enemy.transform.position = new Vector2(spawnPos.x, spawnPos.y / 2f);
         else
             enemy.transform.position = spawnPos;
@@ -245,9 +231,35 @@ public class ManagerEnemy : MonoBehaviourSingleton<ManagerEnemy>
     {
         switch(characterName)
         {
-            case CharacterName.EnemyA:
-                return Consts.Resources.Character.EnemyA;
+            // 一般兵
+            case CharacterName.EnemyWeakA:
+                return Consts.Resources.Character.EnemyWeakA;
+            case CharacterName.EnemyWeakB:
+                return Consts.Resources.Character.EnemyWeakB;
+            case CharacterName.EnemyWeakC:
+                return Consts.Resources.Character.EnemyWeakC;
+            case CharacterName.EnemyNormalD:
+                return Consts.Resources.Character.EnemyNormalD;
+            case CharacterName.EnemyNormalE:
+                return Consts.Resources.Character.EnemyNormalE;
+            case CharacterName.EnemyNormalF:
+                return Consts.Resources.Character.EnemyNormalF;
+            
+            // 中ボス
+            case CharacterName.EnemyStrongA:
+                return Consts.Resources.Character.EnemyStrongA;
+            case CharacterName.EnemyStrongB:
+                return Consts.Resources.Character.EnemyStrongB;
+            case CharacterName.EnemyStrongC:
+                return Consts.Resources.Character.EnemyStrongC;
+            case CharacterName.EnemyStrongD:
+                return Consts.Resources.Character.EnemyStrongD;
+            case CharacterName.EnemyStrongE:
+                return Consts.Resources.Character.EnemyStrongE;
+            case CharacterName.EnemyStrongF:
+                return Consts.Resources.Character.EnemyStrongF;
 
+            // 大ボス
             case CharacterName.EnemyBossChiruno:
                 return Consts.Resources.Character.EnemyBossChiruno;
 

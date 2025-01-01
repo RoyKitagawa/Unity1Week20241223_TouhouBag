@@ -12,7 +12,7 @@ public class BattleDamage : MonoBehaviour
     [SerializeField]
     private SpriteRenderer criticalBG;
 
-    public static BattleDamage ShowDamageEffect(int damageAmt, DamageType damageType, bool isCritical, Vector2 pos)
+    public static BattleDamage ShowDamageEffect(BagItemName weaponName, int damageAmt, DamageType damageType, bool isCritical, Vector2 pos)
     {
         BattleDamage damage = Instantiate(GetDamagePrefab()).GetComponent<BattleDamage>();
         if(damage == null)
@@ -35,12 +35,12 @@ public class BattleDamage : MonoBehaviour
             case DamageType.Damage:
                 if(isCritical)
                 {
-                    damage.text.color = Color.white;
+                    damage.text.color = Color.red;
+                    damage.criticalBG.gameObject.SetActive(true);
                 }
                 else
                 {
-                    damage.text.color = Color.red;
-                    damage.criticalBG.gameObject.SetActive(true);
+                    damage.text.color = Color.white;
                 }
                 break;
             case DamageType.Heal:
@@ -50,7 +50,7 @@ public class BattleDamage : MonoBehaviour
                 damage.text.color = Color.gray;
                 break;
             default:
-                Debug.LogError("未対応のDamageType: " + damageType);
+                Debug.LogError("未対応のDamageType: " + damageType + " / " + weaponName);
                 break;
 
         }

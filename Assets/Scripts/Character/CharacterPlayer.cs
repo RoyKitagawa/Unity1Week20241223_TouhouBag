@@ -22,9 +22,9 @@ public class CharacterPlayer : CharacterBase
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public override void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
+    public override void GainDamage(BagItemName weaponName, float damageAmt, DamageType damageType, bool isCritical)
     {
-        base.GainDamage(damageAmt, damageType, isCritical);
+        base.GainDamage(weaponName, damageAmt, damageType, isCritical);
         armorBar.SetCurrentValue(currentArmor);
         hpBar.SetCurrentValue(currentLife);
     }

@@ -52,7 +52,22 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         int remainSpawn = GetRemainEnemiesToBeSpawned();
         if(remainSpawn <= 0) return;
 
-        ManagerEnemy.Instance.SpawnEnemy(remainSpawn <= 1 ? CharacterType.EnemyBoss : CharacterType.EnemyNormal);
+        CharacterType targetType;
+        // ボス系
+        if(remainSpawn <= 1)
+        {
+            if(ManagerGame.Instance.IsLastWave()) targetType = CharacterType.EnemyFinalBoss;
+            else targetType = CharacterType.EnemyMidBoss;
+        }
+        // 通常系
+        else
+        {
+            float waveClearRate = (float)ManagerGame.Instance.GetCurrentWave() / (float)ManagerGame.Instance.GetTotalWaves();
+            if(RandUtil.GetRandomBool(waveClearRate)) targetType = CharacterType.EnemyNormal; // 強め
+            else targetType = CharacterType.EnemyWeak; // 弱い
+        }
+        // 敵を出現させる
+        ManagerEnemy.Instance.SpawnEnemy(targetType);
 
         // 1割の確率でラッシュを止める
         bool isInterval = RandUtil.GetRandomBool(0.1f);
@@ -133,7 +148,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
             sr.transform.SetParent(root);
             sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Box);
             sr.transform.position = new Vector2(-5.0f, y);
-            if(y <= -5.0f) break;
+            if(y <= -4.0f) break;
         }
 
         // 敵機関連
@@ -180,7 +195,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         }
     }
 
-    public void TriggerPlayerAttack(BagItemDataBase data)
+    public void TriggerPlayerAttack(BagItemData data)
     {
         // 攻撃タイプが設定されていない場合、攻撃は発動しない
         if(data.WeaponTargetType == TargetType.None) return;
@@ -198,7 +213,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         return player;
     }
 
-    private CharacterBase GetTargetCharacter(BagItemDataBase data)
+    private CharacterBase GetTargetCharacter(BagItemData data)
     {
         switch(data.WeaponTargetType)
         {

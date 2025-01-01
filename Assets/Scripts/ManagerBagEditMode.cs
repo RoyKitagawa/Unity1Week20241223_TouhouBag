@@ -19,6 +19,12 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     private ShopSlot[] shopSlots;
     [SerializeField]
     private TextMeshProUGUI moneyTxt, attackTxt, shieldTxt, healTxt;
+    [SerializeField]
+    private SpriteRenderer nitoriSR;
+    [SerializeField]
+    private Collider2D bagBound;
+    [SerializeField]
+    private SpriteRenderer bagBGSpriteRenderer;
 
     private Sequence rerollButtonShakeSequence = null;
     private Vector2 defaultRerollButtonPos = Vector2.zero;
@@ -32,17 +38,18 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     private bool isInitialized = false;
     
     // 現状のステージ進捗ステータス
-    private Vector2Int stageSize = new Vector2Int(6, 8);
+    private Vector2Int stageSize = new Vector2Int(7, 5);
     // private int currentWave;
     // private int totalWave;
 
     // 画面サイズ
-    private Rect screenCorners;
+    // private Rect screenCorners;
 
     void Start()
     {
         Initialize();
         InitializeReroll();
+        StartNitoriWalk();
     }
 
     private void InitializeReroll()
@@ -54,7 +61,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
 
     private void Initialize()
     {
-        screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        // screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
 
         // スロット初期化処理
         ManagerGame.Instance.ClearAllInStageObjectLists();
@@ -98,6 +105,35 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         }
     }
 
+    private void StartNitoriWalk()
+    {
+        float minX = -8.0f;
+        float maxX = -1.4f;
+        Vector2 maxDest = new Vector2(maxX, nitoriSR.transform.position.y);
+        Vector2 minDest = new Vector2(minX, nitoriSR.transform.position.y);
+        float dist = Vector2.Distance(nitoriSR.transform.position, maxDest);
+
+        nitoriSR.transform.position = minDest;
+        nitoriSR.transform.rotation = Quaternion.Euler(new Vector3(0.0f, 270.0f, 0.0f));
+
+        float walkRDuration = Random.Range(3.0f, 10.0f);
+        float walkLDuration = Random.Range(3.0f, 10.0f);
+        float turnDuration = 1.0f;
+        // 左から右に
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(nitoriSR.transform.DOMoveX(maxX, walkRDuration).SetEase(Ease.InOutQuad));
+        sequence.Join(nitoriSR.transform.DORotate(Vector3.zero, turnDuration).SetEase(Ease.InQuad));
+        sequence.Join(nitoriSR.transform.DORotate(new Vector3(0.0f, 90.0f, 0.0f), turnDuration).SetDelay(walkRDuration - turnDuration).SetEase(Ease.OutQuad));
+        // 右から左に
+        sequence.Append(nitoriSR.transform.DOMoveX(minX, walkLDuration).SetEase(Ease.InOutQuad));
+        sequence.Join(nitoriSR.transform.DORotate(new Vector3(0.0f, 180.0f, 0.0f), turnDuration).SetEase(Ease.InQuad));
+        sequence.Join(nitoriSR.transform.DORotate(new Vector3(0.0f, 270.0f, 0.0f), turnDuration).SetDelay(walkLDuration - turnDuration).SetEase(Ease.OutQuad));
+        // sequence.SetLoops(-1);
+        sequence.OnComplete(() => {
+            StartNitoriWalk();
+        });
+    }
+
     public void OnBagWeaponUpdate()
     {
         int attack = 0;
@@ -106,7 +142,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         foreach(BagItem item in ManagerGame.Items)
         {
             if(!item.IsPlaced()) continue;
-            BagItemDataBase data = item.GetData();
+            BagItemData data = item.GetData();
             switch(data.WeaponDamageType)
             {
                 case DamageType.Damage:
@@ -145,7 +181,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
             {
                 BagItem slot = BagItemManager.InstantiateItem(BagItemName.StageSlot, BagItemLevel.Lv1);
                 slot.SetPhysicSimulator(false);
-                slot.transform.localPosition = new Vector2(x, y);
+                slot.transform.localPosition = new Vector2(x + 0.5f, y + 0.5f);
                 slot.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BagSlotRoot).transform);
 
                 // 色味お試し変更
@@ -164,7 +200,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         }
 
         Transform root = BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform;
-        root.localPosition = new Vector2((-sizeX / 2.0f) + 0.5f, (-sizeY / 2.0f) + 0.5f);
+        root.localPosition = bagBGSpriteRenderer.transform.position;
     }
 
     private void InitStageScale()
@@ -175,21 +211,30 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         // スロット生成
         CreateStageSlots(stageSize.x, stageSize.y);
         
-        // 画像サイズ取得
-        Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
-        Vector2 rightScreenSize = new Vector2(screenCorners.width / 2.0f, screenCorners.height);
-        Vector2 rightScreenCenterPos = new Vector2(rightScreenSize.x / 2.0f, 0.0f);
+        // // 画像サイズ取得
+        // Rect screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
+        // Vector2 rightScreenSize = new Vector2(screenCorners.width / 2.0f, screenCorners.height);
+        // Vector2 rightScreenCenterPos = new Vector2(rightScreenSize.x / 2.0f, 0.0f);
 
-        // 画面の右半分の中央に配置する。画面右半分になるべくしっかり入るスケールにする
-        ratioH = rightScreenSize.x / stageSize.x  * 0.8f; // 0.8係数はマージンが割り
-        ratioV = rightScreenSize.y / stageSize.y * 0.8f;
-        float scale = ratioH < ratioV ? ratioH : ratioV;
+        // // 画面の右半分の中央に配置する。画面右半分になるべくしっかり入るスケールにする
+        float margin = 0.95f;
+        ratioH = bagBound.bounds.size.x / stageSize.x  * margin; // 0.8係数はマージンが割り
+        ratioV = bagBound.bounds.size.y / stageSize.y * margin;
+        bool isRatioHSmaller = ratioH < ratioV;
+        float scale = isRatioHSmaller ? ratioH : ratioV;
+        Debug.Log("HRatio: " + ratioH + " / VRatio: " + ratioV);
 
-        BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform.localScale = new Vector2(scale, scale);
-        BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform.position = new Vector2(
-            rightScreenCenterPos.x - (stageSize.x / 2f),
-            rightScreenCenterPos.y - (stageSize.y / 2f)
+        Transform bagRoot = BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform;
+        bagRoot.localScale = new Vector2(scale, scale);
+        bagRoot.position = new Vector2(
+            bagBound.transform.position.x - (stageSize.x / 2f * scale),
+            bagBound.transform.position.y - (stageSize.y / 2f * scale)
         );
+        if(isRatioHSmaller) bagBound.transform.localScale = new Vector3(1.0f, scale * (margin * margin), 1.0f);
+        else bagBound.transform.localScale = new Vector3(scale * (margin * margin), 1.0f, 1.0f);
+        // BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform.localScale = new Vector2(scale, scale);
+
+
     }
 
     private BagItemType[] spawnItemTypes = {

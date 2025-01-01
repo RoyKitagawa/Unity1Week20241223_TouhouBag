@@ -48,7 +48,18 @@ public static class Consts
         {
             private const string Characters = _Prefabs + "/Characters";
             // 敵機
-            public const string EnemyA = Characters + "/EnemyA";
+            public const string EnemyWeakA = Characters + "/EnemyWeakA";
+            public const string EnemyWeakB = Characters + "/EnemyWeakB";
+            public const string EnemyWeakC = Characters + "/EnemyWeakC";
+            public const string EnemyNormalD = Characters + "/EnemyNormalD";
+            public const string EnemyNormalE = Characters + "/EnemyNormalE";
+            public const string EnemyNormalF = Characters + "/EnemyNormalF";
+            public const string EnemyStrongA = Characters + "/EnemyStrongA";
+            public const string EnemyStrongB = Characters + "/EnemyStrongB";
+            public const string EnemyStrongC = Characters + "/EnemyStrongC";
+            public const string EnemyStrongD = Characters + "/EnemyStrongD";
+            public const string EnemyStrongE = Characters + "/EnemyStrongE";
+            public const string EnemyStrongF = Characters + "/EnemyStrongF";
             public const string EnemyBossChiruno = Characters + "/EnemyBossChiruno";
         }
 

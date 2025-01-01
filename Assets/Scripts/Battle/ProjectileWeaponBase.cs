@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ProjectileWeaponBase : MonoBehaviour
 {
-    private BagItemDataBase data;
+    private BagItemData data;
     private SpriteRenderer sr;
 
-    public static ProjectileWeaponBase Launch(BagItemDataBase data, CharacterBase target, Vector2 startPosition)
+    public static ProjectileWeaponBase Launch(BagItemData data, CharacterBase target, Vector2 startPosition)
     {
         ProjectileWeaponBase weapon = new GameObject(data.ItemName.ToString()).AddComponent<ProjectileWeaponBase>();
         weapon.transform.SetParent(BasicUtil.GetRootObject(Consts.Roots.BattleWeapons).transform);

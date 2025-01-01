@@ -64,13 +64,14 @@ public class CharacterBase : MonoBehaviour
     /// </summary>
     /// <param name="damageAmt"></param>
     /// <param name="damageType"></param>
-    public virtual void GainDamage(float damageAmt, DamageType damageType, bool isCritical)
+    public virtual void GainDamage(BagItemName weaponName, float damageAmt, DamageType damageType, bool isCritical)
     {
         // ライフ更新
         ApplyDamage2Life(damageAmt, damageType);
         
         // ダメージ表記演出を行う
         BattleDamage.ShowDamageEffect(
+            weaponName,
             (int)damageAmt,
             damageType,
             isCritical,
@@ -119,11 +120,11 @@ public class CharacterBase : MonoBehaviour
         else if(currentLife > data.MaxLife) currentLife = data.MaxLife;
     }
 
-    public void OnWeaponHit(BagItemDataBase data)
+    public void OnWeaponHit(BagItemData data)
     {
         // 通常攻撃系以外クリティカルは発生しない
         bool isCritical = data.WeaponDamageType == DamageType.Damage ? RandUtil.GetRandomBool(0.1f) : false;
-        GainDamage(isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType, isCritical);
+        GainDamage(data.ItemName, isCritical ? data.WeaponDamage * 1.5f : data.WeaponDamage, data.WeaponDamageType, isCritical);
 
         // 回復系
         if(data.WeaponDamageType == DamageType.Heal)

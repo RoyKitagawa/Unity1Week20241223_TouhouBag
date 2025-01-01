@@ -23,7 +23,7 @@ public enum Rotation
 public class BagItem : TappableObject
 {
     // アイテムデータ
-    private BagItemDataBase data = null;
+    private BagItemData data = null;
     // アイテムのコンポーネント
     private SpriteRenderer image = null;
     private Rigidbody2D rb = null;
@@ -134,7 +134,7 @@ public class BagItem : TappableObject
             isPlacable = false;
     }
 
-    public BagItemDataBase GetData()
+    public BagItemData GetData()
     {
         return data;
     }
@@ -143,7 +143,7 @@ public class BagItem : TappableObject
     /// アイテムデータを設定する
     /// </summary>
     /// <param name="itemData"></param>
-    public void SetItemData(BagItemDataBase itemData)
+    public void SetItemData(BagItemData itemData)
     {
         data = itemData;
     }

@@ -7,26 +7,24 @@ using UnityEngine;
 /// </summary>
 public class BagItemDataStageSlot : BagItemDataBase
 {
-    // 基本情報系
-    BagItemType BagItemDataBase.GetItemType() { return BagItemType.StageSlot; }
-    BagItemName BagItemDataBase.GetItemName() { return BagItemName.StageSlot; }
-    string BagItemDataBase.GetTag() { return Consts.Tags.StageSlot; }
-    ColliderShape BagItemDataBase.GetColliderShape() { return ColliderShape.Square1x1; }
-    string BagItemDataBase.GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
-    string BagItemDataBase.GetSpritePathItemThumb() { return ""; }
+    protected override int GetBaseCost() { return 0; }
+    protected override int GetBaseDamage() { return 0; }
+    protected override float GetBaseCoolDown() { return 99f; }
 
-    // バッグ編集画面用
-    int BagItemDataBase.GetCost() { return 0; }
-    Vector2Int BagItemDataBase.GetSize() { return new Vector2Int(1, 1); }
+    // 基本情報系
+    public override BagItemType GetItemType() { return BagItemType.StageSlot; }
+    public override BagItemName GetItemName() { return BagItemName.StageSlot; }
+    public override string GetTag() { return Consts.Tags.StageSlot; }
+    public override ColliderShape GetColliderShape() { return ColliderShape.Square1x1; }
+
+    // レベル関連
+    public override BagItemLevel GetLevel() { return BagItemLevel.Lv1; }
+    public override bool GetIsMergable() { return false; }
+    public override string GetSpritePathItem() { return Consts.Resources.Sprites.BattleItem.StageSlot; }
+    public override string GetSpritePathItemThumb() { return ""; }
 
     // バトル画面用
-    DamageType BagItemDataBase.GetDamageType() { return DamageType.None; }
-    LaunchType BagItemDataBase.GetLaunchType() { return LaunchType.None; }
-    TargetType BagItemDataBase.GetTargetType() { return TargetType.None; }
-    float BagItemDataBase.GetCooldown() { return 1.25f; }
-    int BagItemDataBase.GetDamage() { return 17; }
-
-    // レベル
-    BagItemLevel BagItemDataBase.GetLevel() { return BagItemLevel.Lv1; }
-    bool BagItemDataBase.GetIsMergable() { return false; }
+    public override DamageType GetDamageType() { return DamageType.None; }
+    public override LaunchType GetLaunchType() { return LaunchType.None; }
+    public override TargetType GetTargetType() { return TargetType.None; }
 }

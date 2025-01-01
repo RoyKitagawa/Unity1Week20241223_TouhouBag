@@ -4,33 +4,49 @@ public enum CharacterType
 {
     None,
     Player,
+    EnemyWeak,
     EnemyNormal,
-    EnemyBoss,
+    EnemyMidBoss,
+    EnemyFinalBoss,
 }
 
 public enum CharacterName
 {
     None,
     Player,
-    EnemyA,
+    // 一般兵
+    EnemyWeakA,
+    EnemyWeakB,
+    EnemyWeakC,
+    EnemyNormalD,
+    EnemyNormalE,
+    EnemyNormalF,
+    // 中ボス
+    EnemyStrongA,
+    EnemyStrongB,
+    EnemyStrongC,
+    EnemyStrongD,
+    EnemyStrongE,
+    EnemyStrongF,
+    // 大ボス
     EnemyBossChiruno
 }
 
 public interface CharacterDataBase
 {
-    public CharacterType Type { get { return GetType(); } }
-    public CharacterName Name { get { return GetName(); } }
+    public CharacterType Type { get { return GetCharacterType(); } }
+    public CharacterName Name { get { return GetCharacterName(); } }
     public float MaxLife { get { return GetMaxLife(); } }
     public Vector2 Velocity { get { return GetVelocity(); } }
     public float Cooldown { get { return GetCooldown(); } }
     public float AttackDamage { get { return GetAttackDamage(); } }
 
-    public CharacterType GetType();
-    public CharacterName GetName();
-    public float GetMaxLife();
-    public Vector2 GetVelocity();
-    public float GetCooldown();
-    public float GetAttackDamage();
+    public abstract CharacterType GetCharacterType();
+    public abstract CharacterName GetCharacterName();
+    public abstract float GetMaxLife();
+    public abstract Vector2 GetVelocity();
+    public abstract float GetCooldown();
+    public abstract float GetAttackDamage();
 
     // public CharacterDataBase()
     // {
