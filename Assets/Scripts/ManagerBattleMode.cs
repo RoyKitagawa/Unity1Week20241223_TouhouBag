@@ -59,6 +59,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         int remainSpawn = GetRemainEnemiesToBeSpawned();
         if(remainSpawn <= 0) return;
 
+        if(!IsBattleActive) return;
+
         CharacterType targetType;
         // ボス系
         if(remainSpawn <= 1)
@@ -171,7 +173,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
 
         // ミカン箱を設置する
         Transform root = BasicUtil.GetRootObject(Consts.Roots.BoxRoot).transform;
-        float y = 4.0f;
+        float y = 3.5f;
         for(int i = 0; i < 20; i++) // 最大20個（-5 ~ 5 範囲の、最小単位0.5なため）
         {
             y -= Random.Range(0.5f, 2.0f);
@@ -179,7 +181,7 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
             sr.transform.SetParent(root);
             sr.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Box);
             sr.transform.position = new Vector2(-4.5f, y);
-            if(y <= -4.0f) break;
+            if(y <= -3f) break;
         }
 
         // 敵機関連
@@ -293,8 +295,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         PopupBase.Show(PopupType.GameClear);
         PauseTimer();
 
-        // 進捗を削除する
-        SaveDataManager.ClearProgress();
+        // // 進捗を削除する
+        // SaveDataManager.ClearProgress();
     }
 
     private void ShowWaveClearResult()
@@ -328,8 +330,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         }).SetDelay(0.5f);
         PauseTimer();
 
-        // 進捗を保存する
-        SaveDataManager.SaveProgress();
+        // // 進捗を保存する
+        // SaveDataManager.SaveProgress();
     }
 
     
@@ -340,8 +342,8 @@ public class ManagerBattleMode : MonoBehaviourSingleton<ManagerBattleMode>
         PopupBase.Show(PopupType.GameOver);
         PauseTimer();
 
-        // 進捗を削除する
-        SaveDataManager.ClearProgress();
+        // // 進捗を削除する
+        // SaveDataManager.ClearProgress();
     }
 
 

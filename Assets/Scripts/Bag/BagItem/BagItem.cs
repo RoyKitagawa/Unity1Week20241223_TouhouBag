@@ -40,7 +40,7 @@ public class BagItem : TappableObject
     private HashSet<BagItemCell> targetSlots = new HashSet<BagItemCell>();
     private HashSet<BagItemCell> cellHitSlots = new HashSet<BagItemCell>();
     // アイテムが設置中か
-    private bool isPlaced = false;
+    public bool isPlaced = false;
     // アイテムが設置可能か（移動中に更新される）
     private bool isPlacable = false;
     // アイテムが購入済みか
@@ -127,7 +127,7 @@ public class BagItem : TappableObject
         {
             if(isTapped)
             {
-                RotateToNext90(0.2f);
+                RotateToNext90(currentTapPos, 0.2f);
             }
         }
 
@@ -301,13 +301,12 @@ public class BagItem : TappableObject
         transform.DOScale(1.2f, duration);
         // 回転、物理演算関係の設定
         SetPhysicSimulator(false);
-        RotateToNearest90(duration);
+        RotateToNearest90(currentTapPos, duration);
 
         // 設置フラグをOFFに
         SetIsPlaced(false);
 
         // アイテム購入処理
-        Debug.Log("Is Before Purchase");
         if(!IsPurchased())
         {
             // コストを支払う
@@ -316,7 +315,6 @@ public class BagItem : TappableObject
             SetShopSlot(null);
             ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipPurchaseItem);
 
-            Debug.Log("IsPurchased");
             ManagerBagEditMode.Instance.OnMoneyUpdate();
 
             // SetIsPurchased(true);
@@ -325,7 +323,6 @@ public class BagItem : TappableObject
         {
             ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipGrabItem, 0.6f);
         }
-        Debug.Log("Is After Purchase");
 
         // ステータス更新
         ManagerBagEditMode.Instance.OnBagWeaponUpdate();
@@ -557,7 +554,7 @@ public class BagItem : TappableObject
         {
             cell.SlotPos = mergeTarget.GetCellAtCellPos(cell.CellPos).SlotPos;
         }
-        RotateTo(mergeTarget.currentRotation, duration);
+        RotateTo(mergeTarget.currentRotation, currentTapPos, duration);
         Move2(mergeTarget.transform.position, duration, OnComplete);
     }
 
@@ -721,22 +718,33 @@ public class BagItem : TappableObject
         //     i++;
         // }
         // Debug.Log("PlaceItemAt: " + name + " / rot = " + rot + " / slotPos = " + spos);
+
         Vector2 pos = ManagerGame.Instance.GetSlotsCenterPos(slotPos);
-        PlaceItemAt(rot, pos);
+        transform.position = pos;
+        RotateTo(rot, pos, 0.0f);
+        SetIsPlaced(true);
+
+        if(cells.Count <= 0) InitCells();
+        foreach(BagItemCell cell in cells)
+        {
+            Vector2Int _slotPos = ManagerGame.Instance.GetClosestSlotPos(cell.transform.position);
+            cell.SlotPos = _slotPos;
+        }
+        // PlaceItemAt(rot, pos);
     }
 
-    /// <summary>
-    /// 指定座標に最も近いセルに即座に配置する
-    /// </summary>
-    /// <param name="position"></param>
-    public void PlaceItemAt(Rotation rot, Vector2 position)
-    {
-        transform.position = position;
-        RotateTo(rot, 0.0f);
-        SetItemCellSlotAtClosestSlot();
-        Move2(position, 0.0f, OnItemPlaced);
-        SetIsPlaced(true);
-    }
+    // /// <summary>
+    // /// 指定座標に最も近いセルに即座に配置する
+    // /// </summary>
+    // /// <param name="position"></param>
+    // public void PlaceItemAt(Rotation rot, Vector2 position)
+    // {
+    //     transform.position = position;
+    //     RotateTo(rot, 0.0f);
+    //     SetItemCellSlotAtClosestSlot();
+    //     Move2(position, 0.0f, OnItemPlaced);
+    //     SetIsPlaced(true);
+    // }
 
     /// <summary>
     /// 指定CellPosにあるセルを取得する
@@ -954,14 +962,14 @@ public class BagItem : TappableObject
     /// <summary>
     /// 一番近い90度単位へ回転する
     /// </summary>
-    public void RotateToNearest90(float duration)
+    public void RotateToNearest90(Vector2 pivotPos, float duration)
     {
         // オブジェクトの現在の角度（回転の軸はZ軸）
         Rotation rot = GetNearest90Angle();
-        RotateTo(rot, duration);
+        RotateTo(rot, pivotPos, duration);
     }
 
-    private void RotateToNext90(float duration)
+    private void RotateToNext90(Vector2 pivotPos, float duration)
     {
         // オブジェクトの現在の角度（回転の軸はZ軸）
         Rotation rot = GetNearest90Angle();
@@ -985,17 +993,17 @@ public class BagItem : TappableObject
                 rot = Rotation.Angle270;
                 break;
         }
-        RotateTo(rot, duration);
+        RotateTo(rot, pivotPos, duration);
     }
 
     /// <summary>
     /// 指定角度へ回転する
     /// </summary>
     /// <param name="rot"></param>
-    public void RotateTo(Rotation rot, float duration)
+    public void RotateTo(Rotation rot, Vector2 pivotPos, float duration)
     {
         // Pivotの座標をタップ座標へ移動
-        pivot.transform.position = currentTapPos;
+        pivot.transform.position = pivotPos;
         // 対象角度の取得
         float angle = 0;
         switch(rot)
@@ -1023,10 +1031,12 @@ public class BagItem : TappableObject
         else transform.DORotate(new Vector3(0f, 0f, angle), duration);
         // どの角度に移動しているか記録する
         currentRotation = rot;
+
+        // TODO この処理で座標ずれが起きていたため、今はRotateは中央座標に限定する
         // 回転によってずれたPivot座標とタップ座標の差分を取得
-        Vector3 dist = VectorUtil.Sub(currentTapPos, pivot.transform.position);
+        // Vector3 dist = VectorUtil.Sub(currentTapPos, pivot.transform.position);
         // その分アイテムオブジェクト自体を移動して、Pivotがタップ座標へ来るようにする
-        transform.position = VectorUtil.Add(transform.position, dist);
+        // transform.position = VectorUtil.Add(transform.position, dist);
     }
 
     /// <summary>

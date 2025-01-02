@@ -51,7 +51,6 @@ public class ItemDescription : MonoBehaviour
         itemDescription.textLRT.localPosition = screenPos;
 
         itemDescription.SetDescriptionVisibility();
-        Debug.Log("pos: " + pos);
         return itemDescription;
     }
     

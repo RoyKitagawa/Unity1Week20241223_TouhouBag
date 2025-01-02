@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -65,21 +66,31 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         // screenCorners = BasicUtil.GetScreenWorldCorners(Camera.main);
 
         // スロット初期化処理
-        ManagerGame.Instance.ClearAllInStageObjectLists();
+        // ManagerGame.Instance.ClearAllInStageObjectLists();
         CreateBorderColliders();
 
         // ステージ情報整理
-        InitStageScale();
+        InitStageSlots();
         // アイテムスポーン地点整理
         InitItemSpawnAreaPos();
 
         // Reroll関連
         defaultRerollButtonPos = rerollButton.GetComponent<RectTransform>().localPosition;
-        UpdateRerollPriceImage();        
+        UpdateRerollPriceImage();
 
-        // ロード処理
-        SaveData saveData = SaveDataManager.LoadProgress();
-        if(saveData == null)
+        // 次のWAVEを開始する。WAVE増加＆MONEY増加
+        ManagerGame.Instance.StartNextWave();
+        waveText.text = ManagerGame.Instance.GetWaveStatusText();    
+        // 金銭初期化
+        OnMoneyUpdate();
+
+
+        int wave = ManagerGame.Instance.GetCurrentWave();
+        // // ロード処理
+        // SaveData saveData = SaveDataManager.LoadProgress();
+        // if(saveData == null)
+        // {
+        if(wave <= 1)
         {
             // 初期バッグ配置
             BagItem bagA = BagItemManager.InstantiateItem(BagItemName.Bag2x2, BagItemLevel.Lv1);
@@ -93,19 +104,81 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         }
         else
         {
-            // データをもとにゲーム進捗、バッグの状況を復元
-            SaveDataManager.ApplyItemsSavedData(saveData, true);
+            // バッグ系
+            // ManagerGame.Bags.Clear();
+            HashSet<BagItem> tmpBags = new HashSet<BagItem>();
+            foreach(BagItem item in ManagerGame.Bags)
+            {
+                BagItem newItem = BagItemManager.InstantiateItem(item.GetData().ItemName, item.GetData().Level);
+                newItem.SetIsPlaced(true);
+
+                Rotation rot = item.GetRotation();
+                Vector2Int[] originalSlotPos = item.GetSlotPos();//.GetPlacedSlots();
+                Vector2Int[] newSlotPos = new Vector2Int[originalSlotPos.Length];
+                for(int i = 0; i < originalSlotPos.Length; i++)
+                {
+                    newSlotPos[i] = new Vector2Int(originalSlotPos[i].x, originalSlotPos[i].y);
+                }
+                newItem.PlaceItemAt(rot, newSlotPos);
+
+                tmpBags.Add(newItem);
+            }
+            ManagerGame.Instance.RemoveAllBags();
+            foreach(BagItem bag in tmpBags)
+            {
+                ManagerGame.Instance.Add2List(bag);
+            }
+
+            // 武器系
+            // ManagerGame.Items.Clear();
+            HashSet<BagItem> tmpItems = new HashSet<BagItem>();
+            foreach(BagItem item in ManagerGame.Items)
+            {
+
+                BagItem newItem = BagItemManager.InstantiateItem(item.GetData().ItemName, item.GetData().Level);
+                newItem.SetIsPlaced(true);
+                Rotation rot = item.GetRotation();
+                Vector2Int[] originalSlotPos = item.GetSlotPos();
+                Vector2Int[] newSlotPos = new Vector2Int[originalSlotPos.Length];
+                for(int i = 0; i < originalSlotPos.Length; i++)
+                {
+                    newSlotPos[i] = new Vector2Int(originalSlotPos[i].x, originalSlotPos[i].y);
+                }
+                newItem.PlaceItemAt(rot, newSlotPos);
+                tmpItems.Add(newItem);
+
+                // if(item == null) continue;
+                // // BagItem item = BagItemManager.InstantiateItem(itemData.GetName(), itemData.GetLevel());
+                // // item.SetIsPurchased(true);
+                // item.SetIsPlaced(true);
+                // // if(doPlaceItem)
+                // // {
+                //     Rotation rot = item.GetRotation();
+                //     Vector2Int[] slotPos = item.GetSlotPos();//Data.GetPlacedSlots();
+                //     item.PlaceItemAt(rot, slotPos);
+                // // }
+                // // else
+                // // {
+                // //     item.gameObject.SetActive(false);
+                // // }
+                // // ManagerGame.Instance.Add2List(item);
+            }
+            ManagerGame.Instance.RemoveAllItems();
+            foreach(BagItem item in tmpItems)
+            {
+                ManagerGame.Instance.Add2List(item);
+            }
+
+
+            // // データをもとにゲーム進捗、バッグの状況を復元
+            // SaveDataManager.ApplyItemsSavedData(saveData, true);
         }
 
-        // 残りのデータを反映
-        SaveDataManager.ApplyWavesSaveData(saveData);
-        SaveDataManager.ApplyMoneySaveData(saveData);
-
-        // 次のWAVEを開始する。WAVE増加＆MONEY増加
-        ManagerGame.Instance.StartNextWave();
-        waveText.text = ManagerGame.Instance.GetWaveStatusText();    
-        // 金銭初期化
-        OnMoneyUpdate();
+        // // 残りのデータを反映
+        // SaveDataManager.ApplyWavesSaveData(saveData);
+        // SaveDataManager.ApplyMoneySaveData(saveData);
+        
+        OnBagWeaponUpdate();
 
     }
 
@@ -187,6 +260,8 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     /// <param name="sizeY"></param>
     private void CreateStageSlots(int sizeX, int sizeY)
     {
+        // リストに追加
+        ManagerGame.Instance.RemoveAllSlots();
         for(int x = 0; x < sizeX; x++)
         {
             for(int y = 0; y < sizeY; y++)
@@ -215,7 +290,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         root.localPosition = bagBGSpriteRenderer.transform.position;
     }
 
-    private void InitStageScale()
+    private void InitStageSlots()
     {
         float ratioH;
         float ratioV;
@@ -234,7 +309,6 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         ratioV = bagBound.bounds.size.y / stageSize.y * margin;
         bool isRatioHSmaller = ratioH < ratioV;
         float scale = isRatioHSmaller ? ratioH : ratioV;
-        Debug.Log("HRatio: " + ratioH + " / VRatio: " + ratioV);
 
         Transform bagRoot = BasicUtil.GetRootObject(Consts.Roots.BagRoot).transform;
         bagRoot.localScale = new Vector2(scale, scale);
@@ -357,33 +431,7 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
         rerollPriceImage.sprite = BasicUtil.LoadSprite4Resources(Consts.Resources.Sprites.Prices.Price(rerollPrice));
     }
 
-    public void RemoveUnPlacedItems()
-    {
-        HashSet<BagItem> removeList = new HashSet<BagItem>();
-        // バッグリスト
-        foreach(BagItem bag in ManagerGame.Bags)
-        {
-            if(!bag.IsPlaced())
-            {
-                removeList.Add(bag);
-                Destroy(bag.gameObject);
-            }
-        }
-        // アイテムリスト
-        foreach(BagItem item in ManagerGame.Items)
-        {
-            if(!item.IsPlaced())
-            {
-                removeList.Add(item);
-                Destroy(item.gameObject);
-            }
-        }
-        // 実際にリストから削除
-        foreach(BagItem item in removeList)
-        {
-            ManagerGame.Instance.RemoveFromList(item);
-        }
-    }
+    
 
 
 
@@ -515,6 +563,8 @@ public class ManagerBagEditMode : MonoBehaviourSingleton<ManagerBagEditMode>
     /// </summary>
     public void StartModeBattle()
     {
+
+        ManagerGame.Instance.RemoveUnPlacedItems();
         // IsCurrentStateBagEdit = false;
         
         // rootBagEdit.SetActive(false);

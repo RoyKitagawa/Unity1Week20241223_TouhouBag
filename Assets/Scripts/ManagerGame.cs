@@ -14,8 +14,8 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public static HashSet<BagItem> Items = new HashSet<BagItem>();
     // 所持金情報
     // // public int InitialMoneyAmt = 14;
-    // private const int defaultMoney = 14;
-    private int moneyAmt = 14;
+    private const int defaultMoney = 10;
+    private int moneyAmt = 10;
     // WAVE関連
     private const int totalWaves = 15;
     private int currentWave = 0;
@@ -32,35 +32,26 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public void StartNextWave()
     {
         int nextWave = currentWave + 1;
-        Debug.Log("Next Wave = " + nextWave);
         SetCurrentWave(nextWave);
         AddMoneyForNewWave(nextWave);
     }
 
     public void ResetAllData()
     {
-        moneyAmt = 14;
+        moneyAmt = defaultMoney;
         currentWave = 0;
         clearedWave = 0;
-        Slots.Clear();
-        Bags.Clear();
-        Items.Clear();
-        SaveDataManager.ClearProgress();
+        RemoveAllSlots();
+        RemoveAllBags();
+        RemoveAllItems();
+        // SaveDataManager.ClearProgress();
     }
 
     // 金銭関連
     public int GetMoney() { return moneyAmt; }// < 0 ? defaultMoney : moneyAmt; } // Moneyがマイナス値なら未設定として初期値を渡す
     public void SetMoney(int value) { moneyAmt = value; }
-    public void AddMoney(int value) {
-        Debug.Log("Add前Money: " + moneyAmt + " / value = " + value);
-        moneyAmt += value;
-        Debug.Log("Add後Money: " + moneyAmt + " / value = " + value);
-        }
-    public void AddMoneyForNewWave(int nextWave)
-    {
-        Debug.Log("AddMoneyForNextWave = " + nextWave);
-        if(nextWave > 1) AddMoney(10 + nextWave);
-    }
+    public void AddMoney(int value) { moneyAmt += value; }
+    public void AddMoneyForNewWave(int nextWave) { if(nextWave > 1) AddMoney(6 + (nextWave / 2)); }
     // WAVE関連
     public string GetWaveStatusText() { return "WAVE " + GetCurrentWave() + " / " + GetTotalWaves(); }
     public bool IsLastWave() { return currentWave >= totalWaves; }
@@ -143,7 +134,8 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
         Vector2 totalPos = Vector2.zero;
         foreach(Vector2Int _slotPos in slotPos)
         {
-            totalPos += GetSlotWorldPosAt(_slotPos);
+            Vector2 pos = GetSlotWorldPosAt(_slotPos);
+            totalPos += pos;
         }
         return totalPos / slotPos.Length;
     }
@@ -248,17 +240,17 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
 
     public void ClearAllInStageObjectLists()
     {
-        Slots.Clear();
-        Bags.Clear();
-        Items.Clear();
+        RemoveAllSlots();
+        RemoveAllBags();
+        RemoveAllItems();
     }
 
     public void LoadVolume()
     {
         SetVolume(
-            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeMaster, 1.0f),
-            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeSE, 1.0f),
-            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeBGM, 1.0f));            
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeMaster, 0.4f),
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeSE, 0.4f),
+            PlayerPrefs.GetFloat(Consts.PlayerPrefs.Keys.VolumeBGM, 0.4f));            
     }
 
     public void SetVolume(float master, float se, float bgm)
@@ -274,4 +266,80 @@ public class ManagerGame : MonoBehaviourSingleton<ManagerGame>
     public float GetVolumeMaster() { return volumeMaster; }
     public float GetVolumeSE() { return volumeMaster * volumeSE; }
     public float GetVolumeBGM() { return volumeMaster * volumeBGM; }
+
+    public int GetStatusTotal()
+    {
+        int attack = 0;
+        int shield = 0;
+        int heal= 0;
+        foreach(BagItem item in Items)
+        {
+            if(!item.IsPlaced()) continue;
+            BagItemData data = item.GetData();
+            switch(data.WeaponDamageType)
+            {
+                case DamageType.Damage:
+                    attack += data.WeaponDamage;
+                    break;
+
+                case DamageType.Shield:
+                    shield += data.WeaponDamage;
+                    break;
+
+                case DamageType.Heal:
+                    heal += data.WeaponDamage;
+                    break;
+            }
+        }
+        return attack + shield + heal;
+    }
+
+    public void RemoveUnPlacedItems()
+    {
+        HashSet<BagItem> removeList = new
+        HashSet<BagItem>();
+        // バッグリスト
+        foreach(BagItem bag in Bags)
+        {
+            if(!bag.IsPlaced())
+            {
+                removeList.Add(bag);
+                Destroy(bag.gameObject);
+            }
+        }
+        // アイテムリスト
+        foreach(BagItem item in Items)
+        {
+            if(!item.IsPlaced())
+            {
+                removeList.Add(item);
+                Destroy(item.gameObject);
+            }
+        }
+        // 実際にリストから削除
+        foreach(BagItem item in removeList)
+        {
+            RemoveFromList(item);
+        }
+    }
+
+    public void RemoveAllSlots() { RemoveAll(Slots); }
+    public void RemoveAllBags() { RemoveAll(Bags); }
+    public void RemoveAllItems() { RemoveAll(Items); }
+
+    private void RemoveAll(HashSet<BagItem> items)
+    {
+        foreach(BagItem item in items)
+        {
+            if(item != null)
+            {
+                if(item.gameObject != null)
+                {
+
+                    Destroy(item.gameObject);
+                }
+            }
+        }
+        items.Clear();
+    }
 }

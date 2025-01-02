@@ -2,6 +2,7 @@ using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using unityroom.Api;
 
 public class PopupGameOver : PopupBase
 {
@@ -42,8 +43,13 @@ public class PopupGameOver : PopupBase
 
     public void OnClickMove2Title()
     {
-        // 進捗データを消す
-        ManagerGame.Instance.ResetAllData();
+        // ランキング送信
+        // 最終ステータスの合算（多い方がつよい）
+        int totalStatus = ManagerGame.Instance.GetStatusTotal();
+        UnityroomApiClient.Instance.SendScore(1, totalStatus, ScoreboardWriteMode.HighScoreDesc);
+
+        // // 進捗データを消す
+        // ManagerGame.Instance.ResetAllData();
         ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
     }

@@ -12,7 +12,7 @@ public class CharacterDataEnemyBase : CharacterDataBase
         {
             public const float BaseLife = 12.0f;
             public const float BaseCoolDown = 1.2f;
-            public const float BaseAttack = 8.0f;
+            public const float BaseAttack = 9.0f;
             public const float BaseSpeed = -2.0f;
         }
         public static class Normal

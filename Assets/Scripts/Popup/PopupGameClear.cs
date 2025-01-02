@@ -3,6 +3,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using unityroom.Api;
 
 public class PopupGameClear : PopupBase
 {
@@ -79,13 +80,18 @@ public class PopupGameClear : PopupBase
 
     public void OnClickToTitleButton()
     {
-        // 進捗データを消す
-        ManagerGame.Instance.ResetAllData();
+        // ランキング送信
+        // 最終ステータスの合算（多い方がつよい）
+        int totalStatus = ManagerGame.Instance.GetStatusTotal();
+        UnityroomApiClient.Instance.SendScore(1, totalStatus, ScoreboardWriteMode.HighScoreDesc);
+
+        // ゲームクリア時のステータスの合算（小さい方がつよい）
+        UnityroomApiClient.Instance.SendScore(2, totalStatus, ScoreboardWriteMode.HighScoreAsc);
+        
+        // // 進捗データを消す
+        // ManagerGame.Instance.ResetAllData();
+
         ManagerSE.Instance.PlaySE(ManagerSE.Instance.ClipButtonClickOK);
         ManagerSceneTransition.Instance.Move2Scene(SceneType.Title);
     }
-
-    // protected override void OnShown()
-    // {
-    // }
 }

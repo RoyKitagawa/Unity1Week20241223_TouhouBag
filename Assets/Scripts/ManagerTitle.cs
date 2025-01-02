@@ -8,8 +8,9 @@ public class ManagerTitle : MonoBehaviourSingleton<ManagerTitle>
         ManagerBGM.Instance.SetVolume(ManagerGame.Instance.GetVolumeBGM());
         ManagerBGM.Instance.PlayBGM(ManagerBGM.Instance.ClipMainBGM);
 
-        // 進捗データを消す
+        // 現状途中スタート／ロード機能は不要なため、進捗データを消す
         ManagerGame.Instance.ResetAllData();
+        ManagerGame.Instance.ClearAllInStageObjectLists();
     }
 
     public void OnClickSettings()

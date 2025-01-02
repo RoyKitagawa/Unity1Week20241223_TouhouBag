@@ -45,9 +45,9 @@ public class ManagerSE : MonoBehaviourSingleton<ManagerSE>
         // 初期音量設定はBGM側で行う
     }
 
-    public void SetVolume(float volume)
+    public void SetVolume(float _volume)
     {
-        volume = 1.0f;
+        volume = _volume;
     }
 
     public void PlaySE(AudioClip clip, float volumeScale = 1.0f)
